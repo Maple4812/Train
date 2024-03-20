@@ -6,8 +6,10 @@ public class Date {
     String REGEXP_PATTERN_NORMAL_1 = "[0-9]{6}";    // 240320의 형식
     String REGEXP_PATTERN_NORMAL_2 = "[0-9]{8}";    // 20240320의 형식
     String[] dateArr;
+
     int year, month, day;
     int firstYear = 1970;   // 최소 년도
+
     public Date(String input) throws Exception {
         if(input.matches(REGEXP_PATTERN_SLASH_1)){
             dateArr = input.split("/");
@@ -79,6 +81,7 @@ public class Date {
         else
             return false;
     }
+
     private boolean checkValidYear(int year) {
         return year >= this.firstYear;
     }
