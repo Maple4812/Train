@@ -10,6 +10,13 @@ public class Date {
     int year, month, day;
     int firstYear = 1970;   // 최소 년도
 
+    @Override
+    public String toString() {
+        return year + "년 " +
+                month + "월 " +
+                day + "일";
+    }
+
     public Date(String input) throws Exception {
         if(input.matches(REGEXP_PATTERN_SLASH_1)){
             dateArr = input.split("/");
@@ -90,7 +97,4 @@ public class Date {
         return month >= 1 && month <= 12;
     }
 
-    public void printDate(){
-        System.out.println(year + "년 " + month + "월 " + day + "일");
-    }
 }
