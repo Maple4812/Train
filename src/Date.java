@@ -5,10 +5,11 @@ public class Date {
     String REGEXP_PATTERN_DASH_2 = "[0-9]{4}-[0-9]{2}-[0-9]{2}";    // 2024-03-20의 형식
     String REGEXP_PATTERN_NORMAL_1 = "[0-9]{6}";    // 240320의 형식
     String REGEXP_PATTERN_NORMAL_2 = "[0-9]{8}";    // 20240320의 형식
+    String NUMBERS_2 = "[0-9]{2}";
     String[] dateArr;
 
     int year, month, day;
-    int firstYear = 1970;   // 최소 년도
+    int firstYear = 2000;   // 최소 년도
 
     @Override
     public String toString() {
@@ -43,7 +44,7 @@ public class Date {
             day = Integer.parseInt(dateArr[2]);
 
         } else if (input.matches(REGEXP_PATTERN_NORMAL_1)){
-            year = Integer.parseInt(input.substring(0, 2));
+            year = Integer.parseInt(input.substring(0, 2)) + 2000;
             month = Integer.parseInt(input.substring(2, 4));
             day = Integer.parseInt(input.substring(4, 6));
 
@@ -59,8 +60,14 @@ public class Date {
     }
 
     private void checkValid(int year, int month, int day) throws Exception {
-        if(!checkValidYear(year))
-            throw new Exception("잘못된 연도(Year)입니다.");
+        if(Integer.toString(year).matches(NUMBERS_2)){
+            if(!checkValidYear(year + firstYear))
+                throw new Exception("잘못된 연도(Year)입니다.");
+        }
+        else{
+            if(!checkValidYear(year))
+                throw new Exception("잘못된 연도(Year)입니다.");
+        }
         if(!checkValidMonth(month))
             throw new Exception("잘못된 월(Month)입니다.");
         if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12){
@@ -96,5 +103,4 @@ public class Date {
     private boolean checkValidMonth(int month) {
         return month >= 1 && month <= 12;
     }
-
 }
