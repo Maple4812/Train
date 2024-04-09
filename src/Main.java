@@ -35,9 +35,8 @@ public class Main {
             return;
         }
 
-        System.out.println("명령어 목록: Q(프로그램 종료), 시간표조회, 기차표예약, 예약조회");
-
         while(true) {
+            System.out.println("명령어 목록: Q(프로그램 종료), 시간표조회, 기차표예약, 예약조회");
             String cmd = br.readLine();
 
             switch (cmd){
