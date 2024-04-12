@@ -1,6 +1,6 @@
 import java.io.FileNotFoundException;
 
-public class FileTimeTable implements FileInterface{
+public class FileUserInfo implements FileInterface{
     @Override
     public void checkIntergrity() throws FileNotFoundException {
 
