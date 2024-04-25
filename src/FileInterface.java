@@ -1,5 +1,5 @@
 import java.io.FileNotFoundException;
 
 public interface FileInterface {
-    void checkIntergrity() throws FileNotFoundException;
+    void checkIntegrity() throws FileNotFoundException, FileIntegrityException;
 }

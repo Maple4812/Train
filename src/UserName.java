@@ -3,6 +3,7 @@ import java.util.regex.Pattern;
 public class UserName{
     private static final String REGEXP_PATTERN_NAME = "[가-힣]{1,}"; //길이가 1 이상인 한글로만 이루어진 문자열
     String name;
+
     UserName(String str) throws FileIntegrityException {
         checkIntegrity(str);
         name = str;

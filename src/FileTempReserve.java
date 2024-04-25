@@ -1,19 +1,29 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 
 public class FileTempReserve implements FileInterface{
     private String fileName;
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
     private ArrayList<ArrayList<String>> tempList;
-    public FileTempReserve(String fileName)
-    {
+    public FileTempReserve(String fileName) throws FileNotFoundException {
         this.fileName = fileName;
     }
+    Scanner scan = new Scanner(new File(fileName));
     @Override
-    public void checkIntergrity() throws FileNotFoundException {}
+    public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
+        while(scan.hasNextLine()){
+            String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다은 split
+            if(strArr.length != 6) {
+                throw new FileIntegrityException("무결성 오류: 파일에 인자의 개수가 옳지 않은 레코드가 존재합니다.");
+            }
+            UserName.checkIntegrity(strArr[0]);
+        }
+    }
 
     private void repos(){}
 

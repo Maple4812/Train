@@ -17,7 +17,7 @@ public class Main {
             fileReserve.checkIntergrity();
             fileTempReserve.checkIntergrity();
             fileTimeTable.checkIntergrity();
-        }catch (FileIntegrityException e)
+        }catch (Exception e)
         {
             // error 가 catch 되면 이를 사용자에게 알리고 프로그램을 종료한다.
             System.out.println("파일에서 심각한 오류가 발견되었습니다. 프로그램을 종료합니다.");
@@ -41,7 +41,6 @@ public class Main {
         logInAndTimeInput.init();
 
         while(true) {
-
             // 정상적으로 사용자 정보를 입력 받으면 명령을 입력받습니다.
             System.out.println("명령어 목록: Q(프로그램 종료), 시간표조회, 기차표예약, 예약조회");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
