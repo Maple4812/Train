@@ -13,10 +13,10 @@ public class Main {
 
         try{
             // 각 파일객체에서 무결성검사를 하고, 오류가 있으면 error 를 throw 한다.
-            fileUserInfo.checkIntergrity();
-            fileReserve.checkIntergrity();
-            fileTempReserve.checkIntergrity();
-            fileTimeTable.checkIntergrity();
+            fileUserInfo.checkIntegrity();
+            fileReserve.checkIntegrity();
+            fileTempReserve.checkIntegrity();
+            fileTimeTable.checkIntegrity();
         }catch (Exception e)
         {
             // error 가 catch 되면 이를 사용자에게 알리고 프로그램을 종료한다.
