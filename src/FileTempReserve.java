@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,6 +7,8 @@ import java.util.Scanner;
 
 public class FileTempReserve implements FileInterface{
     private String fileName;
+    private FileWriter fw;
+    private PrintWriter writer;
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
     private ArrayList<ArrayList<String>> tempList;
     public FileTempReserve(String fileName) throws FileNotFoundException {
@@ -32,7 +33,19 @@ public class FileTempReserve implements FileInterface{
 
     private void repos(){}
 
-    public void write(){}
+    public void write(String userName, String phoneNumber, String lineNum, String startTime, String endTime){
+        // 이 함수에서 추가적인 규칙 검사는 이루어지지 않습니다. 해당 함수에 입력되는 모든 인자는 이미 검사를 받았다고 가정합니다.
+        File file = new File(fileName);
+        try {
+            fw = new FileWriter(file);
+            writer = new PrintWriter(fw);
+            String str = userName + "," + phoneNumber + "," + lineNum + "," + startTime + "," + endTime;
+            writer.println(str);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public boolean isTimeOn()
     {
