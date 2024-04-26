@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+//import java.io.FileWriter;
+//import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -58,9 +58,9 @@ public class FileTimeTable implements FileInterface{
             trainlist에 저장된 ticket 객체들의 노선 번호를 중복 없이 lineNumList에 저장하고 둘의 사이즈를 비교합니다.
             사이즈가 다르다면 중복된 노선 번호가 존재한다는 것이기 때문에 exception을 throw 합니다.
         */
-        for(int i=0;i< trainlist.size();i++){
-            if(!lineNumList.contains(trainlist.get(i).lineNum)){
-                lineNumList.add(trainlist.get(i).lineNum);
+        for (Ticket ticket : trainlist) {
+            if (!lineNumList.contains(ticket.lineNum)) {
+                lineNumList.add(ticket.lineNum);
             }
         }
         if(trainlist.size()!=lineNumList.size()){
