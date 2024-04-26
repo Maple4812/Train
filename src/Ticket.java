@@ -9,6 +9,7 @@ public class Ticket {
 
     public Ticket(){}
 
+    //노선 번호 무결성 검사
     public static void checkIntegrity(String str) throws FileIntegrityException {
         if(!Pattern.matches(REGEXP_PATTERN_LINE, str)) {
             throw new FileIntegrityException("노선번호 무결성 오류");
