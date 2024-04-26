@@ -1,7 +1,9 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -14,9 +16,10 @@ public class FileTempReserve implements FileInterface{
     public FileTempReserve(String fileName) throws FileNotFoundException {
         this.fileName = fileName;
     }
-    Scanner scan = new Scanner(new File(fileName));
+    Scanner scan;
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
+        scan = new Scanner(new File(fileName));
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다은 split
             if(strArr.length != 6) {
@@ -31,7 +34,20 @@ public class FileTempReserve implements FileInterface{
         }
     }
 
-    private void repos(){}
+    private void repos(){
+        try {
+            checkIntegrity();
+            tempList = new ArrayList<>();
+            scan = new Scanner(new File(fileName));
+            while(scan.hasNextLine()) {
+                String[] strArr = scan.nextLine().split(",");
+                ArrayList<String> list = new ArrayList<>(Arrays.asList(strArr)); // 6개의 인자를 String 형태로 가진 ArrayList (named: list)
+                tempList.add(list); // 위에서 생성한 ArrayList를 tempList에 append한다
+            }
+        } catch (FileNotFoundException | FileIntegrityException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void write(String userName, String phoneNumber, String lineNum, String startTime, String endTime){
         // 이 함수에서 추가적인 규칙 검사는 이루어지지 않습니다. 해당 함수에 입력되는 모든 인자는 이미 검사를 받았다고 가정합니다.
@@ -47,7 +63,7 @@ public class FileTempReserve implements FileInterface{
         }
     }
 
-    public boolean isTimeOn()
+    public boolean isTimerOn()
     {
         // 리스트가 비어있으면 timer 가 false
         return !tempList.isEmpty();
