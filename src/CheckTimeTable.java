@@ -13,7 +13,7 @@ public class CheckTimeTable {
     public FileTimeTable timeTableFile;
     public String[] inputArr;
 
-    // 임시 시간!! 지우게 될것
+    // 임의의 현재 시간!! 지우게 될것
     String thistime = "202111230830";
 
     public CheckTimeTable(FileTimeTable timeTableFile) {
