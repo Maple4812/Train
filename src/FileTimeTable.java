@@ -23,6 +23,10 @@ public class FileTimeTable implements FileInterface{
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
             Ticket ticket=new Ticket();
+
+            /*
+            데이터 파일이 노선번호, 출발 시각, 출발역, 도착 시각, 도착역, 가격, 여석 수, 전체 좌석 수의 8가지 요소를 갖고 있는지 검사합니다.
+             */
             if(strArr.length != 8) {
                 throw new FileIntegrityException("무결성 오류: 파일에 인자의 개수가 옳지 않은 레코드가 존재합니다.");
             }
