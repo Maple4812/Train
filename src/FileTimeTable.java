@@ -31,7 +31,7 @@ public class FileTimeTable implements FileInterface{
             Station.checkIntegrity(strArr[2]);  //출발역 무결성 확인
             Time.checkIntegrity(strArr[3]);  //도착 시각 무결성 확인
             Station.checkIntegrity(strArr[4]);  //도착역 무결성 확인
-//            가격.checkIntegrity(strArr[5]);  //가격 무결성 확인, Ticket 객체에서 노선 번호와 함께 무결성검사 할 것인지, 따로 price 객체를 만들지?
+            Price.checkIntegrity(strArr[5]);  //가격 무결성 확인
             Seat.checkIntegrity(strArr[6]);  //여석 수 무결성 확인
             Seat.checkIntegrity(strArr[7]);  //전체 좌석 수 무결성 확인
 
@@ -44,7 +44,7 @@ public class FileTimeTable implements FileInterface{
             ticket.fromStation=new Station(strArr[2]);
             ticket.arrivalTime=strArr[3];
             ticket.toStation=new Station(strArr[4]);
-//            ticket.price=Integer.parseInt(strArr[5]);
+            ticket.price=new Price(strArr[5]);
             ticket.extraSeat=new Seat(strArr[6]);
             ticket.entireSeat=new Seat(strArr[7]);
 
