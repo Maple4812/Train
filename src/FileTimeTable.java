@@ -36,7 +36,7 @@ public class FileTimeTable implements FileInterface{
             Seat.checkIntegrity(strArr[6]);  //여석 수 무결성 확인
             Seat.checkIntegrity(strArr[7]);  //전체 좌석 수 무결성 확인
 
-            if(strArr[2].equals(strArr[4])){ // 부가 확인 항목: 출발역과 도착역이 같은 열차가 존재하는 경우
+            if(strArr[2].equals(strArr[4])){ // 부가 확인 항목 1: 출발역과 도착역이 같은 열차가 존재하는 경우
                 throw new FileIntegrityException("오류: 출발역과 도착역이 같은 열차가 있습니다.");
             }
 
@@ -54,6 +54,7 @@ public class FileTimeTable implements FileInterface{
         }
 
         /*
+            부가 확인 항목 2
             노선 번호가 같은 열차가 존재하는지 무결성 검사를 진행합니다.
             trainlist에 저장된 ticket 객체들의 노선 번호를 중복 없이 lineNumList에 저장하고 둘의 사이즈를 비교합니다.
             사이즈가 다르다면 중복된 노선 번호가 존재한다는 것이기 때문에 exception을 throw 합니다.
@@ -68,6 +69,7 @@ public class FileTimeTable implements FileInterface{
         }
 
 /*
+    부가 확인 항목 3
     출발시간과 출발역 및 도착역이 같은 열차가 존재하는지 무결성 검사를 진행합니다.
     두 개의 for문을 사용해 (인덱스가 같은 경우를 제외하고) 출발시간과 출발역 및 도착역이 같은 열차가 존재한다면 exception을 throw 합니다.
 */
