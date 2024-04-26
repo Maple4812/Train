@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 //import java.io.FileWriter;
 //import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,7 +10,7 @@ public class FileTimeTable implements FileInterface{
 //    private FileWriter fw; // 예약 시 여석 수가 줄어드는 걸 csv 파일에 업데이트해야함
 //    private PrintWriter writer;
     private ArrayList<Ticket> trainlist=new ArrayList<>(); //timetable.csv의 한 줄에 저장된 정보를 각 줄 마다 ticket 객체로 묶어 저장
-    Scanner scan = new Scanner(new File(fileName));
+    Scanner scan;
 
     public FileTimeTable(String fileName) throws FileNotFoundException {
         this.fileName = fileName;
@@ -19,6 +18,7 @@ public class FileTimeTable implements FileInterface{
 
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
+        scan= new Scanner(new File(fileName));
         ArrayList<String> lineNumList=new ArrayList<>(); // 노선 번호 중복을 체크하기 위해 노선 번호만 저장 할 리스트
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
@@ -26,6 +26,7 @@ public class FileTimeTable implements FileInterface{
             if(strArr.length != 8) {
                 throw new FileIntegrityException("무결성 오류: 파일에 인자의 개수가 옳지 않은 레코드가 존재합니다.");
             }
+
             Ticket.checkIntegrity(strArr[0]);  //노선번호 무결성 확인
             Time.checkIntegrity(strArr[1]);  //출발 시각 무결성 확인
             Station.checkIntegrity(strArr[2]);  //출발역 무결성 확인
@@ -38,6 +39,16 @@ public class FileTimeTable implements FileInterface{
             if(strArr[2].equals(strArr[4])){ // 부가 확인 항목 1: 출발역과 도착역이 같은 열차가 존재하는 경우
                 throw new FileIntegrityException("오류: 출발역과 도착역이 같은 열차가 있습니다.");
             }
+
+            /*
+                여석 수의 의미 규칙에 따라 여석 수가 전체 좌석 수보다 큰지 무결성 검사를 진행합니다.
+                위에서 Seat.checkIntegrity()를 통해 여석 수, 전체 좌석 수의 무결성 검사를 이미 진행했기에
+                추가적인 형식 검사 없이 Integer.parseInt()를 사용합니다.
+             */
+            if(Integer.parseInt(strArr[6])>Integer.parseInt(strArr[7])){
+                throw new FileIntegrityException("오류: 여석 수가 전체 좌석 수 보다 큰 열차가 존재합니다.");
+            }
+
 
             ticket.lineNum=strArr[0];
             ticket.depTime=strArr[1];
