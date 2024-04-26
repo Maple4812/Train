@@ -21,4 +21,8 @@ public class Seat {
             }
         }
     }
+
+    public int getSeat() {
+        return Integer.parseInt(seat);
+    }
 }

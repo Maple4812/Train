@@ -1,9 +1,10 @@
+import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TempReservation {
     private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-    private static FileTempReserve tempReserveFile;
+    private FileTempReserve tempReserveFile;
     private FileUserInfo userInfoFile;
     private FileReserve reserveFile;
     private FileTimeTable timeTableFile;
@@ -18,9 +19,9 @@ public class TempReservation {
         this.timeTableFile = (FileTimeTable) timeTableFile;
     }
     public void init() throws FileIntegrityException {
-        String lineNum;
-        boolean isConfirmed;
-        int tickets;
+        String lineNum = "";
+        boolean isConfirmed = false;
+        int tickets = 0;
 
         System.out.print("예약 확정/예약 취소 중 선택해주세요:" );
         String input = scan.next();
@@ -32,33 +33,47 @@ public class TempReservation {
                     return;
                 }
                 else {
-                    System.out.println("옳지 않은 입력 형식입니다.");
+                    System.out.println("잘못된 입력입니다.");
                 }
                 break;
             case 2:
                 try {
                     Ticket.checkIntegrity(inputArr[0]);
+                } catch (FileIntegrityException e) {
+                    System.out.println("잘못된 노선 번호입니다.");
+                }
+                try {
                     if (!(inputArr[1].equals("T") || inputArr[1].equals("F"))){
                         throw new FileIntegrityException();
                     }
                 } catch (FileIntegrityException e) {
-                    System.out.println("입력 오류");
+                    System.out.println("잘못된 입력입니다.");
                 }
             case 3:
                 try {
                     Ticket.checkIntegrity(inputArr[0]);
-                    if (!(inputArr[1].equals("T") || inputArr[1].equals("F"))){
+                } catch (FileIntegrityException e) {
+                    System.out.println("잘못된 노선 번호입니다.");
+                }
+                try {
+                    if (!(inputArr[1].equals("t") || inputArr[1].equals("f"))){
                         throw new FileIntegrityException();
                     }
+                } catch (FileIntegrityException e) {
+                    System.out.println("잘못된 입력입니다.");
+                }
+                try {
                     tickets = Integer.parseInt(inputArr[2]);  // 정수형태로 parseInt
                     if (tickets <= 0) {  //자연수인지 확인
                         throw new FileIntegrityException();
                     }
-                } catch (FileIntegrityException | NumberFormatException e) {
-                    System.out.println("입력 오류");
+                } catch (NumberFormatException e) {
+                    System.out.println("잘못된 입력입니다.");
+                } catch (FileIntegrityException e) {
+                    System.out.println("예매 수가 올바르지 않습니다. 1 이상의 정수를 입력하세요.");
                 }
             default:
-                System.out.println("옳지 않은 입력 형식입니다.");
+                System.out.println("잘못된 입력입니다.");
 
             lineNum = inputArr[0];                //여기서 각 인수를 변수에 넣는다
             if(inputArr[1].equals("T")) {
@@ -67,13 +82,28 @@ public class TempReservation {
             else if (inputArr[1].equals("F")){
                 isConfirmed = false;
             }
-            //TODO 여기서 해야하는 것!!!!!!!!: 위에서 받은 내용을 바탕으로 한 티켓이 실제로 timetable.csv에 존재하는지 확인하고 써야 한다.
-            tempReserveFile.write();
+            //TODO 여기서 해야하는 것!!!!!!!!: 위에서 받은 내용을 바탕으로 한 티켓이 실제로 timetable.csv에 존재하는지 확인해야 한다.
+            Ticket ticket = timeTableFile.getTicket(lineNum);  // 티켓의 노선번호로 티켓 객체를 가져오는 임의의 함수입니다.
+            if (tickets > ticket.extraSeat.getSeat()) {
+                System.out.println("해당 열차에서는 최대 " + ticket.extraSeat + "개의 좌석만 예약할 수 있습니다.");
+            }
+            //일반 예약인 경우
+            if(isConfirmed) {
+                for (int i = 0; i < tickets; i++) {
+                    // TODO client 가져와서 이름 및 전화번호 얻고 예약 컴퓨터 시간까지 넣기
+                    tempReserveFile.write(FileUserInfo.userName, FileUserInfo.phoneNumber, ticket.lineNum, ticket.arrivalTime, ticket.depTime, "예약 컴퓨터 시각");
+                }
+                System.out.println(ticket.arrivalTime +"에 출발하는 " + ticket.lineNum + " " + tickets + "장을 예매 확정지었습니다.");
+            }
+            //가예약인 경우
+            else {
+                for (int i = 0; i < tickets; i++) {
+                    //TODO 위에랑 마찬가지
+                    reserveFile.write(FileUserInfo.userName, FileUserInfo.phoneNumber, ticket.lineNum, ticket.arrivalTime);
+                }
+                System.out.println(ticket.arrivalTime +"에 출발하는 " + ticket.lineNum + " " + tickets + "가예약 했습니다.");
+            }
         }
-    }
-
-    public static boolean isTimerOn() {
-        return tempReserveFile.isTimeOn();
     }
 
     public static String timeRenewal() {
