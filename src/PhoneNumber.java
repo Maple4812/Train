@@ -1,7 +1,7 @@
 import java.util.regex.Pattern;
 
 public class PhoneNumber {
-    private static final String REGEXP_PATTERN_NORMAL = "010[0-9]{8}"; //010xxxxxxxx 형식
+    private static final String REGEXP_PATTERN_NORMAL = "^010[0-9]{8}$"; //010xxxxxxxx 형식
     String phoneNumber;
 
     public PhoneNumber(String str) throws FileIntegrityException {
