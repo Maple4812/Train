@@ -45,11 +45,13 @@ public class CheckTimeTable {
             Scanner scan = new Scanner(System.in, "UTF-8");
             String input = scan.nextLine();
             inputArr = input.split(",");
+            
             // 요소가 3개가 아닐 시 재입력
             if (inputArr.length != 3) {
                 System.out.println("잘못된 입력입니다.(인자수가 틀림) ");
                 continue;
             }
+            
             // 각 요소가 문법형식에 맞는지 확인
             try {
                 Station.checkIntegrity(inputArr[0]);
@@ -60,31 +62,36 @@ public class CheckTimeTable {
                 System.out.println("잘못된 입력입니다.(문법오류) ");
                 continue;
             }
+            
             // 출발역과 도착역이 같을경우
             if(inputArr[0].equals(inputArr[1])) {
                 System.out.println("역 설정을 다시 해주세요.");
                 continue;
             }
+            
             // 출발역 또는 도착역이 목록에 없을경우
             if(newList.indexOf(inputArr[0]) == -1 || newList.indexOf(inputArr[1]) == -1) {
                 System.out.println("해당 역이 존재하지 않습니다. 다시 입력해 주세요.");
                 continue;
             }
-
-
+            
             // 검색한 시각이 현재 시각보다 전인지 확인(년도)
             if(Integer.parseInt(thistime.substring(0,4)) > Integer.parseInt(inputArr[2].substring(0,4))) {
                 System.out.println("출발시간을 확인해주세요 현재 시각은 " + thistime.substring(8,10) + ":" + thistime.substring(10,12) + "입니다");
                 continue;
             }
+            
             // 검색한 시각이 현재 시각보다 전인지 확인(월일분초)
             if(Integer.parseInt(thistime.substring(4)) > Integer.parseInt(inputArr[2].substring(4))) {
                 System.out.println("출발시간을 확인해주세요 현재 시각은 " + thistime.substring(8,10) + ":" + thistime.substring(10,12) + "입니다");
                 continue;
             }
+            
             // 조건을 모두 만족시 다음으로 이동
-            break;
-        }
+            break; 
+        } // while문 종료
+        
+        
         // 검색에 부합하는 기차 정보 출력
         System.out.println("노선 번호 / 출발 시각 / 출발 역 / 도착 시각 / 도착 역 / (여석 수 / 전체 좌석 수)");
         for (int i = 0; i < timeTableFile.trainlist.size(); i++) {
@@ -106,6 +113,7 @@ public class CheckTimeTable {
                 }
             }
         }
+    
         // 기차 정보 출력이후 예약 메뉴 진입 여부
         while(true) {
             System.out.println("예약 메뉴로 넘어가겠습니까?");
