@@ -6,11 +6,12 @@ import java.nio.file.attribute.FileTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class TempReservation {
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-    private FileTempReserve tempReserveFile;
+    private final static SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
+    private static FileTempReserve tempReserveFile;
     private FileUserInfo userInfoFile;
     private FileReserve reserveFile;
     private FileTimeTable timeTableFile;
@@ -128,6 +129,7 @@ public class TempReservation {
             String line = scanner.nextLine();
             String[] parts = line.split(",");
             // 파일 포맷: 사용자이름,기차출발시간,...
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             LocalDateTime departureTime = LocalDateTime.parse(parts[1], formatter);
             if (parts[0].equals(loginClient.getName()) && departureTime.isAfter(LocalDateTime.now())) {
                 long minutesBetween = java.time.Duration.between(LocalDateTime.now(), departureTime).toMinutes();
@@ -173,8 +175,10 @@ public class TempReservation {
             System.out.println("잘못된 순번입니다.");
         }
     }
-    }
 
+    public static boolean isTimerOn(){
+        return tempReserveFile.isTimerOn();
+    }
     public static String timeRenewal() {
         /*
         기능 :
@@ -193,18 +197,23 @@ public class TempReservation {
             @param diff: 지나간 시간
          */
 
-        Date savedNowComputerDate = formatter.parse(LogInAndTimeInput.getNowComputerTime());
-        Date nowComputerDate = new Date();
-        Date savedNowDate = formatter.parse(LogInAndTimeInput.getNowTime());
+        Date savedNowComputerDate = null;
+        try {
+            savedNowComputerDate = FORMATTER.parse(LogInAndTimeInput.getNowComputerTime());
+            Date nowComputerDate = new Date();
+            Date savedNowDate = FORMATTER.parse(LogInAndTimeInput.getNowTime());
 
-        long time1 = savedNowComputerDate.getTime();
-        long time2 = nowComputerDate.getTime();
-        long nowTime = savedNowDate.getTime();
+            long time1 = savedNowComputerDate.getTime();
+            long time2 = nowComputerDate.getTime();
+            long nowTime = savedNowDate.getTime();
 
-        long diff = time2 - time1;
-        nowTime += diff;
+            long diff = time2 - time1;
+            nowTime += diff;
 
-        return formatter.format(new Date(nowTime));
+            return FORMATTER.format(new Date(nowTime));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String getNewTime() {
@@ -212,7 +221,7 @@ public class TempReservation {
         return tempReserveFile.getNewTime();
     }
 
-    public static void removeTimeOutReserve()
+    public void removeTimeOutReserve()
     {
         // 기능 : 5분이 지난 예약들을 현재 시각을 기준으로 해서 삭제해준다.
         tempReserveFile.removeTimeOutReserve();

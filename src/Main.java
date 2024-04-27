@@ -63,7 +63,7 @@ public class Main {
                 // 예약조회를 입력한 경우 예약조회 클래스의 init() 을 호출합니다.
                 case "가예약확정":
                     tempReservation.init2();
-
+                    break;
                 case "예약조회":
                     reservationAndCancel.init();
                     break;
