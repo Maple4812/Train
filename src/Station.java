@@ -1,9 +1,9 @@
 import java.util.regex.Pattern;
 
 public class Station {
-    private static final String REGEXP_PATTERN_NORMAL = "[가-핳]역"; //xx역 형식
-    private static final String REGEXP_PATTERN_WITHOUT = "[가-핳]"; //xx 형식
-    private static final String REGEXP_PATTERN_DOUBLE = "[가-핳]역역"; //xx역역 형식 (방지하기 위함)
+    private static final String REGEXP_PATTERN_NORMAL = "^[가-핳]역$"; //xx역 형식
+    private static final String REGEXP_PATTERN_WITHOUT = "^[가-핳]$"; //xx 형식
+    private static final String REGEXP_PATTERN_DOUBLE = "^[가-핳]역역$"; //xx역역 형식 (방지하기 위함)
     String station;
 
     public Station(String str) throws FileIntegrityException {

@@ -29,19 +29,37 @@ public class CheckTimeTable {
     }
 
     public int init() throws IOException, FileIntegrityException, ParseException {
-        System.out.print("운형하는 역 : ");
+        System.out.print("운행하는 역 : ");
         // 운행하는 역 출력
-        // 리스트를 만들어 csv파일의 도착역 및 출발역 추가 후 set으로 변환시켜 중복제거
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < timeTableFile.trainlist.size(); i++) {
-            list.add(timeTableFile.trainlist.get(i).fromStation.getStation());
+        // 리스트를 만들어 운행하는 모든 역을 중복 없이 출력
+        List<String> STlist = new ArrayList<>();
+        /*
+            출발역을 중복 제거하여 역 리스트에 추가
+         */
+        for (int i = 0; i < timeTableFile.getTrainlist().size(); i++) {
+            if(!STlist.contains(timeTableFile.getTrainlist().get(i).fromStation.getStation())){
+                STlist.add(timeTableFile.getTrainlist().get(i).fromStation.getStation());
+            }
         }
-        for (int i = 0; i < timeTableFile.trainlist.size(); i++) {
-            list.add(timeTableFile.trainlist.get(i).toStation.getStation());
+        /*
+            도착역을 중복 제거하여 역 리스트에 추가
+         */
+        for (int i = 0; i < timeTableFile.getTrainlist().size(); i++) {
+            if(!STlist.contains(timeTableFile.getTrainlist().get(i).toStation.getStation())){
+                STlist.add(timeTableFile.getTrainlist().get(i).toStation.getStation());
+            }
         }
-        Set<String> set = new HashSet<String>(list);
-        List<String> newList =new ArrayList<String>(set);
-        System.out.println(newList);
+
+        /*
+            역 리스트를 출력
+         */
+        for(int i=0;i<STlist.size();i++){
+            System.out.print(STlist.get(i));
+            if(i!=STlist.size()-1){
+                System.out.print(", ");
+            }
+        }
+        System.out.println();
 
 
         while(true) {
@@ -53,6 +71,13 @@ public class CheckTimeTable {
             Scanner scan = new Scanner(System.in, "UTF-8");
             String input = scan.nextLine();
             inputArr = input.split(",");
+
+            /*
+                Q를 입력 받은 경우 메인 메뉴로 돌아감
+             */
+            if(inputArr.length == 1 && inputArr[0].equals("Q")){
+                return 0;
+            }
 
             // 요소가 3개가 아닐 시 재입력
             if (inputArr.length != 3) {
@@ -78,7 +103,7 @@ public class CheckTimeTable {
             }
 
             // 출발역 또는 도착역이 목록에 없을경우
-            if(newList.indexOf(inputArr[0]) == -1 || newList.indexOf(inputArr[1]) == -1) {
+            if(!STlist.contains(inputArr[0]) || !STlist.contains(inputArr[1])) {
                 System.out.println("해당 역이 존재하지 않습니다. 다시 입력해 주세요.");
                 continue;
             }
@@ -112,27 +137,27 @@ public class CheckTimeTable {
 
         // 검색에 부합하는 기차 정보 출력
         System.out.println("노선 번호 / 출발 시각 / 출발 역 / 도착 시각 / 도착 역 / (여석 수 / 전체 좌석 수)");
-        for (int i = 0; i < timeTableFile.trainlist.size(); i++) {
-            if (timeTableFile.trainlist.get(i).fromStation.getStation().equals(inputArr[0])) {
-                if (timeTableFile.trainlist.get(i).toStation.getStation().equals(inputArr[1])) {
+        for (int i = 0; i < timeTableFile.getTrainlist().size(); i++) {
+            if (timeTableFile.getTrainlist().get(i).fromStation.getStation().equals(inputArr[0])) {
+                if (timeTableFile.getTrainlist().get(i).toStation.getStation().equals(inputArr[1])) {
 
                     //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
-                    Depdate = dtFormat.parse(timeTableFile.trainlist.get(i).depTime);
+                    Depdate = dtFormat.parse(timeTableFile.getTrainlist().get(i).depTime);
                     long diff = inputdate.getTime() - Depdate.getTime();
                     if((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))){
-                        System.out.print(timeTableFile.trainlist.get(i).lineNum);
+                        System.out.print(timeTableFile.getTrainlist().get(i).lineNum);
                         System.out.print("  ");
-                        System.out.print(timeTableFile.trainlist.get(i).depTime);
+                        System.out.print(timeTableFile.getTrainlist().get(i).depTime);
                         System.out.print("  ");
-                        System.out.print(timeTableFile.trainlist.get(i).fromStation.getStation());
+                        System.out.print(timeTableFile.getTrainlist().get(i).fromStation.getStation());
                         System.out.print("  ");
-                        System.out.print(timeTableFile.trainlist.get(i).arrivalTime);
+                        System.out.print(timeTableFile.getTrainlist().get(i).arrivalTime);
                         System.out.print("  ");
-                        System.out.print(timeTableFile.trainlist.get(i).toStation.getStation());
+                        System.out.print(timeTableFile.getTrainlist().get(i).toStation.getStation());
                         System.out.print("  ");
-                        System.out.print(timeTableFile.trainlist.get(i).extraSeat.getSeat());
+                        System.out.print(timeTableFile.getTrainlist().get(i).extraSeat.getSeat());
                         System.out.print("/");
-                        System.out.println(timeTableFile.trainlist.get(i).entireSeat.getSeat());
+                        System.out.println(timeTableFile.getTrainlist().get(i).entireSeat.getSeat());
                     }
 
                 }

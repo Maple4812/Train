@@ -16,6 +16,10 @@ public class FileTimeTable implements FileInterface{
         this.fileName = fileName;
     }
 
+    public ArrayList<Ticket> getTrainlist() {
+        return this.trainlist;
+    }
+
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
         scan= new Scanner(new File(fileName));
@@ -91,8 +95,8 @@ public class FileTimeTable implements FileInterface{
             for(int j=0;j< trainlist.size();j++){
                 if(i!=j){
                     if(     trainlist.get(i).depTime.equals(trainlist.get(j).depTime)
-                            && trainlist.get(i).fromStation.equals(trainlist.get(j).fromStation)
-                            && trainlist.get(i).toStation.equals(trainlist.get(j).toStation)
+                            && trainlist.get(i).fromStation.getStation().equals(trainlist.get(j).fromStation.getStation())
+                            && trainlist.get(i).toStation.getStation().equals(trainlist.get(j).toStation.getStation())
                     ){
                         throw new FileIntegrityException("오류: 출발시간과 출발역 및 도착역이 같은 열차가 있습니다.");
                     }
