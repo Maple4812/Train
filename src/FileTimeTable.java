@@ -16,6 +16,15 @@ public class FileTimeTable implements FileInterface{
         return this.trainlist;
     }
 
+    public Ticket getTicket(String str){
+        for(Ticket ticket : trainlist){
+            if(ticket.lineNum.equals(str)){
+                return ticket;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
         scan= new Scanner(new File(fileName));
