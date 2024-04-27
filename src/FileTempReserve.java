@@ -173,4 +173,16 @@ public class FileTempReserve implements FileInterface{
     public String getFileName() {
         return fileName;
     }
+
+    public int findByLineNum(String userName, String lineNum) {
+        int index = 0;
+        for (ArrayList<String> tempReserve : tempList) {
+            if (tempReserve.get(0).equals(userName)) {
+                if (tempReserve.get(2).equals(lineNum))
+                    return index;
+            }
+            index++;
+        }
+        return -1;
+    }
 }

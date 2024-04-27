@@ -24,6 +24,35 @@ public class FileTimeTable implements FileInterface{
         return null;
     }
 
+    public ArrayList<Ticket> getTicketByDepStation(String depStation) {
+        ArrayList<Ticket> arrayList = new ArrayList<>();
+        for (Ticket ticket : trainlist) {
+            if (ticket.fromStation.getStation().equals(depStation))
+                arrayList.add(ticket);
+        }
+        return arrayList;
+    }
+
+    public ArrayList<Ticket> getTicketByArrStation(String arrStation) {
+        ArrayList<Ticket> arrayList = new ArrayList<>();
+        for (Ticket ticket : trainlist) {
+            if (ticket.toStation.getStation().equals(arrStation))
+                arrayList.add(ticket);
+        }
+        return arrayList;
+    }
+
+    public ArrayList<Ticket> getTicketByDepArrStation(String depStation, String arrStation) {
+        ArrayList<Ticket> arrayList = new ArrayList<>();
+        for (Ticket ticket : trainlist) {
+            if (ticket.fromStation.getStation().equals(depStation)) {
+                if (ticket.toStation.getStation().equals(arrStation))
+                    arrayList.add(ticket);
+            }
+        }
+        return arrayList;
+    }
+
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
         scan= new Scanner(new File(fileName));
@@ -38,15 +67,6 @@ public class FileTimeTable implements FileInterface{
             if(strArr.length != 8) {
                 throw new FileIntegrityException("무결성 오류: 파일에 인자의 개수가 옳지 않은 레코드가 존재합니다.");
             }
-
-            Ticket.checkIntegrity(strArr[0]);  //노선번호 무결성 확인
-            Time.checkIntegrity(strArr[1]);  //출발 시각 무결성 확인
-            Station.checkIntegrity(strArr[2]);  //출발역 무결성 확인
-            Time.checkIntegrity(strArr[3]);  //도착 시각 무결성 확인
-            Station.checkIntegrity(strArr[4]);  //도착역 무결성 확인
-            Price.checkIntegrity(strArr[5]);  //가격 무결성 확인
-            Seat.checkIntegrity(strArr[6]);  //여석 수 무결성 확인
-            Seat.checkIntegrity(strArr[7]);  //전체 좌석 수 무결성 확인
 
             if(strArr[2].equals(strArr[4])){ // 부가 확인 항목 1: 출발역과 도착역이 같은 열차가 존재하는 경우
                 throw new FileIntegrityException("오류: 출발역과 도착역이 같은 열차가 있습니다.");
