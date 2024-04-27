@@ -95,8 +95,8 @@ public class CheckTimeTable {
 
             //검색한 시간이 현재 시각 보다 한달 후 인지 확인
 
-            long re = diff / (1000 * 60 * 60 * 24);
-            if (re > 30){
+            long re = diff / (1000);
+            if (re > 30 * 24 * 60 * 60){
                 System.out.println("한 달 이내의 열차만 예매할 수 있습니다");
                 continue;
             }
@@ -113,19 +113,26 @@ public class CheckTimeTable {
         for (int i = 0; i < timeTableFile.trainlist.size(); i++) {
             if (timeTableFile.trainlist.get(i).fromStation.getStation().equals(inputArr[0])) {
                 if (timeTableFile.trainlist.get(i).toStation.getStation().equals(inputArr[1])) {
-                    System.out.print(timeTableFile.trainlist.get(i).lineNum);
-                    System.out.print("  ");
-                    System.out.print(timeTableFile.trainlist.get(i).depTime);
-                    System.out.print("  ");
-                    System.out.print(timeTableFile.trainlist.get(i).fromStation.getStation());
-                    System.out.print("  ");
-                    System.out.print(timeTableFile.trainlist.get(i).arrivalTime);
-                    System.out.print("  ");
-                    System.out.print(timeTableFile.trainlist.get(i).toStation.getStation());
-                    System.out.print("  ");
-                    System.out.print(timeTableFile.trainlist.get(i).extraSeat.getSeat());
-                    System.out.print("/");
-                    System.out.println(timeTableFile.trainlist.get(i).entireSeat.getSeat());
+
+                    //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
+                    Depdate = dtFormat.parse(timeTableFile.trainlist.get(i).depTime);
+                    long diff = inputdate.getTime() - Depdate.getTime();
+                    if((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))){
+                        System.out.print(timeTableFile.trainlist.get(i).lineNum);
+                        System.out.print("  ");
+                        System.out.print(timeTableFile.trainlist.get(i).depTime);
+                        System.out.print("  ");
+                        System.out.print(timeTableFile.trainlist.get(i).fromStation.getStation());
+                        System.out.print("  ");
+                        System.out.print(timeTableFile.trainlist.get(i).arrivalTime);
+                        System.out.print("  ");
+                        System.out.print(timeTableFile.trainlist.get(i).toStation.getStation());
+                        System.out.print("  ");
+                        System.out.print(timeTableFile.trainlist.get(i).extraSeat.getSeat());
+                        System.out.print("/");
+                        System.out.println(timeTableFile.trainlist.get(i).entireSeat.getSeat());
+                    }
+
                 }
             }
         }
