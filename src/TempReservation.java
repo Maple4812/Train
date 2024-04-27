@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.nio.file.attribute.FileTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -30,49 +31,54 @@ public class TempReservation {
         this.loginClient = loginClient;
     }
 
-    public void init() throws FileIntegrityException {
+    public void init() throws FileIntegrityException, IOException {
         String lineNum = "";
         boolean isConfirmed = false;
         int tickets = 0;
+        Ticket ticket = null;
 
-        System.out.print("예약하시고 싶은 기차표의 노선번호, 확정 여부, 개수(없을 경우 1개)를 입력해주세요: " );
-        String input = scan.next();
-        String[] inputArr = input.split(",");
-        switch (inputArr.length) {  // 입력 인자 개수로 switch
-            case 1:
+        while (true) {
+            System.out.print("예약하시고 싶은 기차표의 노선번호, 확정 여부, 개수(없을 경우 1개)를 입력해주세요: " );
+            String input = scan.next();
+            String[] inputArr = input.split(",");
+            int n = inputArr.length;
+            if(n == 1) {
                 if (inputArr[0].equals("Q")) {
                     System.out.println("메인 프롬프트로 돌아갑니다");
                     return;
-                }
-                else {
+                } else {
                     System.out.println("잘못된 입력입니다.");
+                    continue;
                 }
-                break;
-            case 2:
+            } else if (n == 2) {
                 try {
                     Ticket.checkIntegrity(inputArr[0]);
                 } catch (FileIntegrityException e) {
                     System.out.println("잘못된 노선 번호입니다.");
+                    continue;
                 }
                 try {
-                    if (!(inputArr[1].equals("T") || inputArr[1].equals("F"))){
+                    if (!(inputArr[1].equals("T") || inputArr[1].equals("F"))) {
                         throw new FileIntegrityException();
                     }
                 } catch (FileIntegrityException e) {
                     System.out.println("잘못된 입력입니다.");
+                    continue;
                 }
-            case 3:
+            } else if (n == 3) {
                 try {
                     Ticket.checkIntegrity(inputArr[0]);
                 } catch (FileIntegrityException e) {
                     System.out.println("잘못된 노선 번호입니다.");
+                    continue;
                 }
                 try {
-                    if (!(inputArr[1].equals("t") || inputArr[1].equals("f"))){
+                    if (!(inputArr[1].equals("t") || inputArr[1].equals("f"))) {
                         throw new FileIntegrityException();
                     }
                 } catch (FileIntegrityException e) {
                     System.out.println("잘못된 입력입니다.");
+                    continue;
                 }
                 try {
                     tickets = Integer.parseInt(inputArr[2]);  // 정수형태로 parseInt
@@ -81,12 +87,15 @@ public class TempReservation {
                     }
                 } catch (NumberFormatException e) {  // 정수가 아닐 때
                     System.out.println("잘못된 입력입니다.");
+                    continue;
                 } catch (FileIntegrityException e) {  // 1 이상의 정수가 아닐 때
                     System.out.println("예매 수가 올바르지 않습니다. 1 이상의 정수를 입력하세요.");
+                    continue;
                 }
-            default:
+            } else {
                 System.out.println("잘못된 입력입니다.");
-
+                continue;
+            }
             lineNum = inputArr[0];                //여기서 각 인수를 변수에 넣는다
             if(inputArr[1].equals("T")) {
                 isConfirmed = true;
@@ -94,30 +103,35 @@ public class TempReservation {
             else if (inputArr[1].equals("F")){
                 isConfirmed = false;
             }
-            //TODO 여기서 해야하는 것!!!!!!!!: 위에서 받은 내용을 바탕으로 한 티켓이 실제로 timetable.csv에 존재하는지 확인해야 한다.
-            Ticket ticket = timeTableFile.getTicket(lineNum);  // 티켓의 노선번호로 티켓 객체를 가져오는 임의의 함수입니다.
-            //TODO 예약을 한 다음(예약 확정을 한 다음) timetable.csv 에서 여석 수를 줄인다.
+            ticket = timeTableFile.getTicket(lineNum);  // 티켓의 노선번호로 티켓 객체를 가져오는 임의의 함수입니다.
+            if (ticket == null) {
+                System.out.println("잘못된 노선번호입니다.");
+                continue;
+            }
+            timeTableFile.reduceExtraSeat(lineNum, tickets);
             if (tickets > ticket.extraSeat.getSeat()) {
                 System.out.println("해당 열차에서는 최대 " + ticket.extraSeat + "개의 좌석만 예약할 수 있습니다.");
+                continue;
             }
-            //일반 예약인 경우
-            if(isConfirmed) {
-                for (int i = 0; i < tickets; i++) {
-                    reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime);
-                }
-                System.out.println(ticket.arrivalTime +"에 출발하는 " + ticket.lineNum + " " + tickets + "장을 예매 확정지었습니다.");
-            }
-            //가예약인 경우
             else {
-                for (int i = 0; i < tickets; i++) {
-                    //TODO 위에랑 마찬가지
-                    reserveFile.write(FileUserInfo.userName, FileUserInfo.phoneNumber, ticket.lineNum, ticket.arrivalTime);
-                    Date now = new Date();
-                    String formattedNow = formatter.format(now);
-                    tempReserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime, ticket.depTime, formattedNow);
-                }
-                System.out.println(ticket.arrivalTime +"에 출발하는 " + ticket.lineNum + " " + tickets + "가예약 했습니다.");
+                break;
             }
+        }
+        //일반 예약인 경우
+        if(isConfirmed) {
+            for (int i = 0; i < tickets; i++) {
+                reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime);
+            }
+            System.out.println(ticket.arrivalTime +"에 출발하는 " + ticket.lineNum + " " + tickets + "장을 예매 확정지었습니다.");
+        }
+        //가예약인 경우
+        else {
+            for (int i = 0; i < tickets; i++) {
+                Date now = new Date();
+                String formattedNow = FORMATTER.format(now);
+                tempReserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime, ticket.depTime, formattedNow);
+            }
+            System.out.println(ticket.arrivalTime +"에 출발하는 " + ticket.lineNum + " " + tickets + "장을 가예약 했습니다.");
         }
     }
 
@@ -134,7 +148,7 @@ public class TempReservation {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             LocalDateTime departureTime = LocalDateTime.parse(parts[1], formatter);
             if (parts[0].equals(loginClient.getName()) && departureTime.isAfter(LocalDateTime.now())) {
-                long minutesBetween = java.time.Duration.between(LocalDateTime.now(), departureTime).toMinutes();
+                long minutesBetween = Duration.between(LocalDateTime.now(), departureTime).toMinutes();
                 if (minutesBetween > 20) {
                     System.out.println(line + " - 20분이 지나 삭제되었습니다.");
                     // 이 레코드는 리스트에 추가하지 않음으로써 삭제 효과를 낸다.

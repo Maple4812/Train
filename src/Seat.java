@@ -22,6 +22,14 @@ public class Seat {
         }
     }
 
+    public void reduceSeat(int n) {
+        int temp = Integer.parseInt(seat);
+        for (int i = 0; i < n; i++) {
+            temp--;
+        }
+        this.seat = Integer.toString(temp);
+    }
+
     public int getSeat() {
         return Integer.parseInt(seat);
     }

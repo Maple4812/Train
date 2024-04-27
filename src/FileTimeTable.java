@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -131,5 +130,54 @@ public class FileTimeTable implements FileInterface{
             }
         }
 
+    }
+
+    public void reduceExtraSeat(String lineNum, int n) throws IOException {
+        Ticket ticket = getTicket(lineNum);
+        ticket.extraSeat.reduceSeat(n);
+        scan = new Scanner(new File(fileName));
+
+        PrintWriter tempWriter = new PrintWriter(new FileWriter("temp.txt"));  // 파일의 내용을 지우고 수정하는 데 있어서 파일 삭제가 불가피했습니다.
+        String newString = null;
+        while(scan.hasNextLine()) {
+            String[] strArr = scan.nextLine().split(",");
+            StringBuilder newStr = new StringBuilder();
+            if (strArr[0].equals(lineNum)) {
+                int seatTemp = Integer.parseInt(strArr[6]);
+                for (int i = 0; i < strArr.length; i++) {
+                    if(i < strArr.length - 1) {
+                        if (i == 6) {
+                            newStr.append(seatTemp).append(",");
+                        }
+                        else {
+                            newStr.append(strArr[i]).append(",");
+                        }
+                    }
+                    else {
+                        newStr.append(strArr[i]);
+                    }
+                }
+                newString = newStr.toString();
+            }
+            else {
+                for (int i = 0; i < strArr.length; i++) {
+                    if(i < strArr.length - 1) {
+                        newStr.append(strArr[i]).append(",");
+                    }
+                    else {
+                        newStr.append(strArr[i]);
+                    }
+                }
+                tempWriter.println(newStr);
+            }
+        }
+        tempWriter.println(newString);
+        tempWriter.close();
+
+        File originalFile = new File(fileName);
+        File tempFile = new File("temp.txt");
+        if (tempFile.renameTo(originalFile)) {
+            System.out.print("");
+        }
     }
 }
