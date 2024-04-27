@@ -54,6 +54,7 @@ public class LogInAndTimeInput {
             return;
         }
         
+        // 클라이언트 객체 생성
         client = new Client(userName, phoneNumber);
 
         // TempReserve의 타이머가 꺼져있는 경우
