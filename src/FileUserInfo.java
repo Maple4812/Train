@@ -23,4 +23,16 @@ public class FileUserInfo implements FileInterface{
         }
 
     }
+    public void write(String userName, String phoneNumber) {
+        File file = new File(fileName);
+        try {
+            fw = new FileWriter(file);
+            writer = new PrintWriter(fw);
+            String str = userName + "," + phoneNumber;
+            writer.println(str);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
