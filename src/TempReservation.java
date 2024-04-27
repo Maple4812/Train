@@ -35,7 +35,7 @@ public class TempReservation {
         boolean isConfirmed = false;
         int tickets = 0;
 
-        System.out.print("예약 확정/예약 취소 중 선택해주세요:" );
+        System.out.print("예약하시고 싶은 기차표의 노선번호, 확정 여부, 개수(없을 경우 1개)를 입력해주세요: " );
         String input = scan.next();
         String[] inputArr = input.split(",");
         switch (inputArr.length) {  // 입력 인자 개수로 switch
@@ -103,8 +103,7 @@ public class TempReservation {
             //일반 예약인 경우
             if(isConfirmed) {
                 for (int i = 0; i < tickets; i++) {
-                    // TODO client 가져와서 이름 및 전화번호 얻고 예약 컴퓨터 시간까지 넣기
-                    tempReserveFile.write(FileUserInfo.userName, FileUserInfo.phoneNumber, ticket.lineNum, ticket.arrivalTime, ticket.depTime, "예약 컴퓨터 시각");
+                    reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime);
                 }
                 System.out.println(ticket.arrivalTime +"에 출발하는 " + ticket.lineNum + " " + tickets + "장을 예매 확정지었습니다.");
             }
@@ -113,6 +112,9 @@ public class TempReservation {
                 for (int i = 0; i < tickets; i++) {
                     //TODO 위에랑 마찬가지
                     reserveFile.write(FileUserInfo.userName, FileUserInfo.phoneNumber, ticket.lineNum, ticket.arrivalTime);
+                    Date now = new Date();
+                    String formattedNow = formatter.format(now);
+                    tempReserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime, ticket.depTime, formattedNow);
                 }
                 System.out.println(ticket.arrivalTime +"에 출발하는 " + ticket.lineNum + " " + tickets + "가예약 했습니다.");
             }
