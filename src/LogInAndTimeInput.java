@@ -26,6 +26,7 @@ public class LogInAndTimeInput {
     public static Client getClient() {
         return client;
     }
+    
     public void init() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("사용자 이름과 전화번호를 입력하세요 (이름,전화번호):");
