@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,12 @@ public class ReservationAndCancel {
      *
      * @author 변수혁
      */
+    private static final double FEE_RATE_FREE = 0.0;
+    private static final double FEE_RATE_5_PERCENT = 0.05;
+    private static final double FEE_RATE_10_PERCENT = 0.10;
+    private static final double FEE_RATE_15_PERCENT = 0.15;
+    private static final double FEE_RATE_40_PERCENT = 0.40;
+    private static final double FEE_RATE_70_PERCENT = 0.70;
     private FileTempReserve fileTempReserve;
     private FileReserve fileReserve;
     private ArrayList<String[]> clientTempReservationList;
@@ -25,7 +33,7 @@ public class ReservationAndCancel {
     }
 
     public void init() {
-        Client client = new Client();
+        Client client = LogInAndTimeInput.getClient();
         this.clientName = client.getName();
         this.clientPhoneNumber = client.getPhoneNumber();
         //private FileTimeTable fileTimeTable;
@@ -103,8 +111,32 @@ public class ReservationAndCancel {
         return data;
     }
 
+    public int calcCancelFee(String departureTime){
+        String nowTime = LogInAndTimeInput.getNowTime();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        LocalDateTime depTime = LocalDateTime.parse(departureTime, formatter);
+        LocalDateTime currentTime = LocalDateTime.parse(nowTime, formatter);
+
+        long minutesDifference = java.time.Duration.between(currentTime, depTime).toMinutes();
+
+        int cancellationFee = 0;
+        if (minutesDifference <= 20) {
+            cancellationFee = (int) (FEE_RATE_15_PERCENT * 100);
+        } else if (minutesDifference <= 60) {
+            cancellationFee = (int) (FEE_RATE_40_PERCENT * 100);
+        } else if (minutesDifference < 180) {
+            cancellationFee = (int) (FEE_RATE_70_PERCENT * 100);
+        } else if (minutesDifference < 1440) { // 1 day
+            cancellationFee = (int) (FEE_RATE_5_PERCENT * 100);
+        } else if (minutesDifference < 43200) { // 1 month
+            cancellationFee = (int) (FEE_RATE_FREE * 100); // Free cancellation
+        } else if (minutesDifference < 518400) { // 6 days (518400 minutes)
+            cancellationFee = (int) (FEE_RATE_10_PERCENT * 100);
+        }
+        return cancellationFee;
+    }
 
     // 취소 입력 구현
-    // 취소 수수료 계산
-
+    //열차 취소시 csv파일에서 삭제
 }
