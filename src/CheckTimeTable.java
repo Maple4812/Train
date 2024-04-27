@@ -18,7 +18,7 @@ public class CheckTimeTable {
     // 임시 시간!! 지우게 될것
     String thistime = "202111230830";
 
-    
+
     SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMMddHHmm");
     Date currentdate = new Date();
     Date inputdate = new Date();
@@ -72,6 +72,10 @@ public class CheckTimeTable {
             String input = scan.nextLine();
             inputArr = input.split(",");
 
+            Station station1 = new Station(inputArr[0]);
+            inputArr[0] = station1.getStation();
+            Station station2 = new Station(inputArr[1]);
+            inputArr[1] = station2.getStation();
             /*
                 Q를 입력 받은 경우 메인 메뉴로 돌아감
              */
