@@ -1,5 +1,11 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.attribute.FileTime;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class TempReservation {
@@ -8,15 +14,19 @@ public class TempReservation {
     private FileUserInfo userInfoFile;
     private FileReserve reserveFile;
     private FileTimeTable timeTableFile;
+    private Client loginClient;
     ReservationAndCancel reservationAndCancel = new ReservationAndCancel();
     Scanner scan = new Scanner(System.in);
+    private String tempReservationFilePath = "tempReservationFilePath";
+    private String reservationFilePath = "reservationFilePath";
 
-    public TempReservation(FileInterface userInfoFile, FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile)
+    public TempReservation(FileInterface userInfoFile, FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile, Client loginClient)
     {
         this.tempReserveFile = (FileTempReserve) tempReserveFile;
         this.userInfoFile = (FileUserInfo) userInfoFile;
         this.reserveFile = (FileReserve) reserveFile;
         this.timeTableFile = (FileTimeTable) timeTableFile;
+        this.loginClient = loginClient;
     }
 
     public void init() throws FileIntegrityException {
@@ -106,6 +116,63 @@ public class TempReservation {
                 System.out.println(ticket.arrivalTime +"에 출발하는 " + ticket.lineNum + " " + tickets + "가예약 했습니다.");
             }
         }
+    }
+
+    public void init2() throws IOException {
+        File tempFile = new File(tempReservationFilePath);
+        Scanner scanner = new Scanner(tempFile);
+        List<String> tempReservations = new ArrayList<>();
+        boolean hasReservation = false;
+
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] parts = line.split(",");
+            // 파일 포맷: 사용자이름,기차출발시간,...
+            LocalDateTime departureTime = LocalDateTime.parse(parts[1], formatter);
+            if (parts[0].equals(loginClient.getName()) && departureTime.isAfter(LocalDateTime.now())) {
+                long minutesBetween = java.time.Duration.between(LocalDateTime.now(), departureTime).toMinutes();
+                if (minutesBetween > 20) {
+                    System.out.println(line + " - 20분이 지나 삭제되었습니다.");
+                    // 이 레코드는 리스트에 추가하지 않음으로써 삭제 효과를 낸다.
+                    continue;
+                }
+                System.out.println(line);
+                tempReservations.add(line);
+                hasReservation = true;
+            }
+        }
+        scanner.close();
+
+        // 가예약이 없을 경우 메소드 종료
+        if (!hasReservation) {
+            System.out.println("확정할 예약이 없습니다.");
+            return;
+        }
+
+        // 사용자에게 가예약 중 하나를 확정하도록 요청
+        System.out.println("확정할 가예약 순번을 입력하세요:");
+        Scanner inputScanner = new Scanner(System.in);
+        int reservationIndex = inputScanner.nextInt();
+        inputScanner.close();
+
+        // 입력받은 순번에 해당하는 가예약을 실제 예약으로 이동
+        if (reservationIndex >= 0 && reservationIndex < tempReservations.size()) {
+            String selectedReservation = tempReservations.remove(reservationIndex);
+            // 실제 예약 파일에 추가
+            PrintWriter out = new PrintWriter(new FileWriter(reservationFilePath, true));
+            out.println(selectedReservation);
+            out.close();
+
+            // 가예약 파일 업데이트
+//            PrintWriter tempOut = new PrintWriter(new FileWriter(tempReservationFilePath));
+//            for (String tempReservation : tempReservations) {
+//                tempOut.println(tempReservation);
+//            }
+//            tempOut.close();
+        } else {
+            System.out.println("잘못된 순번입니다.");
+        }
+    }
     }
 
     public static String timeRenewal() {
