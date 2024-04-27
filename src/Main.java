@@ -34,7 +34,7 @@ public class Main {
 
         LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput(...);
         CheckTimeTable checkTimeTable = new CheckTimeTable(...);
-        TempReservation tempReservation = new TempReservation(fileUserInfo, fileReserve, fileTempReserve, fileTimeTable);
+        TempReservation tempReservation = new TempReservation(fileUserInfo, fileReserve, fileTempReserve, fileTimeTable, );
         ReservationAndCancel reservationAndCancel = new ReservationAndCancel(...);
 
         // 가장 처음 사용자로부터 정보들을 입력받습니다.
@@ -61,6 +61,9 @@ public class Main {
                     tempReservation.init();
                     break;
                 // 예약조회를 입력한 경우 예약조회 클래스의 init() 을 호출합니다.
+                case "가예약확정":
+                    tempReservation.init2();
+
                 case "예약조회":
                     reservationAndCancel.init();
                     break;
