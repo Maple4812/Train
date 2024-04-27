@@ -47,6 +47,24 @@ public class FileTimeTable implements FileInterface{
             if(strArr[2].equals(strArr[4])){ // 부가 확인 항목 1: 출발역과 도착역이 같은 열차가 존재하는 경우
                 throw new FileIntegrityException("오류: 출발역과 도착역이 같은 열차가 있습니다.");
             }
+            
+            /*
+                출발 시각과 도착 시각의 선후관계가 올바른지 무결성검사를 진행합니다.
+             */
+            // 출발 시각의 연도가 더 큰 경우
+            if(Integer.parseInt(strArr[1].substring(0,4))>Integer.parseInt(strArr[3].substring(0,4))){
+                throw new FileIntegrityException("오류: 도착 시각이 출발 시각보다 이릅니다.");
+            }
+
+            // 출발 시각의 월/일이 더 큰 경우
+            if(Integer.parseInt(strArr[1].substring(4,8))>Integer.parseInt(strArr[3].substring(4,8))){
+                throw new FileIntegrityException("오류: 도착 시각이 출발 시각보다 이릅니다.");
+            }
+
+            // 출발 시각의 시/분이 더 큰 경우
+            if(Integer.parseInt(strArr[1].substring(8,12))>Integer.parseInt(strArr[3].substring(8,12))){
+                throw new FileIntegrityException("오류: 도착 시각이 출발 시각보다 이릅니다.");
+            }
 
             /*
                 여석 수의 의미 규칙에 따라 여석 수가 전체 좌석 수보다 큰지 무결성 검사를 진행합니다.
