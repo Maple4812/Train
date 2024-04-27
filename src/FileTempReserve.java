@@ -162,4 +162,10 @@ public class FileTempReserve implements FileInterface{
             System.out.println("ParsingError!");
         }
     }
+
+    //ReservationAndCancel에서 사용자별 예약정보를 출력하기 위해 이 항목에서 fileName을 get 하기 위해 만든 getter입니다.
+
+    public String getFileName() {
+        return fileName;
+    }
 }
