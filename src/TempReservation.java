@@ -1,10 +1,11 @@
 import java.nio.file.attribute.FileTime;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TempReservation {
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-    private FileTempReserve tempReserveFile;
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
+    private static FileTempReserve tempReserveFile;
     private FileUserInfo userInfoFile;
     private FileReserve reserveFile;
     private FileTimeTable timeTableFile;
@@ -108,6 +109,10 @@ public class TempReservation {
         }
     }
 
+    public static boolean isTimerOn(){
+        return tempReserveFile.isTimerOn();
+    }
+
     public static String timeRenewal() {
         /*
         기능 :
@@ -126,18 +131,23 @@ public class TempReservation {
             @param diff: 지나간 시간
          */
 
-        Date savedNowComputerDate = formatter.parse(LogInAndTimeInput.getNowComputerTime());
-        Date nowComputerDate = new Date();
-        Date savedNowDate = formatter.parse(LogInAndTimeInput.getNowTime());
+        Date savedNowComputerDate = null;
+        try {
+            savedNowComputerDate = FORMATTER.parse(LogInAndTimeInput.getNowComputerTime());
+            Date nowComputerDate = new Date();
+            Date savedNowDate = FORMATTER.parse(LogInAndTimeInput.getNowTime());
 
-        long time1 = savedNowComputerDate.getTime();
-        long time2 = nowComputerDate.getTime();
-        long nowTime = savedNowDate.getTime();
+            long time1 = savedNowComputerDate.getTime();
+            long time2 = nowComputerDate.getTime();
+            long nowTime = savedNowDate.getTime();
 
-        long diff = time2 - time1;
-        nowTime += diff;
+            long diff = time2 - time1;
+            nowTime += diff;
 
-        return formatter.format(new Date(nowTime));
+            return FORMATTER.format(new Date(nowTime));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String getNewTime() {

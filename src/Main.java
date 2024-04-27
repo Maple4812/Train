@@ -53,8 +53,9 @@ public class Main {
                     return;
                 // 시간표조회를 입력한 경우 시간표조회 클래스의 init() 을 호출합니다.
                 case "시간표조회":
-                    checkTimeTable.init();
-                    break;
+                    int result = checkTimeTable.init();
+                    if(result != 1)
+                        break;
                 // 기차표예약을 입력한 경우 기차표예약 클래스의 init() 을 호출합니다.
                 case "기차표예약":
                     tempReservation.init();
