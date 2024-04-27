@@ -18,6 +18,7 @@ public class TempReservation {
         this.reserveFile = (FileReserve) reserveFile;
         this.timeTableFile = (FileTimeTable) timeTableFile;
     }
+
     public void init() throws FileIntegrityException {
         String lineNum = "";
         boolean isConfirmed = false;
@@ -67,9 +68,9 @@ public class TempReservation {
                     if (tickets <= 0) {  //자연수인지 확인
                         throw new FileIntegrityException();
                     }
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {  // 정수가 아닐 때
                     System.out.println("잘못된 입력입니다.");
-                } catch (FileIntegrityException e) {
+                } catch (FileIntegrityException e) {  // 1 이상의 정수가 아닐 때
                     System.out.println("예매 수가 올바르지 않습니다. 1 이상의 정수를 입력하세요.");
                 }
             default:
