@@ -18,4 +18,8 @@ public class Price {
             throw new FileIntegrityException("가격 무결성 오류");
         }
     }
+
+    public String getPrice() {
+        return price;
+    }
 }

@@ -1,19 +1,19 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-//import java.io.FileWriter;
-//import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileTimeTable implements FileInterface{
     private String fileName;
-//    private FileWriter fw; // 예약 시 여석 수가 줄어드는 걸 csv 파일에 업데이트해야함
-//    private PrintWriter writer;
     private ArrayList<Ticket> trainlist=new ArrayList<>(); //timetable.csv의 한 줄에 저장된 정보를 각 줄 마다 ticket 객체로 묶어 저장
     Scanner scan;
 
     public FileTimeTable(String fileName) throws FileNotFoundException {
         this.fileName = fileName;
+    }
+
+    public ArrayList<Ticket> getTrainlist() {
+        return this.trainlist;
     }
 
     @Override
@@ -42,6 +42,28 @@ public class FileTimeTable implements FileInterface{
 
             if(strArr[2].equals(strArr[4])){ // 부가 확인 항목 1: 출발역과 도착역이 같은 열차가 존재하는 경우
                 throw new FileIntegrityException("오류: 출발역과 도착역이 같은 열차가 있습니다.");
+            }
+            
+            /*
+                ********************************************************
+                이 부분은 기획서 수정이 필요해 보입니다. 기획서에 출발 시각과 도착 시각에 대한 규칙이 따로 정의되어 있지 않고
+                단지 시각 형식만 따른다고 되어 있습니다.
+                출발 시각과 도착 시각의 선후관계가 올바른지 무결성검사를 진행합니다.
+                ********************************************************
+             */
+            // 출발 시각의 연도가 더 큰 경우
+            if(Integer.parseInt(strArr[1].substring(0,4))>Integer.parseInt(strArr[3].substring(0,4))){
+                throw new FileIntegrityException("오류: 도착 시각이 출발 시각보다 이릅니다.");
+            }
+
+            // 출발 시각의 월/일이 더 큰 경우
+            if(Integer.parseInt(strArr[1].substring(4,8))>Integer.parseInt(strArr[3].substring(4,8))){
+                throw new FileIntegrityException("오류: 도착 시각이 출발 시각보다 이릅니다.");
+            }
+
+            // 출발 시각의 시/분이 더 큰 경우
+            if(Integer.parseInt(strArr[1].substring(8,12))>Integer.parseInt(strArr[3].substring(8,12))){
+                throw new FileIntegrityException("오류: 도착 시각이 출발 시각보다 이릅니다.");
             }
 
             /*
@@ -91,8 +113,8 @@ public class FileTimeTable implements FileInterface{
             for(int j=0;j< trainlist.size();j++){
                 if(i!=j){
                     if(     trainlist.get(i).depTime.equals(trainlist.get(j).depTime)
-                            && trainlist.get(i).fromStation.equals(trainlist.get(j).fromStation)
-                            && trainlist.get(i).toStation.equals(trainlist.get(j).toStation)
+                            && trainlist.get(i).fromStation.getStation().equals(trainlist.get(j).fromStation.getStation())
+                            && trainlist.get(i).toStation.getStation().equals(trainlist.get(j).toStation.getStation())
                     ){
                         throw new FileIntegrityException("오류: 출발시간과 출발역 및 도착역이 같은 열차가 있습니다.");
                     }
