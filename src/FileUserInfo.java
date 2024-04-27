@@ -1,4 +1,3 @@
-import java.io.FileNotFoundException;
 import java.io.*;
 import java.util.Scanner;
 
@@ -11,7 +10,7 @@ public class FileUserInfo implements FileInterface{
         this.fileName = fileName;
     }
     @Override
-    public void checkIntegrity() throws FileNotFoundException {
+    public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
         scan = new Scanner(new File(fileName));
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다은 split
