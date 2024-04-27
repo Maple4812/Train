@@ -17,7 +17,6 @@ public class TempReservation {
     private FileReserve reserveFile;
     private FileTimeTable timeTableFile;
     private Client loginClient;
-    ReservationAndCancel reservationAndCancel = new ReservationAndCancel();
     Scanner scan = new Scanner(System.in);
     private String tempReservationFilePath = "tempReservationFilePath";
     private String reservationFilePath = "reservationFilePath";

@@ -14,12 +14,14 @@ public class ReservationAndCancel {
     private FileReserve fileReserve;
     private ArrayList<String[]> clientTempReservationList;
     private ArrayList<String[]> clientReservationList;
+    private FileTimeTable timeTableFile;
     String clientName;
     String clientPhoneNumber;
 
-    public ReservationAndCancel(FileInterface fileTempReserve, FileInterface fileReserve) {
+    public ReservationAndCancel(FileInterface fileTempReserve, FileInterface fileReserve, FileInterface timeTableFile) {
         this.fileReserve = (FileReserve) fileReserve;
         this.fileTempReserve = (FileTempReserve) fileTempReserve;
+        this.timeTableFile = (FileTimeTable) timeTableFile;
     }
 
     public void init() {
@@ -34,6 +36,7 @@ public class ReservationAndCancel {
         clientTempReservationList = makeClientReserveList(tempReservationList, clientPhoneNumber);
         System.out.println("가예약 및 예약 취소 메뉴입니다.");
         //Client 객체 생성 및 출력(loginAndTimeInput에서 받아옴)
+
 
         if (!clientTempReservationList.isEmpty()) {
             System.out.println(clientName + " / " + clientPhoneNumber + "님의 가예약 정보입니다.");
@@ -70,8 +73,9 @@ public class ReservationAndCancel {
         int i = 1;
 
         for (String[] row : reservationList) {
-            System.out.println("#" + (i) + " " + String.join(" / ", row));
-            i++;
+            String trainNum = row[0];
+            String ticketInfo = timeTableFile.getTicket(trainNum).toString(); // Assuming getTicket returns a String
+            System.out.println("#" + (i++) + " " + ticketInfo); // Incrementing i within the println statement
         }
     }
 

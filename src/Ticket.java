@@ -15,4 +15,11 @@ public class Ticket {
             throw new FileIntegrityException("노선번호 무결성 오류");
         }
     }
+
+    //Ticket 정보 출력하기 위한 toString
+
+    @Override
+    public String toString() {
+        return lineNum + " " + depTime + " " + fromStation + " " + arrivalTime + " " + toStation;
+    }
 }
