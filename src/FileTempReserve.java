@@ -11,7 +11,7 @@ public class FileTempReserve implements FileInterface{
     private String fileName;
     private FileWriter fw;
     private PrintWriter writer;
-    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+    private final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
     private ArrayList<ArrayList<String>> tempList;
     public FileTempReserve(String fileName) throws FileNotFoundException {
         this.fileName = fileName;
@@ -96,8 +96,8 @@ public class FileTempReserve implements FileInterface{
 
             for(ArrayList<String> record : tempList)
             {
-                Date reserveDate = formatter.parse(record.get(4));
-                Date reserveComputerDate = formatter.parse(record.get(5));
+                Date reserveDate = FORMATTER.parse(record.get(4));
+                Date reserveComputerDate = FORMATTER.parse(record.get(5));
                 if(lastestDate.before(reserveDate))
                 {
                     lastestDate = reserveDate;
@@ -105,7 +105,7 @@ public class FileTempReserve implements FileInterface{
                 }
             }
 
-            Date SavedNowComputerDate = formatter.parse(LogInAndTimeInput.getNowComputerTime());
+            Date SavedNowComputerDate = FORMATTER.parse(LogInAndTimeInput.getNowComputerTime());
 
             // 프로그램을 킨 순간의 컴퓨터 시각과 예약된 가장 최근의 컴퓨터시각을 비교하기 위해 .getTime() 을 호출한다.
             long time1 = SavedNowComputerDate.getTime();
@@ -121,7 +121,7 @@ public class FileTempReserve implements FileInterface{
             lastestDate = new Date(timeDiff + time3);
 
             // 12자리 문자열의 형태로 변환 후 return 한다.
-            return formatter.format(lastestDate);
+            return FORMATTER.format(lastestDate);
         }catch (ParseException ignore)
         {
             // 만약 프로그램 동작 도중 데이터의 변환으로 인해 parsing error 가 발생한다면
@@ -139,15 +139,15 @@ public class FileTempReserve implements FileInterface{
         if(tempList.isEmpty())
             return;
 
-        // 저장되어있는 현재 시각을 불러온다
-        Date savedNowDate = formatter.parse(LogInAndTimeInput.getNowTime());
-        long NowTime = savedNowDate.getTime();
-
         try{
+            // 저장되어있는 현재 시각을 불러온다
+            Date savedNowDate = FORMATTER.parse(LogInAndTimeInput.getNowTime());
+            long NowTime = savedNowDate.getTime();
+
             for(ArrayList<String> record: tempList)
             {
                 // 저장된 예약 시각들을 받는다.
-                Date reserveDate = formatter.parse(record.get(4));
+                Date reserveDate = FORMATTER.parse(record.get(4));
                 long reserveTime = reserveDate.getTime();
 
                 // 현재시각과 예약시각의 차이를 분 단위로 구한다.

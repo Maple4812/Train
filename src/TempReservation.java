@@ -1,22 +1,33 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.attribute.FileTime;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class TempReservation {
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-    private FileTempReserve tempReserveFile;
+    private final static SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
+    private static FileTempReserve tempReserveFile;
     private FileUserInfo userInfoFile;
     private FileReserve reserveFile;
     private FileTimeTable timeTableFile;
+    private Client loginClient;
     ReservationAndCancel reservationAndCancel = new ReservationAndCancel();
     Scanner scan = new Scanner(System.in);
+    private String tempReservationFilePath = "tempReservationFilePath";
+    private String reservationFilePath = "reservationFilePath";
 
-    public TempReservation(FileInterface userInfoFile, FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile)
+    public TempReservation(FileInterface userInfoFile, FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile, Client loginClient)
     {
         this.tempReserveFile = (FileTempReserve) tempReserveFile;
         this.userInfoFile = (FileUserInfo) userInfoFile;
         this.reserveFile = (FileReserve) reserveFile;
         this.timeTableFile = (FileTimeTable) timeTableFile;
+        this.loginClient = loginClient;
     }
 
     public void init() throws FileIntegrityException {
@@ -24,7 +35,7 @@ public class TempReservation {
         boolean isConfirmed = false;
         int tickets = 0;
 
-        System.out.print("예약 확정/예약 취소 중 선택해주세요:" );
+        System.out.print("예약하시고 싶은 기차표의 노선번호, 확정 여부, 개수(없을 경우 1개)를 입력해주세요: " );
         String input = scan.next();
         String[] inputArr = input.split(",");
         switch (inputArr.length) {  // 입력 인자 개수로 switch
@@ -92,8 +103,7 @@ public class TempReservation {
             //일반 예약인 경우
             if(isConfirmed) {
                 for (int i = 0; i < tickets; i++) {
-                    // TODO client 가져와서 이름 및 전화번호 얻고 예약 컴퓨터 시간까지 넣기
-                    tempReserveFile.write(FileUserInfo.userName, FileUserInfo.phoneNumber, ticket.lineNum, ticket.arrivalTime, ticket.depTime, "예약 컴퓨터 시각");
+                    reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime);
                 }
                 System.out.println(ticket.arrivalTime +"에 출발하는 " + ticket.lineNum + " " + tickets + "장을 예매 확정지었습니다.");
             }
@@ -102,12 +112,75 @@ public class TempReservation {
                 for (int i = 0; i < tickets; i++) {
                     //TODO 위에랑 마찬가지
                     reserveFile.write(FileUserInfo.userName, FileUserInfo.phoneNumber, ticket.lineNum, ticket.arrivalTime);
+                    Date now = new Date();
+                    String formattedNow = formatter.format(now);
+                    tempReserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime, ticket.depTime, formattedNow);
                 }
                 System.out.println(ticket.arrivalTime +"에 출발하는 " + ticket.lineNum + " " + tickets + "가예약 했습니다.");
             }
         }
     }
 
+    public void init2() throws IOException {
+        File tempFile = new File(tempReservationFilePath);
+        Scanner scanner = new Scanner(tempFile);
+        List<String> tempReservations = new ArrayList<>();
+        boolean hasReservation = false;
+
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] parts = line.split(",");
+            // 파일 포맷: 사용자이름,기차출발시간,...
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+            LocalDateTime departureTime = LocalDateTime.parse(parts[1], formatter);
+            if (parts[0].equals(loginClient.getName()) && departureTime.isAfter(LocalDateTime.now())) {
+                long minutesBetween = java.time.Duration.between(LocalDateTime.now(), departureTime).toMinutes();
+                if (minutesBetween > 20) {
+                    System.out.println(line + " - 20분이 지나 삭제되었습니다.");
+                    // 이 레코드는 리스트에 추가하지 않음으로써 삭제 효과를 낸다.
+                    continue;
+                }
+                System.out.println(line);
+                tempReservations.add(line);
+                hasReservation = true;
+            }
+        }
+        scanner.close();
+
+        // 가예약이 없을 경우 메소드 종료
+        if (!hasReservation) {
+            System.out.println("확정할 예약이 없습니다.");
+            return;
+        }
+
+        // 사용자에게 가예약 중 하나를 확정하도록 요청
+        System.out.println("확정할 가예약 순번을 입력하세요:");
+        Scanner inputScanner = new Scanner(System.in);
+        int reservationIndex = inputScanner.nextInt();
+        inputScanner.close();
+
+        // 입력받은 순번에 해당하는 가예약을 실제 예약으로 이동
+        if (reservationIndex >= 0 && reservationIndex < tempReservations.size()) {
+            String selectedReservation = tempReservations.remove(reservationIndex);
+            // 실제 예약 파일에 추가
+            PrintWriter out = new PrintWriter(new FileWriter(reservationFilePath, true));
+            out.println(selectedReservation);
+            out.close();
+
+            // 가예약 파일 업데이트
+//            PrintWriter tempOut = new PrintWriter(new FileWriter(tempReservationFilePath));
+//            for (String tempReservation : tempReservations) {
+//                tempOut.println(tempReservation);
+//            }
+//            tempOut.close();
+        } else {
+            System.out.println("잘못된 순번입니다.");
+        }
+    }
+
+    public static boolean isTimerOn(){
+        return tempReserveFile.isTimerOn();
+    }
     public static String timeRenewal() {
         /*
         기능 :
@@ -126,18 +199,23 @@ public class TempReservation {
             @param diff: 지나간 시간
          */
 
-        Date savedNowComputerDate = formatter.parse(LogInAndTimeInput.getNowComputerTime());
-        Date nowComputerDate = new Date();
-        Date savedNowDate = formatter.parse(LogInAndTimeInput.getNowTime());
+        Date savedNowComputerDate = null;
+        try {
+            savedNowComputerDate = FORMATTER.parse(LogInAndTimeInput.getNowComputerTime());
+            Date nowComputerDate = new Date();
+            Date savedNowDate = FORMATTER.parse(LogInAndTimeInput.getNowTime());
 
-        long time1 = savedNowComputerDate.getTime();
-        long time2 = nowComputerDate.getTime();
-        long nowTime = savedNowDate.getTime();
+            long time1 = savedNowComputerDate.getTime();
+            long time2 = nowComputerDate.getTime();
+            long nowTime = savedNowDate.getTime();
 
-        long diff = time2 - time1;
-        nowTime += diff;
+            long diff = time2 - time1;
+            nowTime += diff;
 
-        return formatter.format(new Date(nowTime));
+            return FORMATTER.format(new Date(nowTime));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String getNewTime() {
@@ -145,7 +223,7 @@ public class TempReservation {
         return tempReserveFile.getNewTime();
     }
 
-    public static void removeTimeOutReserve()
+    public void removeTimeOutReserve()
     {
         // 기능 : 5분이 지난 예약들을 현재 시각을 기준으로 해서 삭제해준다.
         tempReserveFile.removeTimeOutReserve();
