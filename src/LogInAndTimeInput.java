@@ -72,7 +72,23 @@ public class LogInAndTimeInput {
     }
 
     public void repos(String file){
-
+        try (BufferedReader br = new BufferedReader(new FileReader(file));
+             BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
+            String line;
+            boolean found = false; // 클라이언트 정보가 이미 파일에 있는지 여부를 나타내는 플래그
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 2 && parts[0].equals(client.getName()) && parts[1].equals(client.getPhoneNumber())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) { // 클라이언트 정보가 파일에 없는 경우
+                bw.write(client.getName() + "," + client.getPhoneNumber() + "," + nowComputerTime + "," + nowTime + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static String getTime() {
