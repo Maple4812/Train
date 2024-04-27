@@ -24,8 +24,8 @@ public class ReservationAndCancel {
         Client client = new Client();
         String clientName = client.getName();
         String clientPhoneNumber = client.getPhoneNumber();
-        this.tempReservationList = new ArrayList<>(readCsv(((FileTempReserve) fileTempReserve).getFileName(), 6)); // 파일 형식에 따라 개수 수정 필요
-        this.reservationList = new ArrayList<>(readCsv(((FileReserve) fileReserve).getFileName(), 4)); // 파일 형식에 따라 개수 수정 필요
+        this.tempReservationList = new ArrayList<>(readCsv(fileTempReserve.getFileName(), 6)); // 파일 형식에 따라 개수 수정 필요
+        this.reservationList = new ArrayList<>(readCsv(fileReserve.getFileName(), 4)); // 파일 형식에 따라 개수 수정 필요
         System.out.println("가예약 및 예약 취소 메뉴입니다.");
         //Client 객체 생성 및 출력(loginAndTimeInput에서 받아옴)
         System.out.println("홍길동" + " / " + clientPhoneNumber + "님의 예약 정보입니다.");
@@ -81,6 +81,7 @@ public class ReservationAndCancel {
         }
         return data;
     }
+
 
     // 취소 입력 구현
     // 취소 수수료 계산
