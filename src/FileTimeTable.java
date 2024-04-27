@@ -1,14 +1,10 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-//import java.io.FileWriter;
-//import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileTimeTable implements FileInterface{
     private String fileName;
-//    private FileWriter fw; // 예약 시 여석 수가 줄어드는 걸 csv 파일에 업데이트해야함
-//    private PrintWriter writer;
     private ArrayList<Ticket> trainlist=new ArrayList<>(); //timetable.csv의 한 줄에 저장된 정보를 각 줄 마다 ticket 객체로 묶어 저장
     Scanner scan;
 
