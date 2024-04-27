@@ -126,8 +126,7 @@ public class CheckTimeTable {
 
             //검색한 시간이 현재 시각 보다 한달 후 인지 확인
 
-            long re = diff / (1000);
-            if (re > 30 * 24 * 60 * 60){
+            if (diff > (30 * 24 * 60 * 60 * 1000L)){
                 System.out.println("한 달 이내의 열차만 예매할 수 있습니다");
                 continue;
             }
