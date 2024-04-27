@@ -35,7 +35,7 @@ public class Main {
         LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput(...);
         CheckTimeTable checkTimeTable = new CheckTimeTable(...);
         TempReservation tempReservation = new TempReservation(fileUserInfo, fileReserve, fileTempReserve, fileTimeTable, );
-        ReservationAndCancel reservationAndCancel = new ReservationAndCancel(...);
+        ReservationAndCancel reservationAndCancel = new ReservationAndCancel(fileReserve, fileTempReserve, fileTimeTable);
 
         // 가장 처음 사용자로부터 정보들을 입력받습니다.
         logInAndTimeInput.init();

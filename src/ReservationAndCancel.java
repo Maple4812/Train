@@ -1,6 +1,6 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +10,12 @@ public class ReservationAndCancel {
      *
      * @author 변수혁
      */
+    private static final double FEE_RATE_FREE = 0.0;
+    private static final double FEE_RATE_5_PERCENT = 0.05;
+    private static final double FEE_RATE_10_PERCENT = 0.10;
+    private static final double FEE_RATE_15_PERCENT = 0.15;
+    private static final double FEE_RATE_40_PERCENT = 0.40;
+    private static final double FEE_RATE_70_PERCENT = 0.70;
     private FileTempReserve fileTempReserve;
     private FileReserve fileReserve;
     private ArrayList<String[]> clientTempReservationList;
@@ -25,7 +31,7 @@ public class ReservationAndCancel {
     }
 
     public void init() {
-        Client client = new Client();
+        Client client = LogInAndTimeInput.getClient();
         this.clientName = client.getName();
         this.clientPhoneNumber = client.getPhoneNumber();
         //private FileTimeTable fileTimeTable;
@@ -74,8 +80,8 @@ public class ReservationAndCancel {
 
         for (String[] row : reservationList) {
             String trainNum = row[0];
-            String ticketInfo = timeTableFile.getTicket(trainNum).toString(); // Assuming getTicket returns a String
-            System.out.println("#" + (i++) + " " + ticketInfo); // Incrementing i within the println statement
+            String ticketInfo = timeTableFile.getTicket(trainNum).toString();
+            System.out.println("#" + (i++) + " " + ticketInfo);
         }
     }
 
@@ -103,8 +109,72 @@ public class ReservationAndCancel {
         return data;
     }
 
+    public int calcCancelFee(String departureTime){
+        String nowTime = LogInAndTimeInput.getNowTime();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        LocalDateTime depTime = LocalDateTime.parse(departureTime, formatter);
+        LocalDateTime currentTime = LocalDateTime.parse(nowTime, formatter);
+
+        long minutesDifference = java.time.Duration.between(currentTime, depTime).toMinutes();
+
+        int cancellationFee = 0;
+        if (minutesDifference <= 20) {
+            cancellationFee = (int) (FEE_RATE_15_PERCENT * 100);
+        } else if (minutesDifference <= 60) {
+            cancellationFee = (int) (FEE_RATE_40_PERCENT * 100);
+        } else if (minutesDifference < 180) {
+            cancellationFee = (int) (FEE_RATE_70_PERCENT * 100);
+        } else if (minutesDifference < 1440) {
+            cancellationFee = (int) (FEE_RATE_5_PERCENT * 100);
+        } else if (minutesDifference < 43200) {
+            cancellationFee = (int) (FEE_RATE_FREE * 100);
+        } else if (minutesDifference < 518400) {
+            cancellationFee = (int) (FEE_RATE_10_PERCENT * 100);
+        }
+        return cancellationFee;
+    }
+
+    public void makeCancelList(){
+        //TODO 입력 받아온 정보로 취소 열차들 어레이리스트에 저장
+    }
+
+    public void printCancelInfo(ArrayList<Ticket> ticketList){
+        int i = 0;
+        for (Ticket ticket : ticketList) {
+            String ticketInfo = ticket.toString();
+            System.out.println("#" + (i++) + " " + ticketInfo + calcCancelFee(ticket.depTime));
+        }
+    }
 
     // 취소 입력 구현
-    // 취소 수수료 계산
 
+
+    public static void removeRowsByTrainNumber(String csvFilePath, String trainNumber) {
+        List<String[]> nonMatchingRows = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] row = line.split(",");
+                if (!row[2].equals(trainNumber)) {
+
+                    nonMatchingRows.add(row);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFilePath))) {
+            for (String[] row : nonMatchingRows) {
+                bw.write(String.join(",", row));
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //열차 취소시 csv파일에서 삭제
 }
