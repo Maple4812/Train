@@ -137,7 +137,7 @@ public class FileTimeTable implements FileInterface{
         ticket.extraSeat.reduceSeat(n);
         scan = new Scanner(new File(fileName));
 
-        PrintWriter tempWriter = new PrintWriter(new FileWriter("temp.txt"));  // 파일의 내용을 지우고 수정하는 데 있어서 파일 삭제가 불가피했습니다.
+        PrintWriter tempWriter = new PrintWriter(new FileWriter("temp.csv"));  // 파일의 내용을 지우고 수정하는 데 있어서 파일 삭제가 불가피했습니다.
         String newString = null;
         while(scan.hasNextLine()) {
             String[] strArr = scan.nextLine().split(",");
@@ -175,7 +175,7 @@ public class FileTimeTable implements FileInterface{
         tempWriter.close();
 
         File originalFile = new File(fileName);
-        File tempFile = new File("temp.txt");
+        File tempFile = new File("temp.csv");
         if (tempFile.renameTo(originalFile)) {
             System.out.print("");
         }
