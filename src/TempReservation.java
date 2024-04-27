@@ -85,6 +85,7 @@ public class TempReservation {
             }
             //TODO 여기서 해야하는 것!!!!!!!!: 위에서 받은 내용을 바탕으로 한 티켓이 실제로 timetable.csv에 존재하는지 확인해야 한다.
             Ticket ticket = timeTableFile.getTicket(lineNum);  // 티켓의 노선번호로 티켓 객체를 가져오는 임의의 함수입니다.
+            //TODO 예약을 한 다음(예약 확정을 한 다음) timetable.csv 에서 여석 수를 줄인다.
             if (tickets > ticket.extraSeat.getSeat()) {
                 System.out.println("해당 열차에서는 최대 " + ticket.extraSeat + "개의 좌석만 예약할 수 있습니다.");
             }
