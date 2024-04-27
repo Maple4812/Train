@@ -17,6 +17,8 @@ public class CheckTimeTable {
 
     // 임시 시간!! 지우게 될것
     String thistime = "202111230830";
+
+    
     SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMMddHHmm");
     Date currentdate = new Date();
     Date inputdate = new Date();
