@@ -13,6 +13,11 @@ public class FileTempReserve implements FileInterface{
     private PrintWriter writer;
     private final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
     private ArrayList<ArrayList<String>> tempList;
+
+    public ArrayList<ArrayList<String>> getTempList() {
+        return tempList;
+    }
+
     public FileTempReserve(String fileName) throws FileNotFoundException {
         this.fileName = fileName;
     }
@@ -26,15 +31,15 @@ public class FileTempReserve implements FileInterface{
                 throw new FileIntegrityException("무결성 오류: 파일에 인자의 개수가 옳지 않은 레코드가 존재합니다.");
             }
             UserName.checkIntegrity(strArr[0]);  //사용자 이름 무결성 확인
-            PhoneNumber.checkIntegrity(strArr[1]);  //사용자 이름 무결성 확인
-            Ticket.checkIntegrity(strArr[2]);  //사용자 이름 무결성 확인
+            PhoneNumber.checkIntegrity(strArr[1]);  //사용자 전화번호 무결성 확인
+            Ticket.checkIntegrity(strArr[2]);  //사용자 예약 노선번호 무결성 확인
             Time.checkIntegrity(strArr[3]);  //출발 시각 무결성 확인
             Time.checkIntegrity(strArr[4]);  //예약 시각 무결성 확인
             Time.checkIntegrity(strArr[5]);  //예약 컴퓨터 시각 무결성 확인
         }
     }
 
-    private void repos(){
+    public void repos(){
         try {
             checkIntegrity();
             tempList = new ArrayList<>();
