@@ -1,4 +1,3 @@
-import java.awt.event.KeyAdapter;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,18 +16,19 @@ public class TempReservation {
     private static Client loginClient;
     Scanner scan = new Scanner(System.in);
 
-    public TempReservation(FileInterface userInfoFile, FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile, Client loginClient) {
+    public TempReservation(FileInterface userInfoFile, FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile) {
         this.tempReserveFile = (FileTempReserve) tempReserveFile;
         this.userInfoFile = (FileUserInfo) userInfoFile;
         this.reserveFile = (FileReserve) reserveFile;
         this.timeTableFile = (FileTimeTable) timeTableFile;
-        this.loginClient = loginClient;
     }
 
     public void init() throws FileIntegrityException, IOException {
+        ArrayList<String> trueList = new ArrayList<>(Arrays.asList("T", "t", "예", "ㅇ", "1"));
+        ArrayList<String> falseList = new ArrayList<>(Arrays.asList("F", "f", "아니오", "ㄴ", "0"));
         String lineNum = "";
         boolean isConfirmed = false;
-        int tickets = 0;
+        int tickets = 1;
         Ticket ticket = null;
 
         while (true) {
@@ -52,7 +52,7 @@ public class TempReservation {
                     continue;
                 }
                 try {
-                    if (!(inputArr[1].equals("T") || inputArr[1].equals("F"))) {
+                    if (!(trueList.contains(inputArr[1]) || falseList.contains(inputArr[1]))) {
                         throw new FileIntegrityException();
                     }
                 } catch (FileIntegrityException e) {
@@ -67,7 +67,7 @@ public class TempReservation {
                     continue;
                 }
                 try {
-                    if (!(inputArr[1].equals("t") || inputArr[1].equals("f"))) {
+                    if (!(trueList.contains(inputArr[1]) || falseList.contains(inputArr[1]))) {
                         throw new FileIntegrityException();
                     }
                 } catch (FileIntegrityException e) {
@@ -91,9 +91,9 @@ public class TempReservation {
                 continue;
             }
             lineNum = inputArr[0];                //여기서 각 인수를 변수에 넣는다
-            if (inputArr[1].equals("T")) {
+            if (trueList.contains(inputArr[1])) {
                 isConfirmed = true;
-            } else if (inputArr[1].equals("F")) {
+            } else if (falseList.contains(inputArr[1])) {
                 isConfirmed = false;
             }
             ticket = timeTableFile.getTicket(lineNum);  // 티켓의 노선번호로 티켓 객체를 가져오는 임의의 함수입니다.
@@ -109,6 +109,7 @@ public class TempReservation {
                 break;
             }
         }
+        loginClient = LogInAndTimeInput.getClient();
         //일반 예약인 경우
         if (isConfirmed) {
             for (int i = 0; i < tickets; i++) {

@@ -1,3 +1,4 @@
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -6,6 +7,9 @@ public class LogInAndTimeInput {
     private static String nowComputerTime;
     private static String nowTime;
     private static Client client;
+
+    public LogInAndTimeInput(FileInterface fileUserInfo) {
+    }
 
     public static void setNowComputerTime(String time) {
         nowComputerTime = time;

@@ -14,8 +14,4 @@ public class Client {
     public String getName() {    //이름 메소드
         return this.name;
     }
-
-    public void sendToMain() {    //메인함수로 각 메소드에 입력된 값 반환
-        Main.receiveClientData(this.name, this.phoneNumber);
-    }
 }

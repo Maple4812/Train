@@ -58,7 +58,7 @@ public class FileTempReserve implements FileInterface{
         // 이 함수에서 추가적인 규칙 검사는 이루어지지 않습니다. 해당 함수에 입력되는 모든 인자는 이미 검사를 받았다고 가정합니다.
         File file = new File(fileName);
         try {
-            fw = new FileWriter(file);
+            fw = new FileWriter(file, true);
             writer = new PrintWriter(fw);
             String str = userName + "," + phoneNumber + "," + lineNum + "," + startTime + "," + endTime + "," + endComputerTime;
             writer.println(str);
@@ -70,6 +70,7 @@ public class FileTempReserve implements FileInterface{
 
     public boolean isTimerOn()
     {
+        repos();
         // 리스트가 비어있으면 timer 가 false
         return !tempList.isEmpty();
     }

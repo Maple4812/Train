@@ -13,7 +13,7 @@ public class CheckTimeTable {
     public String[] inputArr;
 
     // 사용자가 앞에서 입력한 시간을 받아옴
-    String thistime = LogInAndTimeInput.getNowTime();
+    String thistime;
 
     SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMMddHHmm");
     Date currentdate = new Date();
@@ -110,6 +110,7 @@ public class CheckTimeTable {
             }
 
             // 검색한 시각이 현재 시각보다 전인지 확인
+            thistime = LogInAndTimeInput.getNowTime();
 
             inputdate = dtFormat.parse(inputArr[2]);
             currentdate = dtFormat.parse(thistime);
