@@ -71,9 +71,10 @@ public class ReservationAndCancel {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             LocalDateTime departureTime = LocalDateTime.parse(tempReserve.get(3), formatter);
             LocalDateTime reserveTime = LocalDateTime.parse(tempReserve.get(4), formatter);
+            LocalDateTime nowTime = LocalDateTime.parse(LogInAndTimeInput.getNowTime(), formatter);
 
             if (tempReserve.get(0).equals(loginClient.getName()) && departureTime.isAfter(LocalDateTime.now())) {
-                long minutesBetween = Duration.between(LocalDateTime.now(), reserveTime).toMinutes();
+                long minutesBetween = Duration.between(nowTime, reserveTime).toMinutes();
 
                 System.out.print("#" + rowNum + " / ");
                 System.out.print(tempReserve.get(2) + " / ");
