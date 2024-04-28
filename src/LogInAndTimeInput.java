@@ -28,6 +28,10 @@ public class LogInAndTimeInput {
     }
 
     public void init() {
+
+        // 이전에 입력된 값들을 삭제하는 코드 추가
+        clearPreviousData("UserInfo.csv");
+        
         Scanner scanner = new Scanner(System.in);
         boolean isValidInput = false;
         while (!isValidInput) {
@@ -113,4 +117,18 @@ public class LogInAndTimeInput {
         Date date = new Date();
         return formatter.format(date);
     }
+
+    private void clearPreviousData(String fileName) {
+        File file = new File(fileName);
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("이전 데이터 삭제 완료: " + fileName);
+            } else {
+                System.out.println("이전 데이터 삭제 실패: " + fileName);
+            }
+        } else {
+            System.out.println("이전 데이터 파일이 존재하지 않습니다: " + fileName);
+        }
+    }
+    
 }
