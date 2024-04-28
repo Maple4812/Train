@@ -130,8 +130,6 @@ public class LogInAndTimeInput {
         if (file.exists()) {
             if (file.delete()) {
                 System.out.println("이전 데이터 삭제 완료: " + fileName);
-            } else {
-                System.out.println("이전 데이터 삭제 실패: " + fileName);
             }
         }
     }
