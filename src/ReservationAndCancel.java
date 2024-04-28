@@ -532,7 +532,7 @@ public class ReservationAndCancel {
                     }
 
                     if (num > num2) {
-                        System.out.println("ㄴ입력하신 취소표의 개수가 많습니다. 예매한 개수 이내로 입력해주세요");
+                        System.out.println("입력하신 취소표의 개수가 많습니다. 예매한 개수 이내로 입력해주세요");
                         break;
                     }
                     for (int i = 0; i < num; i++) {
