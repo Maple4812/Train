@@ -53,6 +53,39 @@ public class TempReservation {
                     System.out.println("잘못된 노선 번호입니다.");
                     continue;
                 }
+
+                /*
+                ********************************************************************************************************************
+                    현재 시각 이전의 열차인지 체크합니다.
+                    timeCheckTicket: 입력 받은 노선 번호의 티켓
+                    timeCheckDepTime: 입력 받은 노선 번호 열차의 출발시간
+                 */
+                Ticket timeCheckTicket=timeTableFile.getTicket(inputArr[0]);
+                String timeCheckDepTime=timeCheckTicket.depTime;
+                /*
+                    현재 시각과 예약 하려는 열차의 출발 시각 간 연도 비교
+                 */
+                if(Integer.parseInt(timeCheckDepTime.substring(0,4))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))){
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                    continue;
+                }
+                /*
+                    현재 시각과 예약 하려는 열차의 출발 시각 간 월, 일 비교
+                 */
+                if(Integer.parseInt(timeCheckDepTime.substring(4,8))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))){
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                    continue;
+                }
+                /*
+                    현재 시각과 예약 하려는 열차의 출발 시각 간 시, 분 비교
+                 */
+                if(Integer.parseInt(timeCheckDepTime.substring(8,12))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8,12))){
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                    continue;
+                }
+/*
+**********************************************************************************************************************************
+ */
                 try {
                     if (!(trueList.contains(inputArr[1]) || falseList.contains(inputArr[1]))) {
                         throw new FileIntegrityException();
@@ -68,6 +101,40 @@ public class TempReservation {
                     System.out.println("잘못된 노선 번호입니다.");
                     continue;
                 }
+
+                /*
+                ********************************************************************************************************************
+                    현재 시각 이전의 열차인지 체크합니다.
+                    timeCheckTicket: 입력 받은 노선 번호의 티켓
+                    timeCheckDepTime: 입력 받은 노선 번호 열차의 출발시간
+                 */
+                Ticket timeCheckTicket=timeTableFile.getTicket(inputArr[0]);
+                String timeCheckDepTime=timeCheckTicket.depTime;
+                /*
+                    현재 시각과 예약 하려는 열차의 출발 시각 간 연도 비교
+                 */
+                if(Integer.parseInt(timeCheckDepTime.substring(0,4))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))){
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                    continue;
+                }
+                /*
+                    현재 시각과 예약 하려는 열차의 출발 시각 간 월, 일 비교
+                 */
+                if(Integer.parseInt(timeCheckDepTime.substring(4,8))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))){
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                    continue;
+                }
+                /*
+                    현재 시각과 예약 하려는 열차의 출발 시각 간 시, 분 비교
+                 */
+                if(Integer.parseInt(timeCheckDepTime.substring(8,12))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8,12))){
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                    continue;
+                }
+                /*
+                 **********************************************************************************************************************************
+                 */
+
                 try {
                     if (!(trueList.contains(inputArr[1]) || falseList.contains(inputArr[1]))) {
                         throw new FileIntegrityException();
