@@ -397,29 +397,24 @@ public class ReservationAndCancel {
             case 1:
                 if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
                     int index = Integer.parseInt(inputArr[0].replace("#", "")) - 1;
-
-                    if (index >= 0 && index < fileTempReserve.size()) {
-                        cancelTicketArrayList.add(timeTableFile.getTicket(fileTempReserve.get(index).get(2)));
-                        new FileOutputStream(tempReserveFile.getFileName()).close();
-                        tempReserveFile.getTempList().remove(tempReserveIndexArrayList.get(index));
-                        for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
-                            tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
-                        }
+                    //csv에서 항목 삭제
+                    //clientReservation에서 항목 삭제
+                    //cancelTicketArrayList에 추가
+                    if (index >= 0 && index < clientTempReservationList.size()) {
+                        cancelTicketArrayList.add(timeTableFile.getTicket(clientTempReservationList.get(index)[2]));
+                        clientTempReservationList.remove(index);
+                        removeRowsByTrainNumber(fileTempReserve.getFileName(), clientPhoneNumber,1);
                     }
                 } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
-                    new FileOutputStream(tempReserveFile.getFileName()).close();
-
                     int index = 0;
                     while (index != -1) {
-                        index = tempReserveFile.findByLineNum(clientName, inputArr[0]);
+                        index = cli.findByLineNum(clientName, inputArr[0]);
                         reserveFile.write(clientName, clientPhoneNumber, inputArr[0], timeTableFile.getTicket(inputArr[0]).depTime);
                         cancelTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
                         tempReserveFile.getTempList().remove(index);
                     }
 
-                    for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
-                        tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
-                    }
+                    removeRowsByTrainNumber(fileTempReserve.getFileName(), inputArr[0]);
                 }
                 break;
 
@@ -562,16 +557,23 @@ public class ReservationAndCancel {
     }
 
 
-    public static void removeRowsByTrainNumber(String csvFilePath, String trainNumber) {
-        List<String[]> nonMatchingRows = new ArrayList<>();
+    public void removeRowsByTrainNumber(String csvFilePath, String trainNumber){
+        removeRowsByTrainNumber(csvFilePath, trainNumber, Integer.MAX_VALUE);
+    }
+    public void removeRowsByTrainNumber(String csvFilePath, String trainNumber, int count) {
+        List<String[]> matchingRows = new ArrayList<>();
+        int removedCount = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] row = line.split(",");
-                if (!row[2].equals(trainNumber)) {
-
-                    nonMatchingRows.add(row);
+                if (row[2].equals(trainNumber)) {
+                    matchingRows.add(row);
+                    removedCount++;
+                    if (removedCount == count) {
+                        break; // 지정된 개수만큼 삭제하면 종료
+                    }
                 }
             }
         } catch (IOException e) {
@@ -579,10 +581,24 @@ public class ReservationAndCancel {
             return;
         }
 
+        // 파일 재작성: 매칭되는 행을 제외한 나머지 행을 파일에 씀
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFilePath))) {
-            for (String[] row : nonMatchingRows) {
-                bw.write(String.join(",", row));
-                bw.newLine();
+            try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] row = line.split(",");
+                    boolean found = false;
+                    for (String[] matchingRow : matchingRows) {
+                        if (row[2].equals(matchingRow[2])) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        bw.write(line);
+                        bw.newLine();
+                    }
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
