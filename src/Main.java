@@ -32,7 +32,7 @@ public class Main {
         ... 자리에 각 수행 클래스에서 필요한 파일 객체를 적어 인자로 가져갑니다.
         */
 
-        LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput(fileUserInfo);
+        LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput();
         CheckTimeTable checkTimeTable = new CheckTimeTable(fileTimeTable);
         TempReservation tempReservation = new TempReservation(fileUserInfo, fileReserve, fileTempReserve, fileTimeTable);
         ReservationAndCancel reservationAndCancel = new ReservationAndCancel(fileTempReserve, fileReserve, fileTimeTable);
@@ -42,6 +42,7 @@ public class Main {
 
         while(true) {
             // 정상적으로 사용자 정보를 입력 받으면 명령을 입력받습니다.
+            tempReservation.removeTimeOutReserve();
             System.out.println("명령어 목록: Q(프로그램 종료), 시간표조회, 기차표예약, 예약조회");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String cmd = br.readLine();

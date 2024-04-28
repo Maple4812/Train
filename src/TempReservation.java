@@ -23,7 +23,7 @@ public class TempReservation {
         this.timeTableFile = (FileTimeTable) timeTableFile;
     }
 
-    public void init() throws FileIntegrityException, IOException {
+    public void init() throws FileIntegrityException, IOException, ParseException {
         ArrayList<String> trueList = new ArrayList<>(Arrays.asList("T", "t", "예", "ㅇ", "1"));
         ArrayList<String> falseList = new ArrayList<>(Arrays.asList("F", "f", "아니오", "ㄴ", "0"));
         String lineNum = "";
@@ -101,21 +101,21 @@ public class TempReservation {
                 System.out.println("잘못된 노선번호입니다.");
                 continue;
             }
-            timeTableFile.reduceExtraSeat(lineNum, tickets);
             if (tickets > ticket.extraSeat.getSeat()) {
-                System.out.println("해당 열차에서는 최대 " + ticket.extraSeat + "개의 좌석만 예약할 수 있습니다.");
+                System.out.println("해당 열차에서는 최대 " + ticket.extraSeat.getSeat() + "개의 좌석만 예약할 수 있습니다.");
                 continue;
             } else {
                 break;
             }
         }
+        timeTableFile.reduceExtraSeat(lineNum, tickets);
         loginClient = LogInAndTimeInput.getClient();
         //일반 예약인 경우
         if (isConfirmed) {
             for (int i = 0; i < tickets; i++) {
                 reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime);
             }
-            System.out.println(ticket.arrivalTime + "에 출발하는 " + ticket.lineNum + " " + tickets + "장을 예매 확정지었습니다.");
+            System.out.println(FORMATTER.parse(ticket.arrivalTime) + "에 출발하는 " + ticket.lineNum + " " + tickets + "장을 예매 확정지었습니다.");
         }
         //가예약인 경우
         else {
@@ -124,7 +124,7 @@ public class TempReservation {
                 String formattedNow = FORMATTER.format(now);
                 tempReserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime, ticket.depTime, formattedNow);
             }
-            System.out.println(ticket.arrivalTime + "에 출발하는 " + ticket.lineNum + " " + tickets + "장을 가예약 했습니다.");
+            System.out.println(FORMATTER.parse(ticket.arrivalTime) + "에 출발하는 " + ticket.lineNum + " " + tickets + "장을 가예약 했습니다.");
         }
     }
 
