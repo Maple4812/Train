@@ -1,12 +1,7 @@
-import java.awt.event.KeyAdapter;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class TempReservation {
     private final static SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
@@ -17,7 +12,7 @@ public class TempReservation {
     private static Client loginClient;
     Scanner scan = new Scanner(System.in);
 
-    public TempReservation(FileInterface userInfoFile, FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile, Client loginClient) {
+    public TempReservation(FileInterface userInfoFile, FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile) {
         this.tempReserveFile = (FileTempReserve) tempReserveFile;
         this.userInfoFile = (FileUserInfo) userInfoFile;
         this.reserveFile = (FileReserve) reserveFile;

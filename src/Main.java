@@ -32,7 +32,7 @@ public class Main {
         ... 자리에 각 수행 클래스에서 필요한 파일 객체를 적어 인자로 가져갑니다.
         */
 
-        LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput(fileUserInfo);
+        LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput();
         CheckTimeTable checkTimeTable = new CheckTimeTable(fileTimeTable);
         TempReservation tempReservation = new TempReservation(fileUserInfo, fileReserve, fileTempReserve, fileTimeTable);
         ReservationAndCancel reservationAndCancel = new ReservationAndCancel(fileTempReserve, fileReserve, fileTimeTable);
