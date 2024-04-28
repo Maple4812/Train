@@ -6,7 +6,7 @@ public class Time { //이 클래스는 "아마도" integrity 확인을 위한 �
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
     public static void checkIntegrity(String str) throws FileIntegrityException {
         boolean isValidDateTime = isValidGregorianDateTime(str);
-        if(!isValidDateTime) {
+        if(!isValidDateTime || str.length() != 12) {
             throw new FileIntegrityException("시각 무결성 오류");
         }
     }
