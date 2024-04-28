@@ -28,15 +28,23 @@ public class ReservationAndCancel {
     }
 
     public void init() throws IOException {
-        System.out.println("가예약 확정 또는 예약취소를 입력해주세요: ");
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        scanner.close();
+        while(true) {
+            System.out.println("가예약 확정 또는 예약취소를 입력해주세요: ");
+            Scanner scanner = new Scanner(System.in);
+            String input = scanner.nextLine();
 
-        if (input.equals("가예약 확정")) {
-            init1();
-        } else if (input.equals("예약취소")) {
-            init2();
+            if (input.equals("가예약 확정")) {
+                init1();
+                break;
+            } else if (input.equals("예약취소")) {
+                init2();
+                break;
+            } else if (input.equals("Q")){
+                System.out.println("메인 프롬프트로 돌아갑니다");
+                return;
+            } else {
+                System.out.println("잘못된 입력입니다.");
+            }
         }
     }
 
@@ -319,8 +327,9 @@ public class ReservationAndCancel {
         int i = 1;
 
         for (String[] row : reservationList) {
-            String trainNum = row[0];
-            String ticketInfo = timeTableFile.getTicket(trainNum).toString();
+            String trainNum = row[2];
+            Ticket ticket = timeTableFile.getTicket(trainNum);
+            String ticketInfo = ticket.lineNum + " " + ticket.depTime + " " + ticket.fromStation.getStation() + " " + ticket.arrivalTime + " " + ticket.toStation.getStation();
             System.out.println("#" + (i++) + " " + ticketInfo);
         }
     }

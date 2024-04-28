@@ -17,6 +17,11 @@ public class FileTimeTable implements FileInterface{
     }
 
     public Ticket getTicket(String str){
+        try {
+            repos();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         for(Ticket ticket : trainlist){
             if(ticket.lineNum.equals(str)){
                 return ticket;
@@ -211,6 +216,7 @@ public class FileTimeTable implements FileInterface{
 
     public void repos() throws FileNotFoundException {
         scan = new Scanner(new File("timeTable.csv"));
+        trainlist = new ArrayList<>();
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
             Ticket ticket=new Ticket();
