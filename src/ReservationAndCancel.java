@@ -29,6 +29,8 @@ public class ReservationAndCancel {
 
     public void init() throws IOException {
         while(true) {
+            LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
+            TempReservation.removeTimeOutReserve();
             System.out.println("가예약 확정 또는 예약취소를 입력해주세요: ");
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();
@@ -49,6 +51,9 @@ public class ReservationAndCancel {
     }
 
     public void init1() throws IOException {
+        LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
+        TempReservation.removeTimeOutReserve();
+
         fileTempReserve.repos();
         ArrayList<ArrayList<String>> tempReserves = new ArrayList<>();
         ArrayList<Integer> tempReserveIndexArrayList = new ArrayList<>();
@@ -279,6 +284,10 @@ public class ReservationAndCancel {
     }
 
     public void init2() {
+
+        LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
+        TempReservation.removeTimeOutReserve();
+
         fileTempReserve.repos();
         fileReserve.repos();
         Client client = LogInAndTimeInput.getClient();
@@ -292,7 +301,6 @@ public class ReservationAndCancel {
         clientTempReservationList = makeClientReserveList(tempReservationList, clientPhoneNumber);
         System.out.println("가예약 및 예약 취소 메뉴입니다.");
         //Client 객체 생성 및 출력(loginAndTimeInput에서 받아옴)
-
 
         if (!clientTempReservationList.isEmpty()) {
             System.out.println(clientName + " / " + clientPhoneNumber + "님의 가예약 정보입니다.");
