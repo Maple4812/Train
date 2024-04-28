@@ -278,7 +278,7 @@ public class ReservationAndCancel {
         } while (flag == -1);
     }
 
-    public void init2() {
+        public void init2() {
         fileTempReserve.repos();
         fileReserve.repos();
         Client client = LogInAndTimeInput.getClient();
@@ -299,18 +299,31 @@ public class ReservationAndCancel {
             System.out.println("행 번호 / 노선 번호 / 출발 시간 / 출발 역 / 도착 시간 / 도착 역");
             printReserveList(clientTempReservationList);
             ArrayList<Ticket> tempCancelTicketList = new ArrayList<>();
-            tempCancelTicketList = makeTempCancelList();
+            try {
+                tempCancelTicketList = makeTempCancelList();
+            } catch (Exception e) {
+                System.out.println("입력값이 잘못되었습니다.");
+            }
             printCancelInfo(tempCancelTicketList);
 
+        }else {
+            System.out.println("가예약 정보가 없습니다.");
         }
         if (!clientReservationList.isEmpty()) {
             System.out.println(clientName + " / " + clientPhoneNumber + "님의 예약 정보입니다.");
             System.out.println("행 번호 / 노선 번호 / 출발 시간 / 출발 역 / 도착 시간 / 도착 역");
             printReserveList(clientReservationList);
             ArrayList<Ticket> CancelTicketList = new ArrayList<>();
-            CancelTicketList = makeCancelList();
+            try {
+                CancelTicketList = makeCancelList();
+            } catch (Exception e) {
+                System.out.println("입력값이 잘못되었습니다.");
+            }
             printCancelInfo(CancelTicketList);
+        }else{
+            System.out.println("예약 정보가 없습니다.");
         }
+
     }
 
 
@@ -336,8 +349,7 @@ public class ReservationAndCancel {
 
         for (String[] row : reservationList) {
             String trainNum = row[2];
-            Ticket ticket = timeTableFile.getTicket(trainNum);
-            String ticketInfo = ticket.lineNum + " " + ticket.depTime + " " + ticket.fromStation.getStation() + " " + ticket.arrivalTime + " " + ticket.toStation.getStation();
+            String ticketInfo = timeTableFile.getTicket(trainNum).toString();
             System.out.println("#" + (i++) + " " + ticketInfo);
         }
     }
@@ -405,17 +417,33 @@ public class ReservationAndCancel {
             System.out.println("도착 시각: " + ticket.arrivalTime);
             System.out.println("도착 역: " + ticket.toStation.getStation());
             System.out.println("취소 수수료: " + calcCancelFee(ticket.depTime, ticket.arrivalTime, Integer.parseInt(ticket.price.getPrice())) + "원");
+            System.out.println("-".repeat(20));
         }
     }
 
     // 취소 입력 구현
 
+    public int countStringInArrayList(ArrayList<String[]> arrayList, String searchString) {
+        int count = 0;
 
-    public ArrayList<Ticket> makeTempCancelList() {
+        // ArrayList를 반복하면서 각 String[] 객체를 확인합니다.
+        for (String[] arr : arrayList) {
+            // 현재 String[] 객체에 searchString가 포함되어 있는지 확인합니다.
+            for (String str : arr) {
+                if (str.contains(searchString)) {
+                    count++; // 포함되어 있다면 count를 증가시킵니다.
+                    break; // searchString가 발견되면 더 이상 현재 String[] 객체를 검사하지 않고 다음으로 넘어갑니다.
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public ArrayList<Ticket> makeTempCancelList() throws Exception {
         System.out.println("RSVD Cancel: ");
         Scanner inputScan = new Scanner(System.in);
         String[] inputArr = inputScan.nextLine().split(",");
-//        inputScan.close();
 
         ArrayList<Ticket> cancelTicketArrayList = new ArrayList<>();
 
@@ -427,15 +455,12 @@ public class ReservationAndCancel {
                     if (index >= 0 && index < clientTempReservationList.size()) {
                         cancelTicketArrayList.add(timeTableFile.getTicket(clientTempReservationList.get(index)[2]));
                         removeRowsByTrainNumber(fileTempReserve.getFileName(), clientTempReservationList.get(index)[2],1);
-                        clientTempReservationList.remove(index);
 
                     }
                 } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
-                    int index = 0;
-                    while (index != -1) {
-                        index = fileTempReserve.findByLineNum(clientName, inputArr[0]);
+                    int count = countStringInArrayList(clientTempReservationList, inputArr[0]);
+                    for (int i = 0; i < count; i++) {
                         cancelTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
-                        clientTempReservationList.remove(index);
                     }
 
                     removeRowsByTrainNumber(fileTempReserve.getFileName(), inputArr[0]);
@@ -539,11 +564,10 @@ public class ReservationAndCancel {
         }
         return cancelTicketArrayList;
     }
-    public ArrayList<Ticket> makeCancelList() {
+    public ArrayList<Ticket> makeCancelList() throws Exception {
         System.out.println("RSVD Cancel: ");
         Scanner inputScan = new Scanner(System.in);
         String[] inputArr = inputScan.nextLine().split(",");
-//        inputScan.close();
 
         ArrayList<Ticket> cancelTicketArrayList = new ArrayList<>();
 
@@ -555,15 +579,12 @@ public class ReservationAndCancel {
                     if (index >= 0 && index < clientReservationList.size()) {
                         cancelTicketArrayList.add(timeTableFile.getTicket(clientReservationList.get(index)[2]));
                         removeRowsByTrainNumber(fileReserve.getFileName(), clientReservationList.get(index)[2],1);
-                        clientReservationList.remove(index);
 
                     }
                 } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
-                    int index = 0;
-                    while (index != -1) {
-                        index = fileReserve.findByLineNum(clientName, inputArr[0]);
+                    int count = countStringInArrayList(clientReservationList, inputArr[0]);
+                    for (int i = 0; i < count; i++) {
                         cancelTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
-                        clientReservationList.remove(index);
                     }
 
                     removeRowsByTrainNumber(fileReserve.getFileName(), inputArr[0]);
@@ -672,50 +693,51 @@ public class ReservationAndCancel {
     public void removeRowsByTrainNumber(String csvFilePath, String trainNumber){
         removeRowsByTrainNumber(csvFilePath, trainNumber, Integer.MAX_VALUE);
     }
+
     public void removeRowsByTrainNumber(String csvFilePath, String trainNumber, int count) {
-        List<String[]> matchingRows = new ArrayList<>();
-        int removedCount = 0;
+        List<String[]> rows = new ArrayList<>();
+
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] row = line.split(",");
-                if (row[2].equals(trainNumber)) {
-                    matchingRows.add(row);
-                    removedCount++;
-                    if (removedCount == count) {
-                        break; // 지정된 개수만큼 삭제하면 종료
-                    }
-                }
+                rows.add(row);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
 
-        // 파일 재작성: 매칭되는 행을 제외한 나머지 행을 파일에 씀
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFilePath))) {
-            try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    String[] row = line.split(",");
-                    boolean found = false;
-                    for (String[] matchingRow : matchingRows) {
-                        if (row[2].equals(matchingRow[2])) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        bw.write(line);
-                        bw.newLine();
-                    }
+        int removedCount = 0;
+        for (int i = 0; i < rows.size(); i++) {
+            String[] row = rows.get(i);
+            if (row.length > 2 && row[2].equals(trainNumber)) {
+                rows.remove(i);
+                removedCount++;
+                i--; // Adjust index due to removal
+                if (removedCount == count) {
+                    break;
                 }
+            }
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFilePath))) {
+            for (String[] row : rows) {
+                bw.write(String.join(",", row));
+                bw.newLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    //열차 취소시 csv파일에서 삭제
+
+    public boolean isExist(String trainNumber, ArrayList<String[]> reservationList) {
+        for (String[] row : reservationList) {
+            if (row[2].equals(trainNumber)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
