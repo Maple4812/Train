@@ -465,6 +465,7 @@ public class ReservationAndCancel {
         return count;
     }
 
+
     public ArrayList<Ticket> makeTempCancelList() throws Exception {
         System.out.println("RSVD Cancel: ");
         Scanner inputScan = new Scanner(System.in);
