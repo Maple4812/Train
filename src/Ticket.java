@@ -20,6 +20,6 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return lineNum + " " + depTime + " " + fromStation + " " + arrivalTime + " " + toStation;
+        return lineNum + " " + depTime + " " + fromStation.getStation() + " " + arrivalTime + " " + toStation.getStation();
     }
 }
