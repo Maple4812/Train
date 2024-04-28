@@ -467,6 +467,7 @@ public class ReservationAndCancel {
                     int index = Integer.parseInt(inputArr[0].replace("#", "")) - 1;
 
                     if (index >= 0 && index < clientTempReservationList.size()) {
+                        timeTableFile.increaseExtraSeat(clientTempReservationList.get(index)[2],1);
                         cancelTicketArrayList.add(timeTableFile.getTicket(clientTempReservationList.get(index)[2]));
                         removeRowsByTrainNumber(fileTempReserve.getFileName(), clientTempReservationList.get(index)[2],1);
 
@@ -474,6 +475,7 @@ public class ReservationAndCancel {
                 } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
                     int count = countStringInArrayList(clientTempReservationList, inputArr[0]);
                     for (int i = 0; i < count; i++) {
+                        timeTableFile.increaseExtraSeat(inputArr[0], 1);
                         cancelTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
                     }
 
@@ -490,6 +492,7 @@ public class ReservationAndCancel {
                         int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
 
                         if (index >= 0 && index < clientTempReservationList.size()) {
+                            timeTableFile.increaseExtraSeat(clientTempReservationList.get(index)[2],1);
                             cancelTicketArrayList.add(timeTableFile.getTicket(clientTempReservationList.get(index)[2]));
                         }
                         removeRowsByTrainNumber(fileTempReserve.getFileName(), clientTempReservationList.get(index)[2], 1);
@@ -508,6 +511,7 @@ public class ReservationAndCancel {
                         break;
                     }
                     for (int i = 0; i < num; i++) {
+                        timeTableFile.increaseExtraSeat(inputArr[0],1);
                         cancelTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
                     }
                     removeRowsByTrainNumber(fileTempReserve.getFileName(), inputArr[0], num);
@@ -518,6 +522,7 @@ public class ReservationAndCancel {
                     for (Ticket ticket : ticketArrayList) {
                         index = fileTempReserve.findByLineNum(clientName, ticket.lineNum);
                         if (index != -1) {
+                            timeTableFile.increaseExtraSeat(clientTempReservationList.get(index)[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
@@ -529,6 +534,7 @@ public class ReservationAndCancel {
                     for (Ticket ticket : ticketArrayList) {
                         index = fileTempReserve.findByLineNum(clientName, ticket.lineNum);
                         if (index != -1) {
+                            timeTableFile.increaseExtraSeat(clientTempReservationList.get(index)[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
@@ -541,7 +547,7 @@ public class ReservationAndCancel {
 
                     for (int i = 0; i < 3; i++) {
                         int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
-
+                        timeTableFile.increaseExtraSeat(clientTempReservationList.get(index)[2],1);
                         if (index >= 0 && index < clientTempReservationList.size()) {
                             cancelTicketArrayList.add(timeTableFile.getTicket(clientTempReservationList.get(index)[2]));
                         }
@@ -555,7 +561,7 @@ public class ReservationAndCancel {
 
                     for (int i = 0; i < 4; i++) {
                         int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
-
+                        timeTableFile.increaseExtraSeat(clientTempReservationList.get(index)[2],1);
                         if (index >= 0 && index < clientTempReservationList.size()) {
                             cancelTicketArrayList.add(timeTableFile.getTicket(clientTempReservationList.get(index)[2]));
                         }
@@ -569,6 +575,7 @@ public class ReservationAndCancel {
                     for (Ticket ticket : ticketArrayList) {
                         index = fileTempReserve.findByLineNum(clientName, ticket.lineNum);
                         if (index != -1) {
+                            timeTableFile.increaseExtraSeat(clientTempReservationList.get(index)[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
@@ -591,6 +598,7 @@ public class ReservationAndCancel {
                     int index = Integer.parseInt(inputArr[0].replace("#", "")) - 1;
 
                     if (index >= 0 && index < clientReservationList.size()) {
+                        timeTableFile.increaseExtraSeat(clientReservationList.get(index)[2],1);
                         cancelTicketArrayList.add(timeTableFile.getTicket(clientReservationList.get(index)[2]));
                         removeRowsByTrainNumber(fileReserve.getFileName(), clientReservationList.get(index)[2],1);
 
@@ -598,6 +606,7 @@ public class ReservationAndCancel {
                 } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
                     int count = countStringInArrayList(clientReservationList, inputArr[0]);
                     for (int i = 0; i < count; i++) {
+                        timeTableFile.increaseExtraSeat(inputArr[0], 1);
                         cancelTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
                     }
 
@@ -614,6 +623,7 @@ public class ReservationAndCancel {
                         int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
 
                         if (index >= 0 && index < clientReservationList.size()) {
+                            timeTableFile.increaseExtraSeat(clientReservationList.get(index)[2],1);
                             cancelTicketArrayList.add(timeTableFile.getTicket(clientReservationList.get(index)[2]));
                         }
                         removeRowsByTrainNumber(fileReserve.getFileName(), clientReservationList.get(index)[2], 1);
@@ -632,6 +642,7 @@ public class ReservationAndCancel {
                         break;
                     }
                     for (int i = 0; i < num; i++) {
+                        timeTableFile.increaseExtraSeat(inputArr[0],1);
                         cancelTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
                     }
                     removeRowsByTrainNumber(fileReserve.getFileName(), inputArr[0], num);
@@ -642,6 +653,7 @@ public class ReservationAndCancel {
                     for (Ticket ticket : ticketArrayList) {
                         index = fileReserve.findByLineNum(clientName, ticket.lineNum);
                         if (index != -1) {
+                            timeTableFile.increaseExtraSeat(clientReservationList.get(index)[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
@@ -653,6 +665,7 @@ public class ReservationAndCancel {
                     for (Ticket ticket : ticketArrayList) {
                         index = fileReserve.findByLineNum(clientName, ticket.lineNum);
                         if (index != -1) {
+                            timeTableFile.increaseExtraSeat(clientReservationList.get(index)[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
@@ -665,7 +678,7 @@ public class ReservationAndCancel {
 
                     for (int i = 0; i < 3; i++) {
                         int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
-
+                        timeTableFile.increaseExtraSeat(clientReservationList.get(index)[2],1);
                         if (index >= 0 && index < clientReservationList.size()) {
                             cancelTicketArrayList.add(timeTableFile.getTicket(clientReservationList.get(index)[2]));
                         }
@@ -679,7 +692,7 @@ public class ReservationAndCancel {
 
                     for (int i = 0; i < 4; i++) {
                         int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
-
+                        timeTableFile.increaseExtraSeat(clientReservationList.get(index)[2],1);
                         if (index >= 0 && index < clientReservationList.size()) {
                             cancelTicketArrayList.add(timeTableFile.getTicket(clientReservationList.get(index)[2]));
                         }
@@ -693,6 +706,7 @@ public class ReservationAndCancel {
                     for (Ticket ticket : ticketArrayList) {
                         index = fileReserve.findByLineNum(clientName, ticket.lineNum);
                         if (index != -1) {
+                            timeTableFile.increaseExtraSeat(clientReservationList.get(index)[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
