@@ -2,7 +2,7 @@ import java.io.FileNotFoundException;
 import java.io.*;
 import java.util.Scanner;
 
-@@ -11,7 +10,7 @@ public FileUserInfo(String fileName) {
+public FileUserInfo(String fileName) {
         this.fileName = fileName;
     }
     @Override
