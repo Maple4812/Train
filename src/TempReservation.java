@@ -154,9 +154,9 @@ public class TempReservation {
                 System.out.print("#" + (index + 1) + " / ");
                 System.out.print(tempReserve.get(2) + " / ");
                 System.out.print(tempReserve.get(3));
-                System.out.print("");
-                System.out.print("");
-                System.out.print("");
+                System.out.print(timeTableFile.getTicket(tempReserve.get(2)).fromStation.getStation());
+                System.out.print(timeTableFile.getTicket(tempReserve.get(2)).arrivalTime);
+                System.out.print(timeTableFile.getTicket(tempReserve.get(2)).toStation.getStation());
                 System.out.println();
                 if (minutesBetween > 20)
                     System.out.println("- 20분이 지나 삭제되었습니다.");
