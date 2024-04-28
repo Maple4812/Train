@@ -34,7 +34,7 @@ public class TempReservation {
         while (true) {
             System.out.print("예약하시고 싶은 기차표의 노선번호, 확정 여부, 개수(없을 경우 1개)를 입력해주세요: ");
             String input = scan.next();
-            TempReservation.timeRenewal();
+            LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
             TempReservation.removeTimeOutReserve();
             String[] inputArr = input.split(",");
             int n = inputArr.length;
@@ -123,8 +123,7 @@ public class TempReservation {
         else {
             for (int i = 0; i < tickets; i++) {
                 Date now = new Date();
-                String formattedNow = FORMATTER.format(now);
-                tempReserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime, ticket.arrivalTime, formattedNow);
+                tempReserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime, LogInAndTimeInput.getNowTime(), FORMATTER.format(new Date()));
             }
             System.out.println(FORMATTER.parse(ticket.depTime) + "에 출발하는 " + ticket.lineNum + " " + tickets + "장을 가예약 했습니다.");
         }

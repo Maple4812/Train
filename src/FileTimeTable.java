@@ -154,6 +154,7 @@ public class FileTimeTable implements FileInterface{
     }
 
     public void reduceExtraSeat(String lineNum, int n) throws IOException {
+        repos();
         Ticket ticket = getTicket(lineNum);
         ticket.extraSeat.reduceSeat(n);
         scan = new Scanner(new File(fileName));
@@ -208,7 +209,30 @@ public class FileTimeTable implements FileInterface{
         writer.close();
     }
 
+    public void repos() throws FileNotFoundException {
+        scan = new Scanner(new File("timeTable.csv"));
+        while(scan.hasNextLine()){
+            String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
+            Ticket ticket=new Ticket();
+
+            ticket.lineNum=strArr[0];
+            ticket.depTime=strArr[1];
+            try {
+                ticket.fromStation=new Station(strArr[2]);
+                ticket.arrivalTime=strArr[3];
+                ticket.toStation=new Station(strArr[4]);
+                ticket.price=new Price(strArr[5]);
+                ticket.extraSeat=new Seat(strArr[6]);
+                ticket.entireSeat=new Seat(strArr[7]);
+            } catch (FileIntegrityException e) {
+                throw new RuntimeException(e);
+            }
+            trainlist.add(ticket);
+        }
+    }
+
     public void increaseExtraSeat(String lineNum, int n) throws IOException {
+        repos();
         Ticket ticket = getTicket(lineNum);
         ticket.extraSeat.reduceSeat(n);
         scan = new Scanner(new File(fileName));

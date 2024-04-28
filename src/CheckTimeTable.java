@@ -8,7 +8,6 @@ import java.util.Date;
 
 public class CheckTimeTable {
 
-
     public FileTimeTable timeTableFile;
     public String[] inputArr;
 
@@ -62,6 +61,8 @@ public class CheckTimeTable {
 
             System.out.println("원하시는 출발역, 도착역, 출발 시각을 차례대로 입력해주세요.");
             System.out.print("-> ");
+            LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
+            TempReservation.removeTimeOutReserve();
 
             // 시간표 조회 : 사용자로부터 출발역, 도착역, 출발 시각 입력받음
             Scanner scan = new Scanner(System.in, "UTF-8");
@@ -169,6 +170,8 @@ public class CheckTimeTable {
         while(true) {
             System.out.println("예약 메뉴로 넘어가겠습니까?");
             System.out.print("-> ");
+            LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
+            TempReservation.removeTimeOutReserve();
 
             Scanner scan = new Scanner(System.in, "UTF-8");
             String input = scan.nextLine();

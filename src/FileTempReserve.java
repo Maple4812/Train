@@ -32,7 +32,7 @@ public class FileTempReserve implements FileInterface{
             }
             UserName.checkIntegrity(strArr[0]);  //사용자 이름 무결성 확인
             PhoneNumber.checkIntegrity(strArr[1]);  //사용자 전화번호 무결성 확인
-            Ticket.checkIntegrity(strArr[2]);  //사용자 예약 노선번호 무결성 확인
+            Ticket.checkIntegrity(strArr[2]);  //노선번호 무결성 확인
             Time.checkIntegrity(strArr[3]);  //출발 시각 무결성 확인
             Time.checkIntegrity(strArr[4]);  //예약 시각 무결성 확인
             Time.checkIntegrity(strArr[5]);  //예약 컴퓨터 시각 무결성 확인
@@ -128,7 +128,7 @@ public class FileTempReserve implements FileInterface{
 
             // 12자리 문자열의 형태로 변환 후 return 한다.
             return FORMATTER.format(lastestDate);
-        }catch (ParseException ignore)
+        } catch (ParseException ignore)
         {
             // 만약 프로그램 동작 도중 데이터의 변환으로 인해 parsing error 가 발생한다면
             // 시각은 새롭게 고쳐지지 않고 현재 시각은 변경되지 않는다.
@@ -140,10 +140,11 @@ public class FileTempReserve implements FileInterface{
 
     public void removeTimeOutReserve() {
         // 기능 : 5분이 지난 예약들을 삭제해준다.
-
+        repos();
         // 타이머가 꺼진 경우 수행하지 않는다.
-        if(tempList.isEmpty())
+        if(tempList.isEmpty()){
             return;
+        }
 
         try{
             // 저장되어있는 현재 시각을 불러온다
@@ -158,14 +159,22 @@ public class FileTempReserve implements FileInterface{
 
                 // 현재시각과 예약시각의 차이를 분 단위로 구한다.
                 long diff = (NowTime - reserveTime) / (1000 * 60);
-                if(diff > 5)
+                System.out.println(diff);
+                if(diff > 5){
                     // 차이가 5 분 보다 크다면 삭제한다.
-                    tempList.remove(record);
+                    FileTimeTable t = new FileTimeTable("timeTable.csv");
+                    t.increaseExtraSeat(record.get(2), 1);
+                    removeLineByTime(record.get(4));
+                    System.out.println("시간이 지나 가예약이 삭제되었습니다!");
+                }
             }
+            repos();
         }catch (ParseException ignored){
             // 만약 프로그램 동작 도중 데이터의 변환으로 인해 parsing error 가 발생한다면
             // 예약들은 새로고침되지 않는다.
             System.out.println("ParsingError!");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -185,5 +194,30 @@ public class FileTempReserve implements FileInterface{
             index++;
         }
         return -1;
+    }
+
+    public void removeLineByTime(String time) throws IOException {
+        ArrayList<String> lineList = new ArrayList<>();
+        Scanner scan = new Scanner(new File(fileName));
+        while(scan.hasNextLine()) {
+            String[] strArr = scan.nextLine().split(",");
+            StringBuilder tempStr = new StringBuilder();
+            if(!strArr[4].equals(time)) {
+                for (int i = 0; i < strArr.length; i++) {
+                    if(i < strArr.length - 1) {
+                        tempStr.append(strArr[i]).append(",");
+                    }
+                    else {
+                        tempStr.append(strArr[i]);
+                    }
+                }
+                lineList.add(tempStr.toString());
+            }
+        }
+        PrintWriter writer = new PrintWriter(new FileWriter(fileName));
+        for (String s: lineList) {
+            writer.println(s);
+        }
+        writer.close();
     }
 }
