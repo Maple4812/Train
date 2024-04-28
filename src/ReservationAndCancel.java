@@ -63,6 +63,7 @@ public class ReservationAndCancel {
         }
 
         System.out.println(loginClient.getPhoneNumber() + "/" + loginClient.getName() + " 고객님의 예약정보입니다.");
+        System.out.println();
         System.out.println("행 번호 / 노선 번호 / 출발 시각 / 출발 역 / 도착 시간 / 도착 역");
 
         int tempIndex = 0;
@@ -71,9 +72,9 @@ public class ReservationAndCancel {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             LocalDateTime departureTime = LocalDateTime.parse(tempReserve.get(3), formatter);
             LocalDateTime reserveTime = LocalDateTime.parse(tempReserve.get(4), formatter);
+            LocalDateTime nowTime = LocalDateTime.parse(LogInAndTimeInput.getNowTime(), formatter);
 
-            if (tempReserve.get(0).equals(loginClient.getName()) && departureTime.isAfter(LocalDateTime.now())) {
-                long minutesBetween = Duration.between(LocalDateTime.now(), reserveTime).toMinutes();
+            if (tempReserve.get(0).equals(loginClient.getName())) {
 
                 System.out.print("#" + rowNum + " / ");
                 System.out.print(tempReserve.get(2) + " / ");
@@ -82,16 +83,11 @@ public class ReservationAndCancel {
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).arrivalTime + " / ");
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).toStation.getStation());
                 System.out.println();
-                if (minutesBetween > 20) {
-                    System.out.println("- 20분이 지나 삭제되었습니다.");
-                } else {
-                    tempReserves.add(tempReserve);
-                    tempReserveIndexArrayList.add(tempIndex);
-                }
+                tempReserves.add(tempReserve);
+                tempReserveIndexArrayList.add(tempIndex);
                 System.out.println();
                 rowNum++;
             }
-
             tempIndex++;
         }
 
@@ -260,15 +256,14 @@ public class ReservationAndCancel {
                     } else if (inputArr[1].equals("출발")) {
                         clearCSVContent(fileTempReserve.getFileName());
 
-                        ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepArrStation(inputArr[0] + "역", inputArr[2] + "역");
-
-                        int index = -1;
-                        for (Ticket ticket : ticketArrayList) {
-                            index = fileTempReserve.findByLineNum(loginClient.getName(), ticket.lineNum);
-                            if (index != -1) {
-                                fileReserve.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
-                                confirmedTicketArrayList.add(ticket);
-                                fileTempReserve.getTempList().remove(index);
+                        for (ArrayList<String> tempReserve : tempReserves) {
+                            Ticket ticket = timeTableFile.getTicketByLineNum(tempReserve.get(2));
+                            if (ticket.fromStation.getStation().equals(inputArr[0]+"역")) {
+                                if (ticket.toStation.getStation().equals(inputArr[2]+"역")) {
+                                    fileReserve.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
+                                    confirmedTicketArrayList.add(ticket);
+                                    fileTempReserve.getTempList().remove(fileTempReserve.findByLineNum(loginClient.getName(), ticket.lineNum));
+                                }
                             }
                         }
 
@@ -280,7 +275,29 @@ public class ReservationAndCancel {
                     break;
 
                 default:
-                    flag = -1;
+                    for (int i = 0; i < inputArr.length; i++) {
+                        if (!Pattern.matches("^\\#[1-9]$", inputArr[i])) {
+                            flag = -1;
+                            break;
+                        }
+                    }
+
+                    clearCSVContent(fileTempReserve.getFileName());
+
+                    for (int i = 0; i < inputArr.length; i++) {
+                        int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
+
+                        if (index >= 0 && index < tempReserves.size()) {
+                            fileReserve.write(loginClient.getName(), loginClient.getPhoneNumber(), tempReserves.get(index).get(2), tempReserves.get(index).get(3));
+                            confirmedTicketArrayList.add(timeTableFile.getTicket(tempReserves.get(index).get(2)));
+                            fileTempReserve.getTempList().remove(fileTempReserve.findByLineNum(loginClient.getName(), tempReserves.get(i).get(2)));
+                        }
+                    }
+
+                    for (ArrayList<String> tempReserve : fileTempReserve.getTempList()) {
+                        fileTempReserve.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
+                    }
+                    fileTempReserve.repos();
             }
             TempReservation.printConfirmedTickets(confirmedTicketArrayList);
         } while (flag == -1);
@@ -772,12 +789,9 @@ public class ReservationAndCancel {
 
             // FileWriter 닫기
             fw.close();
-
-            System.out.println(fileName + "의 내용이 성공적으로 지워졌습니다.");
         } catch (IOException e) {
             // IO 예외 처리
             e.printStackTrace();
-            System.out.println(fileName + "의 내용을 지우는 데 실패했습니다.");
         }
     }
 }

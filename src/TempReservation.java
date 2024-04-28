@@ -60,45 +60,45 @@ public class TempReservation {
                     timeCheckTicket: 입력 받은 노선 번호의 티켓
                     timeCheckDepTime: 입력 받은 노선 번호 열차의 출발시간
                  */
-                Ticket timeCheckTicket=timeTableFile.getTicket(inputArr[0]);
+                Ticket timeCheckTicket = timeTableFile.getTicket(inputArr[0]);
                 //실제로 존재하는 노선 번호인지 확인
-                if(timeCheckTicket==null) {
+                if (timeCheckTicket == null) {
                     System.out.println("잘못된 노선 번호입니다.");
                     continue;
                 }
-                String timeCheckDepTime=timeCheckTicket.depTime;
+                String timeCheckDepTime = timeCheckTicket.depTime;
 
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 연도 비교
                  */
-                if(Integer.parseInt(timeCheckDepTime.substring(0,4))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))){
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                if (Integer.parseInt(timeCheckDepTime.substring(0, 4)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4))) {
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     continue;
                 }
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 월, 일 비교
                  */
-                if(
-                        Integer.parseInt(timeCheckDepTime.substring(0,4))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))&&
-                        Integer.parseInt(timeCheckDepTime.substring(4,8))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))
-                ){
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                if (
+                        Integer.parseInt(timeCheckDepTime.substring(0, 4)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4)) &&
+                                Integer.parseInt(timeCheckDepTime.substring(4, 8)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4, 8))
+                ) {
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     continue;
                 }
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 시, 분 비교
                  */
-                if(
-                        Integer.parseInt(timeCheckDepTime.substring(0,4))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))&&
-                        Integer.parseInt(timeCheckDepTime.substring(4,8))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))&&
-                        Integer.parseInt(timeCheckDepTime.substring(8,12))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8,12))
-                ){
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                if (
+                        Integer.parseInt(timeCheckDepTime.substring(0, 4)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4)) &&
+                                Integer.parseInt(timeCheckDepTime.substring(4, 8)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4, 8)) &&
+                                Integer.parseInt(timeCheckDepTime.substring(8, 12)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8, 12))
+                ) {
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     continue;
                 }
-/*
-**********************************************************************************************************************************
- */
+                /*
+                 **********************************************************************************************************************************
+                 */
                 try {
                     if (!(trueList.contains(inputArr[1]) || falseList.contains(inputArr[1]))) {
                         throw new FileIntegrityException();
@@ -121,39 +121,39 @@ public class TempReservation {
                     timeCheckTicket: 입력 받은 노선 번호의 티켓
                     timeCheckDepTime: 입력 받은 노선 번호 열차의 출발시간
                  */
-                Ticket timeCheckTicket=timeTableFile.getTicket(inputArr[0]);
+                Ticket timeCheckTicket = timeTableFile.getTicket(inputArr[0]);
                 //실제로 존재하는 노선 번호인지 확인
-                if(timeCheckTicket==null) {
+                if (timeCheckTicket == null) {
                     System.out.println("잘못된 노선 번호입니다.");
                     continue;
                 }
-                String timeCheckDepTime=timeCheckTicket.depTime;
+                String timeCheckDepTime = timeCheckTicket.depTime;
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 연도 비교
                  */
-                if(Integer.parseInt(timeCheckDepTime.substring(0,4))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))){
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                if (Integer.parseInt(timeCheckDepTime.substring(0, 4)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4))) {
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     continue;
                 }
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 월, 일 비교
                  */
-                if(
-                        Integer.parseInt(timeCheckDepTime.substring(0,4))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))&&
-                                Integer.parseInt(timeCheckDepTime.substring(4,8))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))
-                ){
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                if (
+                        Integer.parseInt(timeCheckDepTime.substring(0, 4)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4)) &&
+                                Integer.parseInt(timeCheckDepTime.substring(4, 8)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4, 8))
+                ) {
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     continue;
                 }
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 시, 분 비교
                  */
-                if(
-                        Integer.parseInt(timeCheckDepTime.substring(0,4))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))&&
-                                Integer.parseInt(timeCheckDepTime.substring(4,8))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))&&
-                                Integer.parseInt(timeCheckDepTime.substring(8,12))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8,12))
-                ){
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
+                if (
+                        Integer.parseInt(timeCheckDepTime.substring(0, 4)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4)) &&
+                                Integer.parseInt(timeCheckDepTime.substring(4, 8)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4, 8)) &&
+                                Integer.parseInt(timeCheckDepTime.substring(8, 12)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8, 12))
+                ) {
+                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     continue;
                 }
                 /*
@@ -281,13 +281,17 @@ public class TempReservation {
             return;
         }
 
+        System.out.println();
+        int num = 0;
         for (Ticket ticket : ticketArrayList) {
-            System.out.println("노선번호: "+ticket.lineNum);
-            System.out.println("출발시각: "+ticket.depTime);
-            System.out.println("출발역: "+ticket.fromStation.getStation());
-            System.out.println("도착시각: "+ticket.arrivalTime);
-            System.out.println("도착역: "+ticket.toStation.getStation());
+            System.out.println("노선번호: " + ticket.lineNum);
+            System.out.println("출발시각: " + ticket.depTime);
+            System.out.println("출발역: " + ticket.fromStation.getStation());
+            System.out.println("도착시각: " + ticket.arrivalTime);
+            System.out.println("도착역: " + ticket.toStation.getStation());
+            System.out.println();
+            num++;
         }
-        System.out.println("예약 확정 되었습니다.");
+        System.out.println("총 " + num + "개의 " + "예약 확정 되었습니다.");
     }
 }
