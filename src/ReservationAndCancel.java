@@ -150,7 +150,7 @@ public class ReservationAndCancel {
                     break;
 
                 case 2:
-                    if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                    if (Pattern.matches("^\\#[1-9]$", inputArr[0]) && Pattern.matches("^\\#[1-9]$", inputArr[1])) {
                         clearCSVContent(fileTempReserve.getFileName());
                         for (int i = 0; i < 2; i++) {
                             int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
@@ -227,7 +227,7 @@ public class ReservationAndCancel {
                     break;
 
                 case 3:
-                    if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                    if (Pattern.matches("^\\#[1-9]$", inputArr[0]) && Pattern.matches("^\\#[1-9]$", inputArr[1]) && Pattern.matches("^\\#[1-9]$", inputArr[2])) {
                         clearCSVContent(fileTempReserve.getFileName());
 
                         for (int i = 0; i < 3; i++) {
@@ -247,7 +247,7 @@ public class ReservationAndCancel {
                     break;
 
                 case 4:
-                    if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                    if (Pattern.matches("^\\#[1-9]$", inputArr[0]) && Pattern.matches("^\\#[1-9]$", inputArr[1]) && Pattern.matches("^\\#[1-9]$", inputArr[2]) && Pattern.matches("^\\#[1-9]$", inputArr[3])) {
                         clearCSVContent(fileTempReserve.getFileName());
 
                         for (int i = 0; i < 4; i++) {
