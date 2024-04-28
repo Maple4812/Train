@@ -66,18 +66,14 @@ public class CheckTimeTable {
             // 시간표 조회 : 사용자로부터 출발역, 도착역, 출발 시각 입력받음
             Scanner scan = new Scanner(System.in, "UTF-8");
             String input = scan.nextLine();
-            inputArr = input.split(",");
-
-            Station station1 = new Station(inputArr[0]);
-            inputArr[0] = station1.getStation();
-            Station station2 = new Station(inputArr[1]);
-            inputArr[1] = station2.getStation();
             /*
                 Q를 입력 받은 경우 메인 메뉴로 돌아감
              */
-            if(inputArr.length == 1 && inputArr[0].equals("Q")){
+            if(input.equals("Q")){
                 return 0;
             }
+            inputArr = input.split(",");
+
 
             // 요소가 3개가 아닐 시 재입력
             if (inputArr.length != 3) {
@@ -95,6 +91,11 @@ public class CheckTimeTable {
                 System.out.println("잘못된 입력입니다.(문법오류) ");
                 continue;
             }
+
+            Station station1 = new Station(inputArr[0]);
+            inputArr[0] = station1.getStation();
+            Station station2 = new Station(inputArr[1]);
+            inputArr[1] = station2.getStation();
 
             // 출발역과 도착역이 같을경우
             if(inputArr[0].equals(inputArr[1])) {
