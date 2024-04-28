@@ -59,7 +59,7 @@ public class CheckTimeTable {
 
         while(true) {
 
-            System.out.println("원하시는 출발역, 도착역, 출발 시각을 차례대로 입력해주세요.");
+            System.out.println("원하시는 출발역, 도착역, 출발 시각을 차례대로 입력해주세요.(출발역,도착역,출발 시각)");
             System.out.print("-> ");
             LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
             TempReservation.removeTimeOutReserve();
