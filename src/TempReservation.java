@@ -277,7 +277,7 @@ public class TempReservation {
     public static void printConfirmedTickets(ArrayList<Ticket> ticketArrayList) {
         System.out.println("예약 확정 열차 정보: ");
         if (ticketArrayList.isEmpty()) {
-            System.out.println("잘못된 가예약이 입력되어 확정되지 않았습니다.");
+            System.out.println("입력값이 잘못되었습니다.");
             return;
         }
 

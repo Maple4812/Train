@@ -1,4 +1,5 @@
 import java.io.*;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -63,24 +64,34 @@ public class ReservationAndCancel {
 
         System.out.println(loginClient.getPhoneNumber() + "/" + loginClient.getName() + " 고객님의 예약정보입니다.");
         System.out.println();
-        System.out.println("행 번호 / 노선 번호 / 출발 시각 / 출발 역 / 도착 시간 / 도착 역");
+        System.out.println("행 번호 / 노선 번호 / 출발 시각 / 출발 역 / 도착 시간 / 도착 역 / 예약 확정 잔여시간");
 
         int tempIndex = 0;
         int rowNum = 1;
         for (ArrayList<String> tempReserve : fileTempReserve.getTempList()) {
+            LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
+            TempReservation.removeTimeOutReserve();
+
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             LocalDateTime departureTime = LocalDateTime.parse(tempReserve.get(3), formatter);
             LocalDateTime reserveTime = LocalDateTime.parse(tempReserve.get(4), formatter);
             LocalDateTime nowTime = LocalDateTime.parse(LogInAndTimeInput.getNowTime(), formatter);
 
-            if (tempReserve.get(0).equals(loginClient.getName())) {
+            if (tempReserve.get(0).equals(loginClient.getName()) && departureTime.isAfter(nowTime)) {
+                long minutesBetween = Duration.between(nowTime, reserveTime).toMinutes() + 5;
 
                 System.out.print("#" + rowNum + " / ");
                 System.out.print(tempReserve.get(2) + " / ");
                 System.out.print(tempReserve.get(3) + " / ");
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).fromStation.getStation() + " / ");
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).arrivalTime + " / ");
-                System.out.print(timeTableFile.getTicket(tempReserve.get(2)).toStation.getStation());
+                System.out.print(timeTableFile.getTicket(tempReserve.get(2)).toStation.getStation() + " / ");
+                System.out.print(minutesBetween+"분");
+                if (minutesBetween > 20) {
+                    System.out.print(" - 20분이 넘었으므로 삭제되었습니다.");
+                    System.out.println();
+                    continue;
+                }
                 System.out.println();
                 tempReserves.add(tempReserve);
                 tempReserveIndexArrayList.add(tempIndex);
@@ -139,7 +150,7 @@ public class ReservationAndCancel {
                     break;
 
                 case 2:
-                    if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                    if (Pattern.matches("^\\#[1-9]$", inputArr[0]) && Pattern.matches("^\\#[1-9]$", inputArr[1])) {
                         clearCSVContent(fileTempReserve.getFileName());
                         for (int i = 0; i < 2; i++) {
                             int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
@@ -216,7 +227,7 @@ public class ReservationAndCancel {
                     break;
 
                 case 3:
-                    if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                    if (Pattern.matches("^\\#[1-9]$", inputArr[0]) && Pattern.matches("^\\#[1-9]$", inputArr[1]) && Pattern.matches("^\\#[1-9]$", inputArr[2])) {
                         clearCSVContent(fileTempReserve.getFileName());
 
                         for (int i = 0; i < 3; i++) {
@@ -236,7 +247,7 @@ public class ReservationAndCancel {
                     break;
 
                 case 4:
-                    if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                    if (Pattern.matches("^\\#[1-9]$", inputArr[0]) && Pattern.matches("^\\#[1-9]$", inputArr[1]) && Pattern.matches("^\\#[1-9]$", inputArr[2]) && Pattern.matches("^\\#[1-9]$", inputArr[3])) {
                         clearCSVContent(fileTempReserve.getFileName());
 
                         for (int i = 0; i < 4; i++) {
