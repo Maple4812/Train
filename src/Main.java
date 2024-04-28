@@ -33,7 +33,7 @@ public class Main {
         */
 
         LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput(...);
-        CheckTimeTable checkTimeTable = new CheckTimeTable(...);
+        CheckTimeTable checkTimeTable = new CheckTimeTable(fileTimeTable);
         TempReservation tempReservation = new TempReservation(fileUserInfo, fileReserve, fileTempReserve, fileTimeTable, );
         ReservationAndCancel reservationAndCancel = new ReservationAndCancel(fileReserve, fileTempReserve, fileTimeTable);
 

@@ -2,10 +2,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.lang.Integer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,7 +21,7 @@ public class CheckTimeTable {
     Date inputdate = new Date();
     Date Depdate = new Date();
 
-    public CheckTimeTable(FileTimeTable timeTableFile) {
+    public CheckTimeTable(FileInterface timeTableFile) {
         this.timeTableFile = (FileTimeTable) timeTableFile;
     }
 
