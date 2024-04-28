@@ -118,6 +118,7 @@ public class LogInAndTimeInput {
         return formatter.format(date);
     }
 
+    //이전 입력값들 삭제하는 코드 추가가
     private void clearPreviousData(String fileName) {
         File file = new File(fileName);
         if (file.exists()) {
