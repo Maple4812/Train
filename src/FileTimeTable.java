@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -153,6 +154,7 @@ public class FileTimeTable implements FileInterface{
     }
 
     public void reduceExtraSeat(String lineNum, int n) throws IOException {
+        repos();
         Ticket ticket = getTicket(lineNum);
         ticket.extraSeat.reduceSeat(n);
         scan = new Scanner(new File(fileName));
@@ -164,6 +166,7 @@ public class FileTimeTable implements FileInterface{
             StringBuilder newStr = new StringBuilder();
             if (strArr[0].equals(lineNum)) {
                 int seatTemp = Integer.parseInt(strArr[6]);
+                seatTemp = seatTemp - n;
                 for (int i = 0; i < strArr.length; i++) {
                     if(i < strArr.length - 1) {
                         if (i == 6) {
@@ -196,8 +199,91 @@ public class FileTimeTable implements FileInterface{
 
         File originalFile = new File(fileName);
         File tempFile = new File("temp.csv");
-        if (tempFile.renameTo(originalFile)) {
-            System.out.print("");
+        Scanner scan = new Scanner(tempFile);
+
+        PrintWriter writer = new PrintWriter(new FileWriter(originalFile));
+        while(scan.hasNextLine()) {
+            writer.println(scan.nextLine());
         }
+        scan.close();
+        writer.close();
+    }
+
+    public void repos() throws FileNotFoundException {
+        scan = new Scanner(new File("timeTable.csv"));
+        while(scan.hasNextLine()){
+            String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
+            Ticket ticket=new Ticket();
+
+            ticket.lineNum=strArr[0];
+            ticket.depTime=strArr[1];
+            try {
+                ticket.fromStation=new Station(strArr[2]);
+                ticket.arrivalTime=strArr[3];
+                ticket.toStation=new Station(strArr[4]);
+                ticket.price=new Price(strArr[5]);
+                ticket.extraSeat=new Seat(strArr[6]);
+                ticket.entireSeat=new Seat(strArr[7]);
+            } catch (FileIntegrityException e) {
+                throw new RuntimeException(e);
+            }
+            trainlist.add(ticket);
+        }
+    }
+
+    public void increaseExtraSeat(String lineNum, int n) throws IOException {
+        repos();
+        Ticket ticket = getTicket(lineNum);
+        ticket.extraSeat.reduceSeat(n);
+        scan = new Scanner(new File(fileName));
+
+        PrintWriter tempWriter = new PrintWriter(new FileWriter("temp.csv"));  // 파일의 내용을 지우고 수정하는 데 있어서 파일 삭제가 불가피했습니다.
+        String newString = null;
+        while(scan.hasNextLine()) {
+            String[] strArr = scan.nextLine().split(",");
+            StringBuilder newStr = new StringBuilder();
+            if (strArr[0].equals(lineNum)) {
+                int seatTemp = Integer.parseInt(strArr[6]);
+                seatTemp = seatTemp + n;
+                for (int i = 0; i < strArr.length; i++) {
+                    if(i < strArr.length - 1) {
+                        if (i == 6) {
+                            newStr.append(seatTemp).append(",");
+                        }
+                        else {
+                            newStr.append(strArr[i]).append(",");
+                        }
+                    }
+                    else {
+                        newStr.append(strArr[i]);
+                    }
+                }
+                newString = newStr.toString();
+            }
+            else {
+                for (int i = 0; i < strArr.length; i++) {
+                    if(i < strArr.length - 1) {
+                        newStr.append(strArr[i]).append(",");
+                    }
+                    else {
+                        newStr.append(strArr[i]);
+                    }
+                }
+                tempWriter.println(newStr);
+            }
+        }
+        tempWriter.println(newString);
+        tempWriter.close();
+
+        File originalFile = new File(fileName);
+        File tempFile = new File("temp.csv");
+        Scanner scan = new Scanner(tempFile);
+
+        PrintWriter writer = new PrintWriter(new FileWriter(originalFile));
+        while(scan.hasNextLine()) {
+            writer.println(scan.nextLine());
+        }
+        scan.close();
+        writer.close();
     }
 }

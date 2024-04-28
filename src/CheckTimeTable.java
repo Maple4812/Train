@@ -8,12 +8,11 @@ import java.util.Date;
 
 public class CheckTimeTable {
 
-
     public FileTimeTable timeTableFile;
     public String[] inputArr;
 
     // 사용자가 앞에서 입력한 시간을 받아옴
-    String thistime = LogInAndTimeInput.getNowTime();
+    String thistime;
 
     SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMMddHHmm");
     Date currentdate = new Date();
@@ -62,6 +61,8 @@ public class CheckTimeTable {
 
             System.out.println("원하시는 출발역, 도착역, 출발 시각을 차례대로 입력해주세요.");
             System.out.print("-> ");
+            LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
+            TempReservation.removeTimeOutReserve();
 
             // 시간표 조회 : 사용자로부터 출발역, 도착역, 출발 시각 입력받음
             Scanner scan = new Scanner(System.in, "UTF-8");
@@ -111,6 +112,7 @@ public class CheckTimeTable {
             }
 
             // 검색한 시각이 현재 시각보다 전인지 확인
+            thistime = LogInAndTimeInput.getNowTime();
 
             inputdate = dtFormat.parse(inputArr[2]);
             currentdate = dtFormat.parse(thistime);
@@ -169,6 +171,8 @@ public class CheckTimeTable {
         while(true) {
             System.out.println("예약 메뉴로 넘어가겠습니까?");
             System.out.print("-> ");
+            LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
+            TempReservation.removeTimeOutReserve();
 
             Scanner scan = new Scanner(System.in, "UTF-8");
             String input = scan.nextLine();

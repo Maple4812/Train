@@ -44,7 +44,7 @@ public class FileReserve implements FileInterface{
     public void write(String userName, String phoneNumber, String lineNum, String startTime) {
         File file = new File(fileName);
         try {
-            fw = new FileWriter(file);
+            fw = new FileWriter(file, true);
             writer = new PrintWriter(fw);
             String str = userName + "," + phoneNumber + "," + lineNum + "," + startTime;
             writer.println(str);
