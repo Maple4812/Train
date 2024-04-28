@@ -67,7 +67,7 @@ public class LogInAndTimeInput {
         if (!TempReservation.isTimerOn()) {
             setNowComputerTime(getTime());
             String time = inputTime(scanner);
-            if (time == null) return; // // TempReserve의 타이머가 꺼져있는 경우
+            if (time == null) return; // // TempReserve의 타이머가 켜져있는 경우
             setNowTime(time);
         } else {
             setNowComputerTime(getTime());
