@@ -34,6 +34,8 @@ public class TempReservation {
         while (true) {
             System.out.print("예약하시고 싶은 기차표의 노선번호, 확정 여부, 개수(없을 경우 1개)를 입력해주세요: ");
             String input = scan.next();
+            TempReservation.timeRenewal();
+            TempReservation.removeTimeOutReserve();
             String[] inputArr = input.split(",");
             int n = inputArr.length;
             if (n == 1) {
@@ -113,18 +115,18 @@ public class TempReservation {
         //일반 예약인 경우
         if (isConfirmed) {
             for (int i = 0; i < tickets; i++) {
-                reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime);
+                reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
             }
-            System.out.println(FORMATTER.parse(ticket.arrivalTime) + "에 출발하는 " + ticket.lineNum + " " + tickets + "장을 예매 확정지었습니다.");
+            System.out.println(FORMATTER.parse(ticket.depTime) + "에 출발하는 " + ticket.lineNum + " " + tickets + "장을 예매 확정지었습니다.");
         }
         //가예약인 경우
         else {
             for (int i = 0; i < tickets; i++) {
                 Date now = new Date();
                 String formattedNow = FORMATTER.format(now);
-                tempReserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.arrivalTime, ticket.depTime, formattedNow);
+                tempReserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime, ticket.arrivalTime, formattedNow);
             }
-            System.out.println(FORMATTER.parse(ticket.arrivalTime) + "에 출발하는 " + ticket.lineNum + " " + tickets + "장을 가예약 했습니다.");
+            System.out.println(FORMATTER.parse(ticket.depTime) + "에 출발하는 " + ticket.lineNum + " " + tickets + "장을 가예약 했습니다.");
         }
     }
 
@@ -169,6 +171,8 @@ public class TempReservation {
 
         System.out.println("확정할 가예약을 입력하세요: ");
         Scanner inputScan = new Scanner(System.in);
+        TempReservation.timeRenewal();
+        TempReservation.removeTimeOutReserve();
         String[] inputArr = inputScan.nextLine().split(",");
         inputScan.close();
 
@@ -389,7 +393,7 @@ public class TempReservation {
         return tempReserveFile.getNewTime();
     }
 
-    public void removeTimeOutReserve() {
+    public static void removeTimeOutReserve() {
         // 기능 : 5분이 지난 예약들을 현재 시각을 기준으로 해서 삭제해준다.
         tempReserveFile.removeTimeOutReserve();
     }
