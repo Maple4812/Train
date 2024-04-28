@@ -45,7 +45,7 @@ public class ReservationAndCancel {
                     System.out.println("메인 프롬프트로 돌아갑니다");
                     return;
                 default:
-                    System.out.println("잘못된 입력입니다.");
+                    System.out.println("입력값이 잘못되었습니다.");
                     break;
             }
         }
@@ -364,6 +364,7 @@ public class ReservationAndCancel {
                 } else {
                     System.out.println("예약 정보가 없습니다.");
                 }
+                break;
             case "Q":
                 System.out.println("메인 프롬프트로 돌아갑니다");
                 return;
