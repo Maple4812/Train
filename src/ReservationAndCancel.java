@@ -28,14 +28,23 @@ public class ReservationAndCancel {
     }
 
     public void init() throws IOException {
-        System.out.println("가예약 확정 또는 예약취소를 입력해주세요: ");
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
+        while(true) {
+            System.out.println("가예약 확정 또는 예약취소를 입력해주세요: ");
+            Scanner scanner = new Scanner(System.in);
+            String input = scanner.nextLine();
 
-        if (input.equals("가예약 확정")) {
-            init1();
-        } else if (input.equals("예약취소")) {
-            init2();
+            if (input.equals("가예약 확정")) {
+                init1();
+                break;
+            } else if (input.equals("예약취소")) {
+                init2();
+                break;
+            } else if (input.equals("Q")){
+                System.out.println("메인 프롬프트로 돌아갑니다");
+                return;
+            } else {
+                System.out.println("잘못된 입력입니다.");
+            }
         }
     }
 
@@ -50,36 +59,21 @@ public class ReservationAndCancel {
             return;
         }
 
-        int tempIndex = 0;
-
-        System.out.println(loginClient.getPhoneNumber() + "/" + loginClient.getName() + " 고객님의 예약정보입니다.");
-        System.out.println("행 번호 / 노선 번호 / 출발 시각 / 출발 역 / 도착 시간 / 도착 역");
-        fileTempReserve.repos();
-
-//        for (ArrayList<String> tempReserve : fileTempReserve.getTempList()) {
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-//            LocalDateTime departureTime = LocalDateTime.parse(tempReserve.get(3), formatter);
-//            LocalDateTime reserveTime = LocalDateTime.parse(tempReserve.get(4), formatter);
-//            System.out.println(departureTime);
-//            System.out.println(reserveTime);
-//            for (String str : tempReserve) {
-//                System.out.print(str+" ");
-//            }
-//            System.out.println();
-//        }
-
         for (ArrayList<String> tempReserve : fileTempReserve.getTempList()) {
+            int index = 0;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             LocalDateTime departureTime = LocalDateTime.parse(tempReserve.get(3), formatter);
             LocalDateTime reserveTime = LocalDateTime.parse(tempReserve.get(4), formatter);
 
+            System.out.println(tempReserve.get(1) + "/" + tempReserve.get(0) + " 고객님의 예약정보입니다.");
+            System.out.println("행 번호 / 노선 번호 / 출발 시각 / 출발 역 / 도착 시간 / 도착 역");
             if (tempReserve.get(0).equals(loginClient.getName()) && departureTime.isAfter(LocalDateTime.now())) {
                 long minutesBetween = Duration.between(LocalDateTime.now(), reserveTime).toMinutes();
 
                 tempReserves.add(tempReserve);
-                tempReserveIndexArrayList.add(tempIndex);
+                tempReserveIndexArrayList.add(index);
 
-                System.out.print("#" + (tempIndex + 1) + " / ");
+                System.out.print("#" + (index + 1) + " / ");
                 System.out.print(tempReserve.get(2) + " / ");
                 System.out.print(tempReserve.get(3));
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).fromStation.getStation());
@@ -91,14 +85,15 @@ public class ReservationAndCancel {
                 System.out.println();
             }
 
-            tempIndex++;
+            index++;
         }
 
         int flag = 1;
         do {
-            System.out.print("확정할 가예약을 입력하세요: ");
+            System.out.println("확정할 가예약을 입력하세요: ");
             Scanner inputScan = new Scanner(System.in);
             String[] inputArr = inputScan.nextLine().split(",");
+            inputScan.close();
 
             ArrayList<Ticket> confirmedTicketArrayList = new ArrayList<>();
 
@@ -332,8 +327,9 @@ public class ReservationAndCancel {
         int i = 1;
 
         for (String[] row : reservationList) {
-            String trainNum = row[0];
-            String ticketInfo = timeTableFile.getTicket(trainNum).toString();
+            String trainNum = row[2];
+            Ticket ticket = timeTableFile.getTicket(trainNum);
+            String ticketInfo = ticket.lineNum + " " + ticket.depTime + " " + ticket.fromStation.getStation() + " " + ticket.arrivalTime + " " + ticket.toStation.getStation();
             System.out.println("#" + (i++) + " " + ticketInfo);
         }
     }
