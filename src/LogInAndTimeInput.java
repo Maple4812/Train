@@ -127,8 +127,6 @@ public class LogInAndTimeInput {
             } else {
                 System.out.println("이전 데이터 삭제 실패: " + fileName);
             }
-        } else {
-            System.out.println("이전 데이터 파일이 존재하지 않습니다: " + fileName);
         }
     }
     
