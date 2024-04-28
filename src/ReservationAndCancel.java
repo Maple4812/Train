@@ -28,15 +28,23 @@ public class ReservationAndCancel {
     }
 
     public void init() throws IOException {
-        System.out.println("가예약 확정 또는 예약취소를 입력해주세요: ");
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        scanner.close();
+        while(true) {
+            System.out.println("가예약 확정 또는 예약취소를 입력해주세요: ");
+            Scanner scanner = new Scanner(System.in);
+            String input = scanner.nextLine();
 
-        if (input.equals("가예약 확정")) {
-            init1();
-        } else if (input.equals("예약취소")) {
-            init2();
+            if (input.equals("가예약 확정")) {
+                init1();
+                break;
+            } else if (input.equals("예약취소")) {
+                init2();
+                break;
+            } else if (input.equals("Q")){
+                System.out.println("메인 프롬프트로 돌아갑니다");
+                return;
+            } else {
+                System.out.println("잘못된 입력입니다.");
+            }
         }
     }
 
@@ -51,21 +59,22 @@ public class ReservationAndCancel {
             return;
         }
 
+        System.out.println(loginClient.getPhoneNumber() + "/" + loginClient.getName() + " 고객님의 예약정보입니다.");
+        System.out.println("행 번호 / 노선 번호 / 출발 시각 / 출발 역 / 도착 시간 / 도착 역");
+
+        int tempIndex = 0;
         for (ArrayList<String> tempReserve : fileTempReserve.getTempList()) {
-            int index = 0;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             LocalDateTime departureTime = LocalDateTime.parse(tempReserve.get(3), formatter);
             LocalDateTime reserveTime = LocalDateTime.parse(tempReserve.get(4), formatter);
 
-            System.out.println(tempReserve.get(1) + "/" + tempReserve.get(0) + " 고객님의 예약정보입니다.");
-            System.out.println("행 번호 / 노선 번호 / 출발 시각 / 출발 역 / 도착 시간 / 도착 역");
             if (tempReserve.get(0).equals(loginClient.getName()) && departureTime.isAfter(LocalDateTime.now())) {
                 long minutesBetween = Duration.between(LocalDateTime.now(), reserveTime).toMinutes();
 
                 tempReserves.add(tempReserve);
-                tempReserveIndexArrayList.add(index);
+                tempReserveIndexArrayList.add(tempIndex);
 
-                System.out.print("#" + (index + 1) + " / ");
+                System.out.print("#" + (tempIndex + 1) + " / ");
                 System.out.print(tempReserve.get(2) + " / ");
                 System.out.print(tempReserve.get(3));
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).fromStation.getStation());
@@ -77,7 +86,7 @@ public class ReservationAndCancel {
                 System.out.println();
             }
 
-            index++;
+            tempIndex++;
         }
 
         int flag = 1;
@@ -319,8 +328,9 @@ public class ReservationAndCancel {
         int i = 1;
 
         for (String[] row : reservationList) {
-            String trainNum = row[0];
-            String ticketInfo = timeTableFile.getTicket(trainNum).toString();
+            String trainNum = row[2];
+            Ticket ticket = timeTableFile.getTicket(trainNum);
+            String ticketInfo = ticket.lineNum + " " + ticket.depTime + " " + ticket.fromStation.getStation() + " " + ticket.arrivalTime + " " + ticket.toStation.getStation();
             System.out.println("#" + (i++) + " " + ticketInfo);
         }
     }
