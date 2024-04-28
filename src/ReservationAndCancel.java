@@ -73,8 +73,7 @@ public class ReservationAndCancel {
             LocalDateTime reserveTime = LocalDateTime.parse(tempReserve.get(4), formatter);
             LocalDateTime nowTime = LocalDateTime.parse(LogInAndTimeInput.getNowTime(), formatter);
 
-            if (tempReserve.get(0).equals(loginClient.getName()) && departureTime.isAfter(LocalDateTime.now())) {
-                long minutesBetween = Duration.between(nowTime, reserveTime).toMinutes();
+            if (tempReserve.get(0).equals(loginClient.getName())) {
 
                 System.out.print("#" + rowNum + " / ");
                 System.out.print(tempReserve.get(2) + " / ");
@@ -83,16 +82,11 @@ public class ReservationAndCancel {
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).arrivalTime + " / ");
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).toStation.getStation());
                 System.out.println();
-                if (minutesBetween > 20) {
-                    System.out.println("- 20분이 지나 삭제되었습니다.");
-                } else {
-                    tempReserves.add(tempReserve);
-                    tempReserveIndexArrayList.add(tempIndex);
-                }
+                tempReserves.add(tempReserve);
+                tempReserveIndexArrayList.add(tempIndex);
                 System.out.println();
                 rowNum++;
             }
-
             tempIndex++;
         }
 
