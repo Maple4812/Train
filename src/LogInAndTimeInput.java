@@ -28,6 +28,10 @@ public class LogInAndTimeInput {
     }
 
     public void init() {
+
+        // 이전에 입력된 값들을 삭제하는 코드 추가
+        clearPreviousData("UserInfo.csv");
+        
         Scanner scanner = new Scanner(System.in);
         boolean isValidInput = false;
         while (!isValidInput) {
@@ -45,7 +49,7 @@ public class LogInAndTimeInput {
             try {
                 UserName.checkIntegrity(userName); // 이름이 조건을 충족하는지 확인
             } catch (FileIntegrityException e) {
-                System.out.println("이름 형식이 올바르지 않습니다. 사용자 이름은 길이가 1 이상인 한글로만 이루어진 문자열이어야 합니다.");
+                System.out.println("이름 형식이 올바르지 않습니다.");
                 continue;
             }
 
@@ -53,7 +57,7 @@ public class LogInAndTimeInput {
             try {
                 PhoneNumber.checkIntegrity(phoneNumber); // 전화번호가 조건을 충족하는지 확인
             } catch (FileIntegrityException e) {
-                System.out.println("전화번호 형식이 올바르지 않습니다. 전화번호는 '010'으로 시작하고 총 11자리의 숫자여야 합니다.");
+                System.out.println("전화번호 형식이 올바르지 않습니다.");
                 continue;
             }
 
@@ -113,4 +117,17 @@ public class LogInAndTimeInput {
         Date date = new Date();
         return formatter.format(date);
     }
+
+    //이전 입력값들 삭제하는 코드 추가가
+    private void clearPreviousData(String fileName) {
+        File file = new File(fileName);
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("이전 데이터 삭제 완료: " + fileName);
+            } else {
+                System.out.println("이전 데이터 삭제 실패: " + fileName);
+            }
+        }
+    }
+    
 }
