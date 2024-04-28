@@ -1,7 +1,11 @@
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class TempReservation {
     private final static SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
@@ -376,6 +380,8 @@ public class TempReservation {
 
             long diff = time2 - time1;
             nowTime += diff;
+
+            LogInAndTimeInput.setNowComputerTime(FORMATTER.format(new Date(time2)));
 
             return FORMATTER.format(new Date(nowTime));
         } catch (ParseException e) {

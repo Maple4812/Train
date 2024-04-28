@@ -159,7 +159,6 @@ public class FileTempReserve implements FileInterface{
 
                 // 현재시각과 예약시각의 차이를 분 단위로 구한다.
                 long diff = (NowTime - reserveTime) / (1000 * 60);
-                System.out.println(diff);
                 if(diff > 5){
                     // 차이가 5 분 보다 크다면 삭제한다.
                     FileTimeTable t = new FileTimeTable("timeTable.csv");

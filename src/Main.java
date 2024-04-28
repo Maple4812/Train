@@ -42,11 +42,11 @@ public class Main {
 
         while(true) {
             // 정상적으로 사용자 정보를 입력 받으면 명령을 입력받습니다.
+            LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
+            TempReservation.removeTimeOutReserve();
             System.out.println("명령어 목록: Q(프로그램 종료), 시간표조회, 기차표예약, 예약조회");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String cmd = br.readLine();
-            LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
-            TempReservation.removeTimeOutReserve();
 
             switch (cmd) {
                 // Q 의 경우 프로그램을 종료합니다.
