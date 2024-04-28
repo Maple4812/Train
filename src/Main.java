@@ -17,7 +17,7 @@ public class Main {
             fileReserve.checkIntegrity();
             fileTempReserve.checkIntegrity();
             fileTimeTable.checkIntegrity();
-        }catch (Exception e)
+        } catch (Exception e)
         {
             // error 가 catch 되면 이를 사용자에게 알리고 프로그램을 종료한다.
             System.out.println("파일에서 심각한 오류가 발견되었습니다. 프로그램을 종료합니다.");
@@ -32,10 +32,10 @@ public class Main {
         ... 자리에 각 수행 클래스에서 필요한 파일 객체를 적어 인자로 가져갑니다.
         */
 
-        LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput(...);
+        LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput(fileUserInfo);
         CheckTimeTable checkTimeTable = new CheckTimeTable(fileTimeTable);
-        TempReservation tempReservation = new TempReservation(fileUserInfo, fileReserve, fileTempReserve, fileTimeTable, );
-        ReservationAndCancel reservationAndCancel = new ReservationAndCancel(fileReserve, fileTempReserve, fileTimeTable);
+        TempReservation tempReservation = new TempReservation(fileUserInfo, fileReserve, fileTempReserve, fileTimeTable);
+        ReservationAndCancel reservationAndCancel = new ReservationAndCancel(fileTempReserve, fileReserve, fileTimeTable);
 
         // 가장 처음 사용자로부터 정보들을 입력받습니다.
         logInAndTimeInput.init();
