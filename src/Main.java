@@ -2,7 +2,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class Main {
-
+    // git 시험
     public static void main(String[] args) throws Exception {
 
         // 각각의 파일 객체를 생성하고 각 생성자의 인자로 파일 경로를 받는다.
