@@ -215,6 +215,7 @@ public class FileTimeTable implements FileInterface{
     }
 
     public void repos() throws FileNotFoundException {
+        trainlist.clear();
         scan = new Scanner(new File("timeTable.csv"));
         trainlist = new ArrayList<>();
         while(scan.hasNextLine()){
