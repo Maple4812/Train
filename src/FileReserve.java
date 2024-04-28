@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class FileReserve implements FileInterface{
@@ -9,6 +11,7 @@ public class FileReserve implements FileInterface{
     public FileReserve(String fileName) {
         this.fileName = fileName;
     }
+    private ArrayList<ArrayList<String>> tempList = new ArrayList<>();
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
         scan = new Scanner(new File(fileName));
@@ -24,6 +27,20 @@ public class FileReserve implements FileInterface{
         }
     }
 
+    public void repos(){
+        try {
+            checkIntegrity();
+            tempList = new ArrayList<>();
+            scan = new Scanner(new File(fileName));
+            while(scan.hasNextLine()) {
+                String[] strArr = scan.nextLine().split(",");
+                ArrayList<String> list = new ArrayList<>(Arrays.asList(strArr)); // 6개의 인자를 String 형태로 가진 ArrayList (named: list)
+                tempList.add(list); // 위에서 생성한 ArrayList를 tempList에 append한다
+            }
+        } catch (FileNotFoundException | FileIntegrityException e) {
+            e.printStackTrace();
+        }
+    }
     public void write(String userName, String phoneNumber, String lineNum, String startTime) {
         File file = new File(fileName);
         try {
@@ -40,5 +57,17 @@ public class FileReserve implements FileInterface{
 
     public String getFileName() {
         return fileName;
+    }
+
+    public int findByLineNum(String userName, String lineNum) {
+        int index = 0;
+        for (ArrayList<String> tempReserve : tempList) {
+            if (tempReserve.get(0).equals(userName)) {
+                if (tempReserve.get(2).equals(lineNum))
+                    return index;
+            }
+            index++;
+        }
+        return -1;
     }
 }
