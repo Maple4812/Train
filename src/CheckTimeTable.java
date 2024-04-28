@@ -70,6 +70,7 @@ public class CheckTimeTable {
                 Q를 입력 받은 경우 메인 메뉴로 돌아감
              */
             if(input.equals("Q")){
+                LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
                 return 0;
             }
             inputArr = input.split(",");
@@ -178,6 +179,7 @@ public class CheckTimeTable {
                 case "O":
                 case "네":
                     // 1을 반환하여 main.java 에서 예약메뉴로 이동
+                    LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
                     return 1;
                 case "No":
                 case "N":
@@ -185,6 +187,7 @@ public class CheckTimeTable {
                 case "아니오":
                 case "아니요":
                     // 다시 메인 메뉴로 이동
+                    LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
                     return 0;
                 default:
                     System.out.println("잘못된 입력입니다.");
