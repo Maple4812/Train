@@ -18,10 +18,12 @@ public class Station {
     }
 
     public static void checkIntegrity(String str) throws FileIntegrityException {
-        if(!Pattern.matches(REGEXP_PATTERN_NORMAL, str) || !Pattern.matches(REGEXP_PATTERN_WITHOUT, str)) {
-            if(Pattern.matches(REGEXP_PATTERN_DOUBLE, str)) {
-                throw new FileIntegrityException("역명 무결성 오류");
-            }
+
+        if(Pattern.matches(REGEXP_PATTERN_DOUBLE, str)) {
+            throw new FileIntegrityException("역명 무결성 오류");
+        }
+        if(!Pattern.matches(REGEXP_PATTERN_WITHOUT, str)) {
+            throw new FileIntegrityException("역명 무결성 오류");
         }
 
     }
