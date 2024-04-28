@@ -511,28 +511,28 @@ public class ReservationAndCancel {
                     removeRowsByTrainNumber(fileTempReserve.getFileName(), inputArr[0], num);
 
                 } else if (inputArr[1].equals("출발")) {
-                    ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepStation(inputArr[0] + "역");
-                    int index = -1;
-                    for (Ticket ticket : ticketArrayList) {
-                        index = fileTempReserve.findByLineNum(clientName, ticket.lineNum);
-                        if (index != -1) {
-                            timeTableFile.increaseExtraSeat(clientTempReservationList.get(index)[2],1);
+                    String trainNumber = "";
+                    for (String[] Reserves: clientTempReservationList) {
+                        Ticket ticket = timeTableFile.getTicketByLineNum(Reserves[2]);
+                        if (ticket.fromStation.getStation().equals(inputArr[0]+"역")) {
+                            trainNumber = Reserves[2];
+                            timeTableFile.increaseExtraSeat(Reserves[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
-                    removeRowsByTrainNumber(fileTempReserve.getFileName(), clientTempReservationList.get(index)[2]);
+                    removeRowsByTrainNumber(fileReserve.getFileName(), trainNumber);
 
                 } else if (inputArr[1].equals("도착")) {
-                    ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepStation(inputArr[0] + "역");
-                    int index = -1;
-                    for (Ticket ticket : ticketArrayList) {
-                        index = fileTempReserve.findByLineNum(clientName, ticket.lineNum);
-                        if (index != -1) {
-                            timeTableFile.increaseExtraSeat(clientTempReservationList.get(index)[2],1);
+                    String trainNumber = "";
+                    for (String[] Reserves: clientTempReservationList) {
+                        Ticket ticket = timeTableFile.getTicketByLineNum(Reserves[2]);
+                        if (ticket.toStation.getStation().equals(inputArr[0]+"역")) {
+                            trainNumber = Reserves[2];
+                            timeTableFile.increaseExtraSeat(Reserves[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
-                    removeRowsByTrainNumber(fileTempReserve.getFileName(), clientTempReservationList.get(index)[2]);
+                    removeRowsByTrainNumber(fileReserve.getFileName(), trainNumber);
                 }
                 break;
 
@@ -563,17 +563,16 @@ public class ReservationAndCancel {
                     }
                 } else if (inputArr[1].equals("출발")) {
 
-                    ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepArrStation(inputArr[0] + "역", inputArr[2] + "역");
-
-                    int index = -1;
-                    for (Ticket ticket : ticketArrayList) {
-                        index = fileTempReserve.findByLineNum(clientName, ticket.lineNum);
-                        if (index != -1) {
-                            timeTableFile.increaseExtraSeat(clientTempReservationList.get(index)[2],1);
+                    String trainNumber = "";
+                    for (String[] Reserves: clientTempReservationList) {
+                        Ticket ticket = timeTableFile.getTicketByLineNum(Reserves[2]);
+                        if (ticket.fromStation.getStation().equals(inputArr[0]+"역")) {
+                            trainNumber = Reserves[2];
+                            timeTableFile.increaseExtraSeat(Reserves[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
-                    removeRowsByTrainNumber(fileTempReserve.getFileName(), clientTempReservationList.get(index)[2]);
+                    removeRowsByTrainNumber(fileReserve.getFileName(), trainNumber);
                 }
                 break;
         }
@@ -642,28 +641,28 @@ public class ReservationAndCancel {
                     removeRowsByTrainNumber(fileReserve.getFileName(), inputArr[0], num);
 
                 } else if (inputArr[1].equals("출발")) {
-                    ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepStation(inputArr[0] + "역");
-                    int index = -1;
-                    for (Ticket ticket : ticketArrayList) {
-                        index = fileReserve.findByLineNum(clientName, ticket.lineNum);
-                        if (index != -1) {
-                            timeTableFile.increaseExtraSeat(clientReservationList.get(index)[2],1);
+                    String trainNumber = "";
+                    for (String[] Reserves: clientReservationList) {
+                        Ticket ticket = timeTableFile.getTicketByLineNum(Reserves[2]);
+                        if (ticket.fromStation.getStation().equals(inputArr[0]+"역")) {
+                            trainNumber = Reserves[2];
+                            timeTableFile.increaseExtraSeat(Reserves[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
-                    removeRowsByTrainNumber(fileReserve.getFileName(), clientReservationList.get(index)[2]);
+                    removeRowsByTrainNumber(fileReserve.getFileName(), trainNumber);
 
                 } else if (inputArr[1].equals("도착")) {
-                    ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepStation(inputArr[0] + "역");
-                    int index = -1;
-                    for (Ticket ticket : ticketArrayList) {
-                        index = fileReserve.findByLineNum(clientName, ticket.lineNum);
-                        if (index != -1) {
-                            timeTableFile.increaseExtraSeat(clientReservationList.get(index)[2],1);
+                    String trainNumber = "";
+                    for (String[] Reserves: clientReservationList) {
+                        Ticket ticket = timeTableFile.getTicketByLineNum(Reserves[2]);
+                        if (ticket.toStation.getStation().equals(inputArr[0]+"역")) {
+                            trainNumber = Reserves[2];
+                            timeTableFile.increaseExtraSeat(Reserves[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
-                    removeRowsByTrainNumber(fileReserve.getFileName(), clientReservationList.get(index)[2]);
+                    removeRowsByTrainNumber(fileReserve.getFileName(), trainNumber);
                 }
                 break;
 
@@ -694,17 +693,16 @@ public class ReservationAndCancel {
                     }
                 } else if (inputArr[1].equals("출발")) {
 
-                    ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepArrStation(inputArr[0] + "역", inputArr[2] + "역");
-
-                    int index = -1;
-                    for (Ticket ticket : ticketArrayList) {
-                        index = fileReserve.findByLineNum(clientName, ticket.lineNum);
-                        if (index != -1) {
-                            timeTableFile.increaseExtraSeat(clientReservationList.get(index)[2],1);
+                    String trainNumber = "";
+                    for (String[] Reserves: clientReservationList) {
+                        Ticket ticket = timeTableFile.getTicketByLineNum(Reserves[2]);
+                        if (ticket.fromStation.getStation().equals(inputArr[0]+"역")) {
+                            trainNumber = Reserves[2];
+                            timeTableFile.increaseExtraSeat(Reserves[2],1);
                             cancelTicketArrayList.add(ticket);
                         }
                     }
-                    removeRowsByTrainNumber(fileReserve.getFileName(), clientReservationList.get(index)[2]);
+                    removeRowsByTrainNumber(fileReserve.getFileName(), trainNumber);
                 }
                 break;
         }
