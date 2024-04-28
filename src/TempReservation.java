@@ -166,180 +166,186 @@ public class TempReservation {
             index++;
         }
 
-        System.out.println("확정할 가예약을 입력하세요: ");
-        Scanner inputScan = new Scanner(System.in);
-        String[] inputArr = inputScan.nextLine().split(",");
-        inputScan.close();
+        int flag = 1;
+        do {
+            System.out.println("확정할 가예약을 입력하세요: ");
+            Scanner inputScan = new Scanner(System.in);
+            String[] inputArr = inputScan.nextLine().split(",");
+            inputScan.close();
 
-        ArrayList<Ticket> confirmedTicketArrayList = new ArrayList<>();
+            ArrayList<Ticket> confirmedTicketArrayList = new ArrayList<>();
 
-        switch (inputArr.length) {
-            case 1:
-                if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
-                    int index = Integer.parseInt(inputArr[0].replace("#", "")) - 1;
+            switch (inputArr.length) {
+                case 1:
+                    if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                        int index = Integer.parseInt(inputArr[0].replace("#", "")) - 1;
 
-                    if (index >= 0 && index < tempReserves.size()) {
-                        reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), tempReserves.get(index).get(2), tempReserves.get(index).get(3));
-                        confirmedTicketArrayList.add(timeTableFile.getTicket(tempReserves.get(index).get(2)));
+                        if (index >= 0 && index < tempReserves.size()) {
+                            reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), tempReserves.get(index).get(2), tempReserves.get(index).get(3));
+                            confirmedTicketArrayList.add(timeTableFile.getTicket(tempReserves.get(index).get(2)));
+                            new FileOutputStream(tempReserveFile.getFileName()).close();
+                            tempReserveFile.getTempList().remove(tempReserveIndexArrayList.get(index));
+                            for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
+                                tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
+                            }
+                        }
+                    } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
                         new FileOutputStream(tempReserveFile.getFileName()).close();
-                        tempReserveFile.getTempList().remove(tempReserveIndexArrayList.get(index));
+
+                        int index = 0;
+                        while (index != -1) {
+                            index = tempReserveFile.findByLineNum(loginClient.getName(), inputArr[0]);
+                            reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), inputArr[0], timeTableFile.getTicket(inputArr[0]).depTime);
+                            confirmedTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
+                            tempReserveFile.getTempList().remove(index);
+                        }
+
                         for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
                             tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
                         }
                     }
-                } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
-                    new FileOutputStream(tempReserveFile.getFileName()).close();
+                    break;
 
-                    int index = 0;
-                    while (index != -1) {
-                        index = tempReserveFile.findByLineNum(loginClient.getName(), inputArr[0]);
-                        reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), inputArr[0], timeTableFile.getTicket(inputArr[0]).depTime);
-                        confirmedTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
-                        tempReserveFile.getTempList().remove(index);
-                    }
+                case 2:
+                    if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                        new FileOutputStream(tempReserveFile.getFileName()).close();
+                        for (int i = 0; i < 2; i++) {
+                            int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
 
-                    for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
-                        tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
-                    }
-                }
-                break;
+                            if (index >= 0 && index < tempReserves.size()) {
+                                reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), tempReserves.get(index).get(2), tempReserves.get(index).get(3));
+                                confirmedTicketArrayList.add(timeTableFile.getTicket(tempReserves.get(index).get(2)));
+                                tempReserveFile.getTempList().remove(tempReserveFile.findByLineNum(loginClient.getName(), tempReserves.get(i).get(2)));
+                            }
+                        }
+                        for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
+                            tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
+                        }
+                    } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
+                        int num = Integer.parseInt(inputArr[1]);
 
-            case 2:
-                if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
-                    new FileOutputStream(tempReserveFile.getFileName()).close();
-                    for (int i = 0; i < 2; i++) {
-                        int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
+                        int num2 = 0;
+                        for (ArrayList<String> tempReserve : tempReserves) {
+                            if (inputArr[0].equals(tempReserve.get(2)))
+                                num2++;
+                        }
 
-                        if (index >= 0 && index < tempReserves.size()) {
-                            reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), tempReserves.get(index).get(2), tempReserves.get(index).get(3));
-                            confirmedTicketArrayList.add(timeTableFile.getTicket(tempReserves.get(index).get(2)));
-                            tempReserveFile.getTempList().remove(tempReserveFile.findByLineNum(loginClient.getName(), tempReserves.get(i).get(2)));
+                        if (num > num2) {
+                            System.out.println("입력하신 표의 개수가 많습니다. 가예약하신 표의 개수만큼 입력해주세요.");
+                            return;
+                        }
+
+                        new FileOutputStream(tempReserveFile.getFileName()).close();
+
+                        for (int i = 0; i < num; i++) {
+                            reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), inputArr[0], timeTableFile.getTicket(inputArr[0]).depTime);
+                            confirmedTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
+                            tempReserveFile.getTempList().remove(tempReserveFile.findByLineNum(loginClient.getName(), inputArr[0]));
+                        }
+
+                        for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
+                            tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
+                        }
+                    } else if (inputArr[1].equals("출발")) {
+                        new FileOutputStream(tempReserveFile.getFileName()).close();
+
+                        ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepStation(inputArr[0]+"역");
+
+                        int index = -1;
+                        for (Ticket ticket : ticketArrayList) {
+                            index = tempReserveFile.findByLineNum(loginClient.getName(), ticket.lineNum);
+                            if (index != -1) {
+                                reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
+                                confirmedTicketArrayList.add(ticket);
+                                tempReserveFile.getTempList().remove(index);
+                            }
+                        }
+
+                        for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
+                            tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
+                        }
+                    } else if (inputArr[1].equals("도착")) {
+                        new FileOutputStream(tempReserveFile.getFileName()).close();
+
+                        ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByArrStation(inputArr[0]+"역");
+
+                        int index = -1;
+                        for (Ticket ticket : ticketArrayList) {
+                            index = tempReserveFile.findByLineNum(loginClient.getName(), ticket.lineNum);
+                            if (index != -1) {
+                                reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
+                                confirmedTicketArrayList.add(ticket);
+                                tempReserveFile.getTempList().remove(index);
+                            }
+                        }
+
+                        for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
+                            tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
                         }
                     }
-                    for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
-                        tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
-                    }
-                } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
-                    int num = Integer.parseInt(inputArr[1]);
+                    break;
 
-                    int num2 = 0;
-                    for (ArrayList<String> tempReserve : tempReserves) {
-                        if (inputArr[0].equals(tempReserve.get(2)))
-                            num2++;
-                    }
+                case 3:
+                    if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                        new FileOutputStream(tempReserveFile.getFileName()).close();
 
-                    if (num > num2) {
-                        System.out.println("입력하신 표의 개수가 많습니다. 가예약하신 표의 개수만큼 입력해주세요.");
-                        return;
-                    }
+                        for (int i = 0; i < 3; i++) {
+                            int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
 
-                    new FileOutputStream(tempReserveFile.getFileName()).close();
-
-                    for (int i = 0; i < num; i++) {
-                        reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), inputArr[0], timeTableFile.getTicket(inputArr[0]).depTime);
-                        confirmedTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
-                        tempReserveFile.getTempList().remove(tempReserveFile.findByLineNum(loginClient.getName(), inputArr[0]));
-                    }
-
-                    for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
-                        tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
-                    }
-                } else if (inputArr[1].equals("출발")) {
-                    new FileOutputStream(tempReserveFile.getFileName()).close();
-
-                    ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepStation(inputArr[0]+"역");
-
-                    int index = -1;
-                    for (Ticket ticket : ticketArrayList) {
-                        index = tempReserveFile.findByLineNum(loginClient.getName(), ticket.lineNum);
-                        if (index != -1) {
-                            reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
-                            confirmedTicketArrayList.add(ticket);
-                            tempReserveFile.getTempList().remove(index);
+                            if (index >= 0 && index < tempReserves.size()) {
+                                reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), tempReserves.get(index).get(2), tempReserves.get(index).get(3));
+                                confirmedTicketArrayList.add(timeTableFile.getTicket(tempReserves.get(index).get(2)));
+                                tempReserveFile.getTempList().remove(tempReserveFile.findByLineNum(loginClient.getName(), tempReserves.get(i).get(2)));
+                            }
+                        }
+                        for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
+                            tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
                         }
                     }
+                    break;
 
-                    for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
-                        tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
-                    }
-                } else if (inputArr[1].equals("도착")) {
-                    new FileOutputStream(tempReserveFile.getFileName()).close();
+                case 4:
+                    if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                        new FileOutputStream(tempReserveFile.getFileName()).close();
 
-                    ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByArrStation(inputArr[0]+"역");
+                        for (int i = 0; i < 4; i++) {
+                            int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
 
-                    int index = -1;
-                    for (Ticket ticket : ticketArrayList) {
-                        index = tempReserveFile.findByLineNum(loginClient.getName(), ticket.lineNum);
-                        if (index != -1) {
-                            reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
-                            confirmedTicketArrayList.add(ticket);
-                            tempReserveFile.getTempList().remove(index);
+                            if (index >= 0 && index < tempReserves.size()) {
+                                reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), tempReserves.get(index).get(2), tempReserves.get(index).get(3));
+                                confirmedTicketArrayList.add(timeTableFile.getTicket(tempReserves.get(index).get(2)));
+                                tempReserveFile.getTempList().remove(tempReserveFile.findByLineNum(loginClient.getName(), tempReserves.get(i).get(2)));
+                            }
+                        }
+                        for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
+                            tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
+                        }
+                    } else if (inputArr[1].equals("출발")) {
+                        new FileOutputStream(tempReserveFile.getFileName()).close();
+
+                        ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepArrStation(inputArr[0]+"역", inputArr[2]+"역");
+
+                        int index = -1;
+                        for (Ticket ticket : ticketArrayList) {
+                            index = tempReserveFile.findByLineNum(loginClient.getName(), ticket.lineNum);
+                            if (index != -1) {
+                                reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
+                                confirmedTicketArrayList.add(ticket);
+                                tempReserveFile.getTempList().remove(index);
+                            }
+                        }
+
+                        for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
+                            tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
                         }
                     }
+                    break;
 
-                    for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
-                        tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
-                    }
-                }
-                break;
-
-            case 3:
-                if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
-                    new FileOutputStream(tempReserveFile.getFileName()).close();
-
-                    for (int i = 0; i < 3; i++) {
-                        int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
-
-                        if (index >= 0 && index < tempReserves.size()) {
-                            reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), tempReserves.get(index).get(2), tempReserves.get(index).get(3));
-                            confirmedTicketArrayList.add(timeTableFile.getTicket(tempReserves.get(index).get(2)));
-                            tempReserveFile.getTempList().remove(tempReserveFile.findByLineNum(loginClient.getName(), tempReserves.get(i).get(2)));
-                        }
-                    }
-                    for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
-                        tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
-                    }
-                }
-                break;
-
-            case 4:
-                if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
-                    new FileOutputStream(tempReserveFile.getFileName()).close();
-
-                    for (int i = 0; i < 4; i++) {
-                        int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
-
-                        if (index >= 0 && index < tempReserves.size()) {
-                            reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), tempReserves.get(index).get(2), tempReserves.get(index).get(3));
-                            confirmedTicketArrayList.add(timeTableFile.getTicket(tempReserves.get(index).get(2)));
-                            tempReserveFile.getTempList().remove(tempReserveFile.findByLineNum(loginClient.getName(), tempReserves.get(i).get(2)));
-                        }
-                    }
-                    for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
-                        tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
-                    }
-                } else if (inputArr[1].equals("출발")) {
-                    new FileOutputStream(tempReserveFile.getFileName()).close();
-
-                    ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepArrStation(inputArr[0]+"역", inputArr[2]+"역");
-
-                    int index = -1;
-                    for (Ticket ticket : ticketArrayList) {
-                        index = tempReserveFile.findByLineNum(loginClient.getName(), ticket.lineNum);
-                        if (index != -1) {
-                            reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
-                            confirmedTicketArrayList.add(ticket);
-                            tempReserveFile.getTempList().remove(index);
-                        }
-                    }
-
-                    for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
-                        tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
-                    }
-                }
-                break;
-        }
-        printConfirmedTickets(confirmedTicketArrayList);
+                default:
+                    flag = -1;
+            }
+            printConfirmedTickets(confirmedTicketArrayList);
+        } while (flag == -1);
     }
 
     public static boolean isTimerOn() {
