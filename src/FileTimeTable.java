@@ -30,6 +30,14 @@ public class FileTimeTable implements FileInterface{
         return null;
     }
 
+    public Ticket getTicketByLineNum(String lineNum) {
+        for (Ticket ticket : trainlist) {
+            if (ticket.lineNum.equals(lineNum))
+                return ticket;
+        }
+        return null;
+    }
+
     public ArrayList<Ticket> getTicketByDepStation(String depStation) {
         ArrayList<Ticket> arrayList = new ArrayList<>();
         for (Ticket ticket : trainlist) {

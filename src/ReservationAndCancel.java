@@ -188,15 +188,12 @@ public class ReservationAndCancel {
                     } else if (inputArr[1].equals("출발")) {
                         clearCSVContent(fileTempReserve.getFileName());
 
-                        ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByDepStation(inputArr[0] + "역");
-
-                        int index = -1;
-                        for (Ticket ticket : ticketArrayList) {
-                            index = fileTempReserve.findByLineNum(loginClient.getName(), ticket.lineNum);
-                            if (index != -1) {
+                        for (ArrayList<String> tempReserve : tempReserves) {
+                            Ticket ticket = timeTableFile.getTicketByLineNum(tempReserve.get(2));
+                            if (ticket.fromStation.getStation().equals(inputArr[0]+"역")) {
                                 fileReserve.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
                                 confirmedTicketArrayList.add(ticket);
-                                fileTempReserve.getTempList().remove(index);
+                                fileTempReserve.getTempList().remove(fileTempReserve.findByLineNum(loginClient.getName(), ticket.lineNum));
                             }
                         }
 
@@ -207,15 +204,12 @@ public class ReservationAndCancel {
                     } else if (inputArr[1].equals("도착")) {
                         clearCSVContent(fileTempReserve.getFileName());
 
-                        ArrayList<Ticket> ticketArrayList = timeTableFile.getTicketByArrStation(inputArr[0] + "역");
-
-                        int index = -1;
-                        for (Ticket ticket : ticketArrayList) {
-                            index = fileTempReserve.findByLineNum(loginClient.getName(), ticket.lineNum);
-                            if (index != -1) {
+                        for (ArrayList<String> tempReserve : tempReserves) {
+                            Ticket ticket = timeTableFile.getTicketByLineNum(tempReserve.get(2));
+                            if (ticket.toStation.getStation().equals(inputArr[0]+"역")) {
                                 fileReserve.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
                                 confirmedTicketArrayList.add(ticket);
-                                fileTempReserve.getTempList().remove(index);
+                                fileTempReserve.getTempList().remove(fileTempReserve.findByLineNum(loginClient.getName(), ticket.lineNum));
                             }
                         }
 
