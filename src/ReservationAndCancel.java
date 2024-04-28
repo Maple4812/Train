@@ -63,6 +63,7 @@ public class ReservationAndCancel {
         System.out.println("행 번호 / 노선 번호 / 출발 시각 / 출발 역 / 도착 시간 / 도착 역");
 
         int tempIndex = 0;
+        int rowNum = 1;
         for (ArrayList<String> tempReserve : fileTempReserve.getTempList()) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             LocalDateTime departureTime = LocalDateTime.parse(tempReserve.get(3), formatter);
@@ -71,32 +72,36 @@ public class ReservationAndCancel {
             if (tempReserve.get(0).equals(loginClient.getName()) && departureTime.isAfter(LocalDateTime.now())) {
                 long minutesBetween = Duration.between(LocalDateTime.now(), reserveTime).toMinutes();
 
-                tempReserves.add(tempReserve);
-                tempReserveIndexArrayList.add(tempIndex);
-
-                System.out.print("#" + (tempIndex + 1) + " / ");
+                System.out.print("#" + rowNum + " / ");
                 System.out.print(tempReserve.get(2) + " / ");
                 System.out.print(tempReserve.get(3) + " / ");
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).fromStation.getStation() + " / ");
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).arrivalTime + " / ");
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).toStation.getStation());
                 System.out.println();
-                if (minutesBetween > 20)
+                if (minutesBetween > 20) {
                     System.out.println("- 20분이 지나 삭제되었습니다.");
+                } else {
+                    tempReserves.add(tempReserve);
+                    tempReserveIndexArrayList.add(tempIndex);
+                }
                 System.out.println();
+                rowNum++;
             }
 
             tempIndex++;
         }
 
-
+        if (tempReserves.isEmpty()) {
+            System.out.println("가예약된 기차표의 출발시각이 이미 지났으므로 자동 삭제되었습니다.");
+            return;
+        }
 
         int flag = 1;
         do {
             System.out.println("확정할 가예약을 입력하세요: ");
             Scanner inputScan = new Scanner(System.in);
             String[] inputArr = inputScan.nextLine().split(",");
-            inputScan.close();
 
             ArrayList<Ticket> confirmedTicketArrayList = new ArrayList<>();
 
