@@ -282,6 +282,7 @@ public class TempReservation {
                         for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
                             tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
                         }
+                        tempReserveFile.repos();
                     }
                 } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
                     new FileOutputStream(tempReserveFile.getFileName()).close();
@@ -297,6 +298,7 @@ public class TempReservation {
                     for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
                         tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
                     }
+                    tempReserveFile.repos();
                 }
                 break;
 
@@ -315,6 +317,7 @@ public class TempReservation {
                     for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
                         tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
                     }
+                    tempReserveFile.repos();
                 } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
                     int num = Integer.parseInt(inputArr[1]);
 
@@ -340,6 +343,7 @@ public class TempReservation {
                     for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
                         tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
                     }
+                    tempReserveFile.repos();
                 } else if (inputArr[1].equals("출발")) {
                     new FileOutputStream(tempReserveFile.getFileName()).close();
 
@@ -358,6 +362,7 @@ public class TempReservation {
                     for (ArrayList<String> tempReserve : tempReserveFile.getTempList()) {
                         tempReserveFile.write(tempReserve.get(0), tempReserve.get(1), tempReserve.get(2), tempReserve.get(3), tempReserve.get(4), tempReserve.get(5));
                     }
+                    tempReserveFile.repos();
                 } else if (inputArr[1].equals("도착")) {
                     new FileOutputStream(tempReserveFile.getFileName()).close();
 
@@ -493,6 +498,11 @@ public class TempReservation {
 
     public static void printConfirmedTickets(ArrayList<Ticket> ticketArrayList) {
         System.out.println("예약 확정 열차 정보: ");
+        if (ticketArrayList.isEmpty()) {
+            System.out.println("잘못된 가예약이 입력되어 확정되지 않았습니다.");
+            return;
+        }
+
         for (Ticket ticket : ticketArrayList) {
             System.out.println("노선번호: "+ticket.lineNum);
             System.out.println("출발시각: "+ticket.depTime);
