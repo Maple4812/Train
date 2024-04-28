@@ -12,9 +12,9 @@ public class TempReservation {
     private final static SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
     private static FileTempReserve tempReserveFile;
     private FileUserInfo userInfoFile;
-    private FileReserve reserveFile;
-    private FileTimeTable timeTableFile;
-    private Client loginClient;
+    private static FileReserve reserveFile;
+    private static FileTimeTable timeTableFile;
+    private static Client loginClient;
     Scanner scan = new Scanner(System.in);
 
     public TempReservation(FileInterface userInfoFile, FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile, Client loginClient) {
@@ -127,7 +127,7 @@ public class TempReservation {
         }
     }
 
-    public void init2() throws IOException {
+    static public void init2() throws IOException {
         tempReserveFile.repos();
         ArrayList<ArrayList<String>> tempReserves = new ArrayList<>();
         ArrayList<Integer> tempReserveIndexArrayList = new ArrayList<>();
@@ -339,7 +339,7 @@ public class TempReservation {
                 }
                 break;
         }
-        this.printConfirmedTickets(confirmedTicketArrayList);
+        printConfirmedTickets(confirmedTicketArrayList);
     }
 
     public static boolean isTimerOn() {
@@ -393,7 +393,7 @@ public class TempReservation {
         tempReserveFile.removeTimeOutReserve();
     }
 
-    public void printConfirmedTickets(ArrayList<Ticket> ticketArrayList) {
+    public static void printConfirmedTickets(ArrayList<Ticket> ticketArrayList) {
         System.out.println("예약 확정 열차 정보: ");
         for (Ticket ticket : ticketArrayList) {
             System.out.println("노선번호: "+ticket.lineNum);
