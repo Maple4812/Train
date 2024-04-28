@@ -12,9 +12,8 @@ public class CheckTimeTable {
     public FileTimeTable timeTableFile;
     public String[] inputArr;
 
-    // 임시 시간!! 지우게 될것
-    String thistime = "202111230830";
-
+    // 사용자가 앞에서 입력한 시간을 받아옴
+    String thistime = LogInAndTimeInput.getNowTime();
 
     SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMMddHHmm");
     Date currentdate = new Date();
