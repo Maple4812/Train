@@ -69,7 +69,7 @@ public class CheckTimeTable {
             /*
                 Q를 입력 받은 경우 메인 메뉴로 돌아감
              */
-            if(input.equals("Q")){
+            if (input.equals("Q")) {
                 LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
                 return 0;
             }
@@ -88,7 +88,7 @@ public class CheckTimeTable {
                 Station.checkIntegrity(inputArr[1]);
                 Time.checkIntegrity(inputArr[2]);
 
-            }catch (FileIntegrityException e) {
+            } catch (FileIntegrityException e) {
                 System.out.println("잘못된 입력입니다.(문법오류) ");
                 continue;
             }
@@ -99,13 +99,13 @@ public class CheckTimeTable {
             inputArr[1] = station2.getStation();
 
             // 출발역과 도착역이 같을경우
-            if(inputArr[0].equals(inputArr[1])) {
+            if (inputArr[0].equals(inputArr[1])) {
                 System.out.println("역 설정을 다시 해주세요.");
                 continue;
             }
 
             // 출발역 또는 도착역이 목록에 없을경우
-            if(!STlist.contains(inputArr[0]) || !STlist.contains(inputArr[1])) {
+            if (!STlist.contains(inputArr[0]) || !STlist.contains(inputArr[1])) {
                 System.out.println("해당 역이 존재하지 않습니다. 다시 입력해 주세요.");
                 continue;
             }
@@ -118,53 +118,61 @@ public class CheckTimeTable {
 
             long diff = inputdate.getTime() - currentdate.getTime();
 
-            if(diff < 0) {
-                System.out.println("출발시간을 확인해주세요 현재 시각은 " + thistime.substring(8,10) + ":" + thistime.substring(10,12) + "입니다");
+            if (diff < 0) {
+                System.out.println("출발시간을 확인해주세요 현재 시각은 " + thistime.substring(8, 10) + ":" + thistime.substring(10, 12) + "입니다");
                 continue;
             }
 
             //검색한 시간이 현재 시각 보다 한달 후 인지 확인
 
-            if (diff > (30 * 24 * 60 * 60 * 1000L)){
+            if (diff > (30 * 24 * 60 * 60 * 1000L)) {
                 System.out.println("한 달 이내의 열차만 예매할 수 있습니다");
                 continue;
             }
 
 
-
             // 조건을 모두 만족시 다음으로 이동
-            break;
-        } // while문 종료
 
 
-        // 검색에 부합하는 기차 정보 출력
-        System.out.println("노선 번호 / 출발 시각 / 출발 역 / 도착 시각 / 도착 역 / (여석 수 / 전체 좌석 수)");
-        for (int i = 0; i < timeTableFile.getTrainlist().size(); i++) {
-            if (timeTableFile.getTrainlist().get(i).fromStation.getStation().equals(inputArr[0])) {
-                if (timeTableFile.getTrainlist().get(i).toStation.getStation().equals(inputArr[1])) {
+            // 검색에 부합하는 기차 정보 출력
 
-                    //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
-                    Depdate = dtFormat.parse(timeTableFile.getTrainlist().get(i).depTime);
-                    long diff = inputdate.getTime() - Depdate.getTime();
-                    if((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))){
-                        System.out.print(timeTableFile.getTrainlist().get(i).lineNum);
-                        System.out.print("  ");
-                        System.out.print(timeTableFile.getTrainlist().get(i).depTime);
-                        System.out.print("  ");
-                        System.out.print(timeTableFile.getTrainlist().get(i).fromStation.getStation());
-                        System.out.print("  ");
-                        System.out.print(timeTableFile.getTrainlist().get(i).arrivalTime);
-                        System.out.print("  ");
-                        System.out.print(timeTableFile.getTrainlist().get(i).toStation.getStation());
-                        System.out.print("  ");
-                        System.out.print(timeTableFile.getTrainlist().get(i).extraSeat.getSeat());
-                        System.out.print("/");
-                        System.out.println(timeTableFile.getTrainlist().get(i).entireSeat.getSeat());
+            int n = 0;
+            for (int i = 0; i < timeTableFile.getTrainlist().size(); i++) {
+                if (timeTableFile.getTrainlist().get(i).fromStation.getStation().equals(inputArr[0])) {
+                    if (timeTableFile.getTrainlist().get(i).toStation.getStation().equals(inputArr[1])) {
+
+                        //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
+                        Depdate = dtFormat.parse(timeTableFile.getTrainlist().get(i).depTime);
+                        diff = inputdate.getTime() - Depdate.getTime();
+                        if ((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))) {
+                            n++;
+                            System.out.println("노선 번호 / 출발 시각 / 출발 역 / 도착 시각 / 도착 역 / (여석 수 / 전체 좌석 수)");
+                            System.out.print(timeTableFile.getTrainlist().get(i).lineNum);
+                            System.out.print("  ");
+                            System.out.print(timeTableFile.getTrainlist().get(i).depTime);
+                            System.out.print("  ");
+                            System.out.print(timeTableFile.getTrainlist().get(i).fromStation.getStation());
+                            System.out.print("  ");
+                            System.out.print(timeTableFile.getTrainlist().get(i).arrivalTime);
+                            System.out.print("  ");
+                            System.out.print(timeTableFile.getTrainlist().get(i).toStation.getStation());
+                            System.out.print("  ");
+                            System.out.print(timeTableFile.getTrainlist().get(i).extraSeat.getSeat());
+                            System.out.print("/");
+                            System.out.println(timeTableFile.getTrainlist().get(i).entireSeat.getSeat());
+                        }
+
                     }
-
                 }
+
             }
+            if (n == 0) {
+                System.out.println("검색에 해당하는 열차가 없습니다!");
+                continue;
+            }
+            break;
         }
+
 
         // 기차 정보 출력이후 예약 메뉴 진입 여부
         while(true) {
