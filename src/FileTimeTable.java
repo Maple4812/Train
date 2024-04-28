@@ -210,6 +210,7 @@ public class FileTimeTable implements FileInterface{
     }
 
     public void repos() throws FileNotFoundException {
+        trainlist.clear();
         scan = new Scanner(new File("timeTable.csv"));
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
