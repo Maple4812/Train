@@ -265,7 +265,7 @@ public class TempReservation {
         TempReservation.timeRenewal();
         TempReservation.removeTimeOutReserve();
         String[] inputArr = inputScan.nextLine().split(",");
-        inputScan.close();
+//        inputScan.close();
 
         ArrayList<Ticket> confirmedTicketArrayList = new ArrayList<>();
 

@@ -409,9 +409,9 @@ public class ReservationAndCancel {
             System.out.println("취소 열차 정보:");
             System.out.println("노선 번호: " + ticket.lineNum);
             System.out.println("출발 시각: " + ticket.depTime);
-            System.out.println("출발 역: " + ticket.fromStation);
+            System.out.println("출발 역: " + ticket.fromStation.getStation());
             System.out.println("도착 시각: " + ticket.arrivalTime);
-            System.out.println("도착 역: " + ticket.toStation);
+            System.out.println("도착 역: " + ticket.toStation.getStation());
             System.out.println("취소 수수료: " + calcCancelFee(ticket.depTime, ticket.arrivalTime, Integer.parseInt(ticket.price.getPrice())) + "원");
         }
     }
@@ -423,7 +423,7 @@ public class ReservationAndCancel {
         System.out.println("RSVD Cancel: ");
         Scanner inputScan = new Scanner(System.in);
         String[] inputArr = inputScan.nextLine().split(",");
-        inputScan.close();
+//        inputScan.close();
 
         ArrayList<Ticket> cancelTicketArrayList = new ArrayList<>();
 
@@ -551,7 +551,7 @@ public class ReservationAndCancel {
         System.out.println("RSVD Cancel: ");
         Scanner inputScan = new Scanner(System.in);
         String[] inputArr = inputScan.nextLine().split(",");
-        inputScan.close();
+//        inputScan.close();
 
         ArrayList<Ticket> cancelTicketArrayList = new ArrayList<>();
 
