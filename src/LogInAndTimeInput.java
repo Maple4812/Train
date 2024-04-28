@@ -81,16 +81,21 @@ public class LogInAndTimeInput {
     }
 
     private String inputTime(Scanner scanner) {
-        System.out.println("현재 시간을 입력하세요 (yyyyMMddHHmm 형식):");
-        String time = scanner.nextLine();
-        try {
-            Time.checkIntegrity(time); // 현재 시간의 유효성 확인
+    System.out.println("현재 시간을 입력하세요 (yyyyMMddHHmm 형식):");
+    String time = scanner.nextLine();
+    try {
+        // 입력된 값이 12자리의 숫자인지 확인
+        if (time.matches("\\d{12}")) {
             return time;
-        } catch (FileIntegrityException e) {
-            System.out.println("시간 형식이 올바르지 않습니다. 다시 입력해주세요.");
-            return null; // 예외 처리된 경우 null 반환
+        } else {
+            throw new FileIntegrityException("시간 형식이 올바르지 않습니다.");
         }
+    } catch (FileIntegrityException e) {
+        System.out.println(e.getMessage());
+        return null; // 예외 처리된 경우 null 반환
     }
+}
+
 
     public void repos(String file) {
         try (BufferedReader br = new BufferedReader(new FileReader(file));
