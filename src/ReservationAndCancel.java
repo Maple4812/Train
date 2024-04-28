@@ -59,21 +59,22 @@ public class ReservationAndCancel {
             return;
         }
 
+        System.out.println(loginClient.getPhoneNumber() + "/" + loginClient.getName() + " 고객님의 예약정보입니다.");
+        System.out.println("행 번호 / 노선 번호 / 출발 시각 / 출발 역 / 도착 시간 / 도착 역");
+
+        int tempIndex = 0;
         for (ArrayList<String> tempReserve : fileTempReserve.getTempList()) {
-            int index = 0;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             LocalDateTime departureTime = LocalDateTime.parse(tempReserve.get(3), formatter);
             LocalDateTime reserveTime = LocalDateTime.parse(tempReserve.get(4), formatter);
 
-            System.out.println(tempReserve.get(1) + "/" + tempReserve.get(0) + " 고객님의 예약정보입니다.");
-            System.out.println("행 번호 / 노선 번호 / 출발 시각 / 출발 역 / 도착 시간 / 도착 역");
             if (tempReserve.get(0).equals(loginClient.getName()) && departureTime.isAfter(LocalDateTime.now())) {
                 long minutesBetween = Duration.between(LocalDateTime.now(), reserveTime).toMinutes();
 
                 tempReserves.add(tempReserve);
-                tempReserveIndexArrayList.add(index);
+                tempReserveIndexArrayList.add(tempIndex);
 
-                System.out.print("#" + (index + 1) + " / ");
+                System.out.print("#" + (tempIndex + 1) + " / ");
                 System.out.print(tempReserve.get(2) + " / ");
                 System.out.print(tempReserve.get(3));
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).fromStation.getStation());
@@ -85,7 +86,7 @@ public class ReservationAndCancel {
                 System.out.println();
             }
 
-            index++;
+            tempIndex++;
         }
 
         int flag = 1;
