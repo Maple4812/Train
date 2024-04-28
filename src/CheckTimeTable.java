@@ -187,7 +187,7 @@ public class CheckTimeTable {
 
             switch (input) {
                 case "Yes":
-                case "y":
+                case "Y":
                 case "O":
                 case "네":
                     // 1을 반환하여 main.java 에서 예약메뉴로 이동
