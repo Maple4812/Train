@@ -78,14 +78,21 @@ public class TempReservation {
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 월, 일 비교
                  */
-                if(Integer.parseInt(timeCheckDepTime.substring(4,8))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))){
+                if(
+                        Integer.parseInt(timeCheckDepTime.substring(0,4))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))&&
+                        Integer.parseInt(timeCheckDepTime.substring(4,8))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))
+                ){
                     System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
                     continue;
                 }
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 시, 분 비교
                  */
-                if(Integer.parseInt(timeCheckDepTime.substring(8,12))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8,12))){
+                if(
+                        Integer.parseInt(timeCheckDepTime.substring(0,4))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))&&
+                        Integer.parseInt(timeCheckDepTime.substring(4,8))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))&&
+                        Integer.parseInt(timeCheckDepTime.substring(8,12))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8,12))
+                ){
                     System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
                     continue;
                 }
@@ -131,14 +138,21 @@ public class TempReservation {
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 월, 일 비교
                  */
-                if(Integer.parseInt(timeCheckDepTime.substring(4,8))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))){
+                if(
+                        Integer.parseInt(timeCheckDepTime.substring(0,4))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))&&
+                                Integer.parseInt(timeCheckDepTime.substring(4,8))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))
+                ){
                     System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
                     continue;
                 }
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 시, 분 비교
                  */
-                if(Integer.parseInt(timeCheckDepTime.substring(8,12))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8,12))){
+                if(
+                        Integer.parseInt(timeCheckDepTime.substring(0,4))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0,4))&&
+                                Integer.parseInt(timeCheckDepTime.substring(4,8))==Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4,8))&&
+                                Integer.parseInt(timeCheckDepTime.substring(8,12))<Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8,12))
+                ){
                     System.out.println("출발시간을 확인해주세요. 현재 시각은 "+LogInAndTimeInput.getNowTime()+"입니다.");
                     continue;
                 }
