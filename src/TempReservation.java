@@ -61,7 +61,13 @@ public class TempReservation {
                     timeCheckDepTime: 입력 받은 노선 번호 열차의 출발시간
                  */
                 Ticket timeCheckTicket=timeTableFile.getTicket(inputArr[0]);
+                //실제로 존재하는 노선 번호인지 확인
+                if(timeCheckTicket==null) {
+                    System.out.println("잘못된 노선 번호입니다.");
+                    continue;
+                }
                 String timeCheckDepTime=timeCheckTicket.depTime;
+
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 연도 비교
                  */
@@ -109,6 +115,11 @@ public class TempReservation {
                     timeCheckDepTime: 입력 받은 노선 번호 열차의 출발시간
                  */
                 Ticket timeCheckTicket=timeTableFile.getTicket(inputArr[0]);
+                //실제로 존재하는 노선 번호인지 확인
+                if(timeCheckTicket==null) {
+                    System.out.println("잘못된 노선 번호입니다.");
+                    continue;
+                }
                 String timeCheckDepTime=timeCheckTicket.depTime;
                 /*
                     현재 시각과 예약 하려는 열차의 출발 시각 간 연도 비교
