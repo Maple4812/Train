@@ -76,9 +76,9 @@ public class ReservationAndCancel {
 
                 System.out.print("#" + (tempIndex + 1) + " / ");
                 System.out.print(tempReserve.get(2) + " / ");
-                System.out.print(tempReserve.get(3));
-                System.out.print(timeTableFile.getTicket(tempReserve.get(2)).fromStation.getStation());
-                System.out.print(timeTableFile.getTicket(tempReserve.get(2)).arrivalTime);
+                System.out.print(tempReserve.get(3) + " / ");
+                System.out.print(timeTableFile.getTicket(tempReserve.get(2)).fromStation.getStation() + " / ");
+                System.out.print(timeTableFile.getTicket(tempReserve.get(2)).arrivalTime + " / ");
                 System.out.print(timeTableFile.getTicket(tempReserve.get(2)).toStation.getStation());
                 System.out.println();
                 if (minutesBetween > 20)
@@ -88,6 +88,8 @@ public class ReservationAndCancel {
 
             tempIndex++;
         }
+
+
 
         int flag = 1;
         do {
