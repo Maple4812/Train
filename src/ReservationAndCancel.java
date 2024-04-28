@@ -349,7 +349,8 @@ public class ReservationAndCancel {
 
         for (String[] row : reservationList) {
             String trainNum = row[2];
-            String ticketInfo = timeTableFile.getTicket(trainNum).toString();
+            Ticket ticket = timeTableFile.getTicket(trainNum);
+            String ticketInfo = ticket.lineNum + " " + ticket.depTime + " " + ticket.fromStation.getStation() + " " + ticket.arrivalTime + " " + ticket.toStation.getStation();
             System.out.println("#" + (i++) + " " + ticketInfo);
         }
     }
