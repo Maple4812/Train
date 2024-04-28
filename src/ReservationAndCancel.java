@@ -408,10 +408,9 @@ public class ReservationAndCancel {
                 } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
                     int index = 0;
                     while (index != -1) {
-                        index = cli.findByLineNum(clientName, inputArr[0]);
-                        reserveFile.write(clientName, clientPhoneNumber, inputArr[0], timeTableFile.getTicket(inputArr[0]).depTime);
+                        index = fileTempReserve.findByLineNum(clientName, inputArr[0]);
                         cancelTicketArrayList.add(timeTableFile.getTicket(inputArr[0]));
-                        tempReserveFile.getTempList().remove(index);
+                        clientTempReservationList.remove(index);
                     }
 
                     removeRowsByTrainNumber(fileTempReserve.getFileName(), inputArr[0]);
