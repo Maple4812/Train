@@ -49,7 +49,7 @@ public class LogInAndTimeInput {
             try {
                 UserName.checkIntegrity(userName); // 이름이 조건을 충족하는지 확인
             } catch (FileIntegrityException e) {
-                System.out.println("이름 형식이 올바르지 않습니다. 사용자 이름은 길이가 1 이상인 한글로만 이루어진 문자열이어야 합니다.");
+                System.out.println("이름 형식이 올바르지 않습니다.");
                 continue;
             }
 
@@ -57,7 +57,7 @@ public class LogInAndTimeInput {
             try {
                 PhoneNumber.checkIntegrity(phoneNumber); // 전화번호가 조건을 충족하는지 확인
             } catch (FileIntegrityException e) {
-                System.out.println("전화번호 형식이 올바르지 않습니다. 전화번호는 '010'으로 시작하고 총 11자리의 숫자여야 합니다.");
+                System.out.println("전화번호 형식이 올바르지 않습니다.");
                 continue;
             }
 
