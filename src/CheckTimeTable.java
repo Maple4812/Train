@@ -78,7 +78,7 @@ public class CheckTimeTable {
 
             // 요소가 3개가 아닐 시 재입력
             if (inputArr.length != 3) {
-                System.out.println("잘못된 입력입니다.(인자수가 틀림) ");
+                System.out.println("잘못된 입력입니다.");
                 continue;
             }
 
