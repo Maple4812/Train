@@ -52,6 +52,7 @@ public class ReservationAndCancel {
     }
 
     public void init1() throws IOException {
+        // pull request test
         fileTempReserve.repos();
         ArrayList<ArrayList<String>> tempReserves = new ArrayList<>();
         ArrayList<Integer> tempReserveIndexArrayList = new ArrayList<>();
