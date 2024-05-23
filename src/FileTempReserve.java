@@ -14,11 +14,11 @@ public class FileTempReserve implements FileInterface{
     private final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
     private ArrayList<ArrayList<String>> tempList;
 
-    public ArrayList<ArrayList<String>> getTempList() {
+    public ArrayList<TempTicket> getTempList() {
         return tempList;
     }
 
-    public FileTempReserve(String fileName) throws FileNotFoundException {
+    public FileTempReserve(String fileName) {
         this.fileName = fileName;
     }
     Scanner scan;
