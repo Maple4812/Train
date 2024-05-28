@@ -31,22 +31,25 @@ public class ReservationAndCancel {
     }
 
     public void init() throws IOException {
+        label:
         while (true) {
             System.out.println("가예약 확정 또는 예약취소를 입력해주세요: ");
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();
 
-            if (input.equals("가예약 확정")) {
-                init1();
-                break;
-            } else if (input.equals("예약취소")) {
-                init2();
-                break;
-            } else if (input.equals("Q")) {
-                System.out.println("메인 프롬프트로 돌아갑니다");
-                return;
-            } else {
-                System.out.println("잘못된 입력입니다.");
+            switch (input) {
+                case "가예약 확정":
+                    init1();
+                    break label;
+                case "예약취소":
+                    init2();
+                    break label;
+                case "Q":
+                    System.out.println("메인 프롬프트로 돌아갑니다");
+                    return;
+                default:
+                    System.out.println("잘못된 입력입니다.");
+                    break;
             }
         }
     }
