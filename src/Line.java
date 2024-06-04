@@ -9,7 +9,9 @@ public class Line {
     public Line() {}
 
     public static void checkIntegrity(String str) throws FileIntegrityException{
+        /*
 
+         */
     }
 
 
