@@ -15,5 +15,12 @@ public class FileRail implements FileInterface{
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
         scan= new Scanner(new File(fileName));
+        while(scan.hasNextLine()){
+            String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
+            Line line=new Line(); //읽어온 줄의 정보를 저장할 Line 객체
+            /*
+            무결성 검사 진행하는 부분 여기에 추가
+             */
+        }
     }
 }
