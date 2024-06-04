@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,6 +14,6 @@ public class FileRail implements FileInterface{
 
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
-
+        scan= new Scanner(new File(fileName));
     }
 }
