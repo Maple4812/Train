@@ -14,19 +14,29 @@ public class FileTimeTable implements FileInterface{
 
     public ArrayList<Line> getLineList(){return this.lineList;}
 
-    public Ticket getTicket(String str){
+    public Line getLine(String str){
+        /*
+            데이터 파일 최신화
+         */
         try {
             repos();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        for(Ticket ticket : trainlist){
-            if(ticket.lineNum.equals(str)){
-                return ticket;
+        /*
+            입력 받은 노선번호에 맞는 Line 반환
+         */
+        for(Line line : lineList){
+            if(line.lineNum.equals(str)){
+                return line;
             }
         }
         return null;
     }
+
+    /*
+    아래는 다른 파트에서 쓰는 부분
+     */
 
     public Ticket getTicketByLineNum(String lineNum) {
         for (Ticket ticket : trainlist) {
@@ -64,6 +74,10 @@ public class FileTimeTable implements FileInterface{
         }
         return arrayList;
     }
+
+    /*
+        위는 다른 파트에서 쓰는 부분
+     */
 
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
