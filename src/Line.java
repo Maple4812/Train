@@ -12,6 +12,7 @@ public class Line {
 
     }
 
+
     /*
         1. public static으로 해야하는지? 만약 static으로 해야하면 설계문서 수정해야 할 듯
     */
