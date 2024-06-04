@@ -15,7 +15,6 @@ public class FileRail implements FileInterface{
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
         scan= new Scanner(new File(fileName));
-        ArrayList<Rail> railList=new ArrayList<>();//구간번호 인덱스 드을 체크하기 위한 arraylist
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
             Rail rail=new Rail(); //읽어온 줄의 정보를 저장할 Rail 객체
@@ -32,7 +31,7 @@ public class FileRail implements FileInterface{
         }
 
         /*
-        운행 정보 인덱스가 1인 구간과 -1인 구간이 출발역 도착역만 다르고 나머지 정보는 일치하는지 무결성검사
+        예) 운행 정보 인덱스가 1인 구간과 -1인 구간에 대해, 출발역 도착역만 다르고 나머지 정보는 일치하는지 무결성검사
         그 외 추가 항목들 모두 이 아래에서 검사
          */
     }
