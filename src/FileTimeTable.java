@@ -5,7 +5,8 @@ import java.util.Scanner;
 
 public class FileTimeTable implements FileInterface{
     private String fileName;
-    private ArrayList<Ticket> trainlist=new ArrayList<>(); //timetable.csv의 한 줄에 저장된 정보를 각 줄 마다 ticket 객체로 묶어 저장
+    private ArrayList<Ticket> trainlist = new ArrayList<>();//timetable.csv의 한 줄에 저장된 정보를 각 줄 마다 ticket 객체로 묶어 저장
+    //private ArrayList<Line> lineList = new ArrayList<>(); //현재의 trainlist를 Line 객체의 추가에 따라 lineList로 변경
     Scanner scan;
 
     public FileTimeTable(String fileName) throws FileNotFoundException {
