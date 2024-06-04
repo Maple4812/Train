@@ -12,7 +12,7 @@ public class FileTempReserve implements FileInterface{
     private FileWriter fw;
     private PrintWriter writer;
     private final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
-    private ArrayList<ArrayList<String>> tempList;
+    private ArrayList<TempTicket> tempList;
 
     public ArrayList<TempTicket> getTempList() {
         return tempList;
@@ -39,6 +39,7 @@ public class FileTempReserve implements FileInterface{
         }
     }
 
+    // 수정 !!
     public void repos(){
         try {
             checkIntegrity();
@@ -46,27 +47,67 @@ public class FileTempReserve implements FileInterface{
             scan = new Scanner(new File(fileName));
             while(scan.hasNextLine()) {
                 String[] strArr = scan.nextLine().split(",");
-                ArrayList<String> list = new ArrayList<>(Arrays.asList(strArr)); // 6개의 인자를 String 형태로 가진 ArrayList (named: list)
-                tempList.add(list); // 위에서 생성한 ArrayList를 tempList에 append한다
+//                ArrayList<String> list = new ArrayList<>(Arrays.asList(strArr)); // 6개의 인자를 String 형태로 가진 ArrayList (named: list)
+//                tempList.add(list); // 위에서 생성한 ArrayList를 tempList에 append한다
+
+                // 저장을 위한 TempTicket 클래스 생성
+                TempTicket ticket = new TempTicket();
+
+                // cilent 부분 채우기
+                // strArr[0] : 사용자 이름
+                // strArr[1] : 전화번호
+                ticket.client = new Client(strArr[0], strArr[1]);
+
+                // Line 객체를 받아오기 위해 어쩔 수 없이 FileTimeTable 객체 생성.. 다른 좋은 방법이 있을 수도...
+                FileTimeTable table = new FileTimeTable("timeTable.csv");
+                // strArr[2] : 노선번호
+                ticket.line = table.getLine(strArr[2]);
+
+                // 출발시각
+                // strArr[3] : String type 출발 시각
+                ticket.depTime = strArr[3];
+
+                // 예약시각
+                ticket.setReserveTime(strArr[4]);
+
+                // 예약 컴퓨터 시각
+                ticket.setReserveComputerTime(strArr[5]);
+
+                // 노선정보
+                // RailIndex 에 맞는 Rail 객체를 받아오기 위해 FileRail 객체 생성,,,
+                FileRail fileRail = new FileRail("rail.csv");
+
+                // strArr[6] : 노선정보
+                String[] railIndices = strArr[6].split("/");
+                ArrayList<Rail> temp = new ArrayList<>();
+                for(int i=0; i<railIndices.length; i++){
+                    // getRailByIndex 를 통해 노선정보인덱스에 해당하는 Rail 객체를 받아온다.
+                    temp.add(fileRail.getRailByIndex(Integer.parseInt(railIndices[i])));
+                }
+                ticket.railIndices = temp;
+
+                // 만들어진 ticket 을 TempList 에 저장
+                tempList.add(ticket);
             }
         } catch (FileNotFoundException | FileIntegrityException e) {
             e.printStackTrace();
         }
     }
 
-    public void write(String userName, String phoneNumber, String lineNum, String startTime, String endTime, String endComputerTime){
-        // 이 함수에서 추가적인 규칙 검사는 이루어지지 않습니다. 해당 함수에 입력되는 모든 인자는 이미 검사를 받았다고 가정합니다.
-        File file = new File(fileName);
-        try {
-            fw = new FileWriter(file, true);
-            writer = new PrintWriter(fw);
-            String str = userName + "," + phoneNumber + "," + lineNum + "," + startTime + "," + endTime + "," + endComputerTime;
-            writer.println(str);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    // 폐기... 기존 String 으로만 하던 방식이었음
+//    public void write(String userName, String phoneNumber, String lineNum, String startTime, String endTime, String endComputerTime){
+//        // 이 함수에서 추가적인 규칙 검사는 이루어지지 않습니다. 해당 함수에 입력되는 모든 인자는 이미 검사를 받았다고 가정합니다.
+//        File file = new File(fileName);
+//        try {
+//            fw = new FileWriter(file, false);
+//            writer = new PrintWriter(fw);
+//            String str = userName + "," + phoneNumber + "," + lineNum + "," + startTime + "," + endTime + "," + endComputerTime;
+//            writer.println(str);
+//            writer.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public boolean isTimerOn()
     {
@@ -100,10 +141,10 @@ public class FileTempReserve implements FileInterface{
             // 하지만 parsing 할 수 없으면 애초에 무결성 검사에서 걸러지기 때문에
             // error 가 catch 되는 경우는 없다.
 
-            for(ArrayList<String> record : tempList)
+            for(TempTicket t : tempList)
             {
-                Date reserveDate = FORMATTER.parse(record.get(4));
-                Date reserveComputerDate = FORMATTER.parse(record.get(5));
+                Date reserveDate = FORMATTER.parse(t.getReserveTime()); // 수정 !!
+                Date reserveComputerDate = FORMATTER.parse(t.getReserveComputerTime()); // 수정 !!
                 if(lastestDate.before(reserveDate))
                 {
                     lastestDate = reserveDate;
@@ -138,9 +179,11 @@ public class FileTempReserve implements FileInterface{
         return null;
     }
 
+    // 수정!!!
+    // 기존 String 으로만 하던 방식에서 TempTicket 을 사용하는 방식으로...
     public void removeTimeOutReserve() {
         // 기능 : 5분이 지난 예약들을 삭제해준다.
-        repos();
+        update();
         // 타이머가 꺼진 경우 수행하지 않는다.
         if(tempList.isEmpty()){
             return;
@@ -151,23 +194,27 @@ public class FileTempReserve implements FileInterface{
             Date savedNowDate = FORMATTER.parse(LogInAndTimeInput.getNowTime());
             long NowTime = savedNowDate.getTime();
 
-            for(ArrayList<String> record: tempList)
+            for(TempTicket t: tempList)
             {
                 // 저장된 예약 시각들을 받는다.
-                Date reserveDate = FORMATTER.parse(record.get(4));
+                Date reserveDate = FORMATTER.parse(t.getReserveTime());
                 long reserveTime = reserveDate.getTime();
 
                 // 현재시각과 예약시각의 차이를 분 단위로 구한다.
                 long diff = (NowTime - reserveTime) / (1000 * 60);
                 if(diff > 4){
                     // 차이가 5 분 보다 크다면 삭제한다.
-                    FileTimeTable t = new FileTimeTable("timeTable.csv");
-                    t.increaseExtraSeat(record.get(2), 1);
-                    removeLineByTime(record.get(4));
+                    FileTimeTable table = new FileTimeTable("timeTable.csv");
+                    table.increaseExtraSeat(t.line.lineNum, 1);
+                    // ArrayList 상에서만 지우고 update 해주면 되니까...
+                    // removeLineByTime(record.get(4));
+                    tempList.remove(t);
                     System.out.println("시간이 지나 가예약이 삭제되었습니다!");
                 }
             }
-            repos();
+            // update 안에 repos 까지 넣어서 사용
+            // 앞서 ArrayList 만 삭제했으니 파일에도 적용해야함
+            update();
         }catch (ParseException ignored){
             // 만약 프로그램 동작 도중 데이터의 변환으로 인해 parsing error 가 발생한다면
             // 예약들은 새로고침되지 않는다.
@@ -218,5 +265,25 @@ public class FileTempReserve implements FileInterface{
             writer.println(s);
         }
         writer.close();
+    }
+
+    // ArrayList 에 적혀있는 내용을 파일에 덮어쓰기 합니다.
+    // 추가!!!
+    public void update(){
+        File file = new File(fileName);
+        try {
+            fw = new FileWriter(file, false);
+            writer = new PrintWriter(fw);
+            for(TempTicket t : tempList){
+                String str = t.client.getName() + "," + t.client.getPhoneNumber() + "," + t.line.lineNum + "," +
+                        t.depTime + "," + t.getReserveTime() + "," + t.getReserveComputerTime() + "," + t.getRailIndicesToString();
+                writer.println(str);
+                writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // repos 까지 수행해준다.
+        repos();
     }
 }

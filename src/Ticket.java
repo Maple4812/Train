@@ -14,7 +14,7 @@ public class Ticket {
     public Ticket(){}
 
     //노선 번호 무결성 검사
-    public static void checkIntegrity(String str) throws FileIntegrityException {
+    public void checkIntegrity(String str) throws FileIntegrityException {
         // 1. railIndices 안에 있는 Rail 객체들의 나열이 실제 존재하는 노선 정보인지 확인
 
         // line 안에 해당 Rail 객체들의 나열이 존재하는지 확인하려면 우선 line 안에 LinkedHashMap 을 가져와야한다.
@@ -115,6 +115,16 @@ public class Ticket {
 
     public int getLastRailofTicket(){
         return railIndices.get(railIndices.size() - 1).railIndex;
+    }
+
+    // Rail 객체들의 Rail index 들을 / 를 기준으로 하는 String 으로 return 해줌
+    public String getRailIndicesToString(){
+        String returnStr = "";
+        for(int i=0; i<railIndices.size() - 1; i++){
+            returnStr += String.valueOf(railIndices.get(i).railIndex) + "/";
+        }
+        returnStr += String.valueOf(railIndices.get(railIndices.size() - 1));
+        return returnStr;
     }
 
     //Ticket 정보 출력하기 위한 toString
