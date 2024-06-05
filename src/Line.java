@@ -6,7 +6,11 @@ public class Line {
     String lineNum, depTime, arrivalTime; //노선 번호, 출발 시각, 도착 시각
     LinkedHashMap<Rail, Integer> railList; // <운행 정보, 여석 수>
 
-    public Line() {}
+    public Line(String lineNum, String depTime, LinkedHashMap<Rail, Integer> railList) {
+        this.lineNum = lineNum;
+        this.depTime = depTime;
+        this.railList = railList;
+    }
 
     public static void checkIntegrity(String str) throws FileIntegrityException{
         /*
