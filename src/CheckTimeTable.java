@@ -9,6 +9,7 @@ import java.util.Date;
 public class CheckTimeTable {
 
     public FileTimeTable timeTableFile;
+    public FileRail railFile;
     public String[] inputArr;
 
     // 사용자가 앞에서 입력한 시간을 받아옴
@@ -19,8 +20,9 @@ public class CheckTimeTable {
     Date inputdate = new Date();
     Date Depdate = new Date();
 
-    public CheckTimeTable(FileInterface timeTableFile) {
+    public CheckTimeTable(FileInterface timeTableFile,FileInterface railFile) {
         this.timeTableFile = (FileTimeTable) timeTableFile;
+        this.railFile = (FileRail) railFile;
     }
 
     public int init() throws IOException, FileIntegrityException, ParseException {
@@ -31,17 +33,17 @@ public class CheckTimeTable {
         /*
             출발역을 중복 제거하여 역 리스트에 추가
          */
-        for (int i = 0; i < timeTableFile.getTrainlist().size(); i++) {
-            if(!STlist.contains(timeTableFile.getTrainlist().get(i).fromStation.getStation())){
-                STlist.add(timeTableFile.getTrainlist().get(i).fromStation.getStation());
+        for (int i = 0; i < railFile.getRaillist().size(); i++) {
+            if(!STlist.contains(railFile.getRaillist().get(i).fromStation.getStation())){
+                STlist.add(railFile.getRaillist().get(i).fromStation.getStation());
             }
         }
         /*
             도착역을 중복 제거하여 역 리스트에 추가
          */
-        for (int i = 0; i < timeTableFile.getTrainlist().size(); i++) {
-            if(!STlist.contains(timeTableFile.getTrainlist().get(i).toStation.getStation())){
-                STlist.add(timeTableFile.getTrainlist().get(i).toStation.getStation());
+        for (int i = 0; i < railFile.getRaillist().size(); i++) {
+            if(!STlist.contains(railFile.getRaillist().get(i).toStation.getStation())){
+                STlist.add(railFile.getRaillist().get(i).toStation.getStation());
             }
         }
 
