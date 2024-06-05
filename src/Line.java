@@ -31,10 +31,16 @@ public class Line {
     /*
         무결성 검사용
         이 Line이 지나는 역을 지나는 순서대로 반환
+        railList에서 순서대로 Rail 객체를 받아오고,
+        railList[0].출발역을 저장
+        railList[0].도착역을 저장
+        이후 railList[0].도착역 과 railList[1].출발역이 일치하는지 검사하고, 일치하지 않으면 오류 처리 (구간이 연결되지 않음)
+        railList의 size만큼 반복
      */
     public ArrayList<String> getStationList(){
 
     }
+
     /*
         충돌 무결성 검사용
         각 구간을 지나는 출발시간을 list로 반환
@@ -42,6 +48,7 @@ public class Line {
     public ArrayList<String> getDeptimeList(){
 
     }
+
     /*
         중복 구간이 있는지 무결성 검사하는 용
      */
