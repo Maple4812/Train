@@ -85,12 +85,14 @@ public class FileTimeTable implements FileInterface{
         ArrayList<String> lineNumList=new ArrayList<>(); // 노선 번호 중복을 체크하기 위해 노선 번호만 저장 할 리스트
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
-            Ticket ticket=new Ticket();
+            Line line= new Line();
 
             /*
-            데이터 파일이 노선번호, 출발 시각, 출발역, 도착 시각, 도착역, 가격, 여석 수, 전체 좌석 수의 8가지 요소를 갖고 있는지 검사합니다.
+                데이터 파일이 노선 번호, 출발 시각, <운행 정보 인덱스, 여석> ... 형태를 갖는지 확인합니다.
+                이때 strArr의 개수는 4 이상의 짝수
+                (한 Line이 최대 20개? 의 구간만 지날 수 있다는 조건이 있었던거 같은데 확인 필요. 일단 현재는 4 이상 짝수이면 모두 만족)
              */
-            if(strArr.length != 8) {
+            if( !((strArr.length>=4) && (strArr.length % 2 == 0))) {
                 throw new FileIntegrityException("무결성 오류: 파일에 인자의 개수가 옳지 않은 레코드가 존재합니다.");
             }
 
@@ -235,15 +237,25 @@ public class FileTimeTable implements FileInterface{
     }
 
     public void repos() throws FileNotFoundException {
-        trainlist.clear();
+        lineList.clear();
         scan = new Scanner(new File("timeTable.csv"));
-        trainlist = new ArrayList<>();
+        lineList = new ArrayList<>();
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
-            Ticket ticket=new Ticket();
+            Line line=new Line();
 
-            ticket.lineNum=strArr[0];
-            ticket.depTime=strArr[1];
+            /*
+                strArr[0]이 '노선 번호'의 문법 규칙을 만족하는 지 검사
+                문법 규칙을 만족한다면 line.lineNum에 할당
+                만족하지 않으면 FileIntegrityException을 throw
+             */
+            line.lineNum=strArr[0]; //노선 번호
+            /*
+                strArr[1]이 '시각' 문법 규칙을 만족하는지 검사
+                문법 규칙을 만족한다면 값을 할당
+                만족하지 않으면 FileIntegrityException을 throw
+             */
+            line.depTime=strArr[1]; //출발 시각
             try {
                 ticket.fromStation=new Station(strArr[2]);
                 ticket.arrivalTime=strArr[3];
