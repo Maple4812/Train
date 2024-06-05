@@ -136,8 +136,34 @@ public class CheckTimeTable {
             // 조건을 모두 만족시 다음으로 이동
 
 
-            // 검색에 부합하는 기차 정보 출력
+            // 검색에 부합하는 기차 정보 출력(새로 작성)
+            int n = 0;
+            for (int i = 0; i < timeTableFile.getLineList().size(); i++) {
+                if (timeTableFile.getLineList().get(i).slicing(inputArr[0], inputArr[1]) != null) {
 
+                    //티켓 객체 임시 생성
+                    Ticket ticket = new Ticket();
+                    ticket.railIndices = timeTableFile.getLineList().get(i).slicing(inputArr[0], inputArr[1]);
+                    ticket.line = timeTableFile.getLineList().get(i);
+                    ticket.depTime = timeTableFile.getLineList().get(i).caculateDeptime(inputArr[0], inputArr[1]); // caculateDeptime : 역입력 시 출발 시각 반환 함수
+
+                    //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
+                    Depdate = dtFormat.parse(ticket.depTime);
+                    diff = inputdate.getTime() - Depdate.getTime();
+                    if ((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))) {
+                        if (n == 0){System.out.println("노선 번호 / 출발 시각 / 출발 역 / 도착 시각 / 도착 역 / (여석 수 / 전체 좌석 수)");}
+                        n++;
+                        printTicket(ticket);
+                    }
+                }
+            }
+            if (n == 0) {
+                System.out.println("검색에 해당하는 열차가 없습니다!");
+                continue;
+            }
+            break;
+
+            /* 검색에 부합하는 기차 정보 출력(기존)
             int n = 0;
             for (int i = 0; i < timeTableFile.getTrainlist().size(); i++) {
                 if (timeTableFile.getTrainlist().get(i).fromStation.getStation().equals(inputArr[0])) {
@@ -173,7 +199,10 @@ public class CheckTimeTable {
                 continue;
             }
             break;
+        */
         }
+
+
 
 
         // 기차 정보 출력이후 예약 메뉴 진입 여부
@@ -214,4 +243,11 @@ public class CheckTimeTable {
     public void repos(String file){
 
     }
+
+    // 티켓 객체의 가격과 도착시간을 계산 후 출력
+    public void printTicket(Ticket ticket){
+
+    }
 }
+
+
