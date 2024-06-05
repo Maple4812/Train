@@ -286,4 +286,8 @@ public class FileTempReserve implements FileInterface{
         // repos 까지 수행해준다.
         repos();
     }
+
+    public void addTempTicket(TempTicket ticket) {
+        this.tempList.add(ticket);
+    }
 }

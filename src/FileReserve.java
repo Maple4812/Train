@@ -119,4 +119,8 @@ public class FileReserve implements FileInterface{
         // repos 까지 수행해준다.
         repos();
     }
+
+    public void addTicket(Ticket ticket) {
+        this.reserveList.add(ticket);
+    }
 }
