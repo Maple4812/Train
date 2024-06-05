@@ -27,4 +27,25 @@ public class Line {
         //6. Ticket 객체로 변환 및 사용자가 입력한 출발 시각과의 비교는 CheckTimeTable 내에서 수행
         return null;
     }
+
+    /*
+        무결성 검사용
+        이 Line이 지나는 역을 지나는 순서대로 반환
+     */
+    public ArrayList<String> getStationList(){
+
+    }
+    /*
+        충돌 무결성 검사용
+        각 구간을 지나는 출발시간을 list로 반환
+     */
+    public ArrayList<String> getDeptimeList(){
+
+    }
+    /*
+        중복 구간이 있는지 무결성 검사하는 용
+     */
+    public ArrayList<Integer> getRailIndecies(){
+
+    }
 }
