@@ -24,6 +24,7 @@ public class Rail {
         Station.checkIntegrity(toStation.getStation());
         Price.checkIntegrity(price.getPrice());
         Time.checkIntegrity(duration);
+
     }
 
 
