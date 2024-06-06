@@ -12,6 +12,11 @@ public class FileReserve implements FileInterface{
         this.fileName = fileName;
     }
     private ArrayList<Ticket> reserveList = new ArrayList<>();
+
+    public ArrayList<Ticket> getReserveList() {
+        return reserveList;
+    }
+
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
         scan = new Scanner(new File(fileName));
