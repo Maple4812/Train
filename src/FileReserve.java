@@ -27,7 +27,7 @@ public class FileReserve implements FileInterface{
             }
             UserName.checkIntegrity(strArr[0]);  //사용자 이름 무결성 확인
             PhoneNumber.checkIntegrity(strArr[1]);  //전화번호 무결성 확인
-            Ticket.checkIntegrity(strArr[2]);  //노선번호 무결성 확인
+            // Ticket.checkIntegrity(strArr[2]);  //노선번호 무결성 확인
             Time.checkIntegrity(strArr[3]);  //출발 시각 무결성 확인
         }
     }
@@ -47,7 +47,8 @@ public class FileReserve implements FileInterface{
                 ticket.client = new Client(strArr[0], strArr[1]);
 
                 // Line 객체를 받아오기 위해 어쩔 수 없이 FileTimeTable 객체 생성.. 다른 좋은 방법이 있을 수도...
-                FileTimeTable table = new FileTimeTable("timeTable.csv");
+                FileRail rail = new FileRail("rail.csv");
+                FileTimeTable table = new FileTimeTable("timeTable.csv", rail);
                 // strArr[2] : 노선번호
                 ticket.line = table.getLine(strArr[2]);
 
@@ -127,5 +128,79 @@ public class FileReserve implements FileInterface{
 
     public void addTicket(Ticket ticket) {
         this.reserveList.add(ticket);
+    }
+
+    // 아래 5개의 메서드들은 특정 파라미터를 통해 특정될 수 있는 예약 티켓들을 return 해주는 함수들
+    // 추가!!
+    public ArrayList<Ticket> getTicketListByClient(Client c){
+        ArrayList<Ticket> returnTicket = new ArrayList<>();
+        for(Ticket t : reserveList){
+            if(t.client.getPhoneNumber().equals(c.getPhoneNumber()) && t.client.getName().equals(c.getName()))
+                returnTicket.add(t);
+        }
+
+        return returnTicket;
+    }
+
+    public ArrayList<Ticket> getTicketListByLineNum(String lineNum, Client c){
+        ArrayList<Ticket> returnTicket = new ArrayList<>();
+        for(Ticket t : reserveList){
+            if(t.client.getPhoneNumber().equals(c.getPhoneNumber()) && t.client.getName().equals(c.getName())
+                    && lineNum.equals(t.line.lineNum))
+                returnTicket.add(t);
+        }
+
+        return returnTicket;
+    }
+
+    public ArrayList<Ticket> getTicketListByfromStation(Station fromStation, Client c){
+        ArrayList<Ticket> returnTicket = new ArrayList<>();
+        for(Ticket t : reserveList){
+            if(t.client.getPhoneNumber().equals(c.getPhoneNumber()) && t.client.getName().equals(c.getName())
+                    && fromStation.getStation().equals(t.railIndices.get(0).fromStation.getStation()))
+                returnTicket.add(t);
+        }
+
+        return returnTicket;
+    }
+
+    public ArrayList<Ticket> getTicketListBytoStation (Station toStation, Client c){
+        ArrayList<Ticket> returnTicket = new ArrayList<>();
+        for(Ticket t : reserveList){
+            if(t.client.getPhoneNumber().equals(c.getPhoneNumber()) && t.client.getName().equals(c.getName())
+                    && toStation.getStation().equals(t.railIndices.get(t.railIndices.size() - 1).toStation.getStation()))
+                returnTicket.add(t);
+        }
+
+        return returnTicket;
+    }
+
+    public ArrayList<Ticket> getTicketListByStation (Station fromStation, Station toStation, Client c){
+        ArrayList<Ticket> returnTicket = new ArrayList<>();
+        for(Ticket t : reserveList){
+            if(t.client.getPhoneNumber().equals(c.getPhoneNumber()) && t.client.getName().equals(c.getName())
+                    && fromStation.getStation().equals(t.railIndices.get(0).fromStation.getStation())
+                    && toStation.getStation().equals(t.railIndices.get(t.railIndices.size() - 1).toStation.getStation()))
+                returnTicket.add(t);
+        }
+
+        return returnTicket;
+    }
+
+    public void write(Ticket Ticket){
+        File file = new File(fileName);
+        try {
+            // 하나하나 추가하는것이기 때문에 덮어쓰기를 허용하지 않는다. append = true
+            fw = new FileWriter(file, true);
+            writer = new PrintWriter(fw);
+            String str = Ticket.client.getName() + "," + Ticket.client.getPhoneNumber() + "," + Ticket.line.lineNum + "," +
+                    Ticket.depTime + "," + Ticket.getReserveTime() + "," + Ticket.getRailIndicesToString();
+            writer.println(str);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // repos 까지 수행해준다.
+        repos();
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Ticket {
+    String reserveTime; // 예약 시각
     Line line;
     Client client; // 예약 사용자 정보
     String depTime, arrivalTime; //출발 시각, 도착 시각
@@ -19,8 +20,8 @@ public class Ticket {
 
         // line 안에 해당 Rail 객체들의 나열이 존재하는지 확인하려면 우선 line 안에 LinkedHashMap 을 가져와야한다.
         // 해당 Rail 객체들을 ArrayList 에 저장하자. 어짜피 값을 변경하는 것은 아니기에 깊은 복사는 필요없다.
-        ArrayList<Rail> lineIndices = new ArrayList<Rail>();
-        for(Rail r : line.railIndices.keySet()){
+        ArrayList<Rail> lineIndices = new ArrayList<>();
+        for(Rail r : line.railList.keySet()){
             lineIndices.add(r);
         }
 
@@ -128,8 +129,12 @@ public class Ticket {
     }
 
     //Ticket 정보 출력하기 위한 toString
-    @Override
-    public String toString() {
-        return lineNum + " " + depTime + " " + fromStation.getStation() + " " + arrivalTime + " " + toStation.getStation();
-    }
+//    @Override
+//    public String toString() {
+//        return lineNum + " " + depTime + " " + fromStation.getStation() + " " + arrivalTime + " " + toStation.getStation();
+//    }
+
+    public String getReserveTime(){return reserveTime;}
+
+    public void setReserveTime(String reserveTime){this.reserveTime = reserveTime;}
 }

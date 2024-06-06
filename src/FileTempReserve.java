@@ -34,7 +34,7 @@ public class FileTempReserve implements FileInterface {
             }
             UserName.checkIntegrity(strArr[0]);  //사용자 이름 무결성 확인
             PhoneNumber.checkIntegrity(strArr[1]);  //사용자 전화번호 무결성 확인
-            Ticket.checkIntegrity(strArr[2]);  //노선번호 무결성 확인
+            // Ticket.checkIntegrity(strArr[2]);  //노선번호 무결성 확인
             Time.checkIntegrity(strArr[3]);  //출발 시각 무결성 확인
             Time.checkIntegrity(strArr[4]);  //예약 시각 무결성 확인
             Time.checkIntegrity(strArr[5]);  //예약 컴퓨터 시각 무결성 확인
@@ -60,8 +60,9 @@ public class FileTempReserve implements FileInterface {
                 // strArr[1] : 전화번호
                 ticket.client = new Client(strArr[0], strArr[1]);
 
-                // Line 객체를 받아오기 위해 어쩔 수 없이 FileTimeTable 객체 생성.. 다른 좋은 방법이 있을 수도...
-                FileTimeTable table = new FileTimeTable("timeTable.csv");
+                // Line 객체를 받아오기 위해 어쩔 수 없이 FileTimeTable 객체와 FileRail 객체 생성.. 다른 좋은 방법이 있을 수도...
+                FileRail rail = new FileRail("rail.csv");
+                FileTimeTable table = new FileTimeTable("timeTable.csv", rail);
                 // strArr[2] : 노선번호
                 ticket.line = table.getLine(strArr[2]);
 
@@ -201,8 +202,9 @@ public class FileTempReserve implements FileInterface {
                 long diff = (NowTime - reserveTime) / (1000 * 60);
                 if (diff > 4) {
                     // 차이가 5 분 보다 크다면 삭제한다.
-                    FileTimeTable table = new FileTimeTable("timeTable.csv");
-                    table.increaseExtraSeat(t.line.lineNum, 1);
+                    FileRail rail = new FileRail("rail.csv");
+                    FileTimeTable table = new FileTimeTable("timeTable.csv", rail);
+                    table.increaseExtraSeat(t.line.lineNum, t.getFirstRailofTicket(), t.getLastRailofTicket(), 1);
                     // ArrayList 상에서만 지우고 update 해주면 되니까...
                     // removeLineByTime(record.get(4));
                     tempList.remove(t);
@@ -216,7 +218,7 @@ public class FileTempReserve implements FileInterface {
             // 만약 프로그램 동작 도중 데이터의 변환으로 인해 parsing error 가 발생한다면
             // 예약들은 새로고침되지 않는다.
             System.out.println("ParsingError!");
-        } catch (IOException e) {
+        } catch (IOException | FileIntegrityException e) {
             throw new RuntimeException(e);
         }
     }
@@ -227,30 +229,42 @@ public class FileTempReserve implements FileInterface {
         return fileName;
     }
 
+//    public int findByLineNum(String userName, String lineNum) {
+//        int index = 0;
+//        for (ArrayList<String> tempReserve : tempList) {
+//            if (tempReserve.get(0).equals(userName)) {
+//                if (tempReserve.get(2).equals(lineNum))
+//                    return index;
+//            }
+//            index++;
+//        }
+//        return -1;
+//    }
 
-    public void removeLineByTime(String time) throws IOException {
-        ArrayList<String> lineList = new ArrayList<>();
-        Scanner scan = new Scanner(new File(fileName));
-        while (scan.hasNextLine()) {
-            String[] strArr = scan.nextLine().split(",");
-            StringBuilder tempStr = new StringBuilder();
-            if (!strArr[4].equals(time)) {
-                for (int i = 0; i < strArr.length; i++) {
-                    if (i < strArr.length - 1) {
-                        tempStr.append(strArr[i]).append(",");
-                    } else {
-                        tempStr.append(strArr[i]);
-                    }
-                }
-                lineList.add(tempStr.toString());
-            }
-        }
-        PrintWriter writer = new PrintWriter(new FileWriter(fileName));
-        for (String s : lineList) {
-            writer.println(s);
-        }
-        writer.close();
-    }
+//    public void removeLineByTime(String time) throws IOException {
+//        ArrayList<String> lineList = new ArrayList<>();
+//        Scanner scan = new Scanner(new File(fileName));
+//        while(scan.hasNextLine()) {
+//            String[] strArr = scan.nextLine().split(",");
+//            StringBuilder tempStr = new StringBuilder();
+//            if(!strArr[4].equals(time)) {
+//                for (int i = 0; i < strArr.length; i++) {
+//                    if(i < strArr.length - 1) {
+//                        tempStr.append(strArr[i]).append(",");
+//                    }
+//                    else {
+//                        tempStr.append(strArr[i]);
+//                    }
+//                }
+//                lineList.add(tempStr.toString());
+//            }
+//        }
+//        PrintWriter writer = new PrintWriter(new FileWriter(fileName));
+//        for (String s: lineList) {
+//            writer.println(s);
+//        }
+//        writer.close();
+//    }
 
     // ArrayList 에 적혀있는 내용을 파일에 덮어쓰기 합니다.
     // 추가!!!
@@ -272,28 +286,87 @@ public class FileTempReserve implements FileInterface {
         repos();
     }
 
+    // 하나하나씩 파일에 저장하고 싶을 때 사용
+    // 추가!!
+    public void write(TempTicket tempTicket){
+        File file = new File(fileName);
+        try {
+            // 하나하나 추가하는것이기 때문에 덮어쓰기를 허용하지 않는다. append = true
+            fw = new FileWriter(file, true);
+            writer = new PrintWriter(fw);
+            String str = tempTicket.client.getName() + "," + tempTicket.client.getPhoneNumber() + "," + tempTicket.line.lineNum + "," +
+                    tempTicket.depTime + "," + tempTicket.getReserveTime() + "," + tempTicket.getReserveComputerTime() + "," + tempTicket.getRailIndicesToString();
+            writer.println(str);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // repos 까지 수행해준다.
+        repos();
+    }
+
     public void addTempTicket(TempTicket ticket) {
         this.tempList.add(ticket);
     }
 
-    public ArrayList<TempTicket> getTempTicketListByClient(Client client) {
-        return new ArrayList<TempTicket>();
+    // 아래 5개의 메서드들은 특정 파라미터를 통해 특정될 수 있는 예약 티켓들을 return 해주는 함수들
+    // 추가!!
+    public ArrayList<TempTicket> getTempTicketListByClient(Client c){
+        ArrayList<TempTicket> returnTicket = new ArrayList<>();
+        for(TempTicket t : tempList){
+            if(t.client.getPhoneNumber().equals(c.getPhoneNumber()) && t.client.getName().equals(c.getName()))
+                returnTicket.add(t);
+        }
+
+        return returnTicket;
     }
 
-    public ArrayList<TempTicket> getTempTicketListByLineNum(String lineNum, Client client) {
-        return new ArrayList<TempTicket>();
+    public ArrayList<TempTicket> getTempTicketListByLineNum(String lineNum, Client c){
+        ArrayList<TempTicket> returnTicket = new ArrayList<>();
+        for(TempTicket t : tempList){
+            if(t.client.getPhoneNumber().equals(c.getPhoneNumber()) && t.client.getName().equals(c.getName())
+                    && lineNum.equals(t.line.lineNum))
+                returnTicket.add(t);
+        }
+
+        return returnTicket;
     }
 
-    public ArrayList<TempTicket> getTempTicketListByfromStation(Station fromStation, Client client) {
-        return new ArrayList<TempTicket>();
+    public ArrayList<TempTicket> getTempTicketListByfromStation(Station fromStation, Client c){
+        ArrayList<TempTicket> returnTicket = new ArrayList<>();
+        for(TempTicket t : tempList){
+            if(t.client.getPhoneNumber().equals(c.getPhoneNumber()) && t.client.getName().equals(c.getName())
+                    && fromStation.getStation().equals(t.railIndices.get(0).fromStation.getStation()))
+                returnTicket.add(t);
+        }
+
+        return returnTicket;
     }
 
-    public ArrayList<TempTicket> getTempTicketListBytoStation(Station toStation, Client client) {
-        return new ArrayList<TempTicket>();
+    public ArrayList<TempTicket> getTempTicketListBytoStation (Station toStation, Client c){
+        ArrayList<TempTicket> returnTicket = new ArrayList<>();
+        for(TempTicket t : tempList){
+            if(t.client.getPhoneNumber().equals(c.getPhoneNumber()) && t.client.getName().equals(c.getName())
+                    && toStation.getStation().equals(t.railIndices.get(t.railIndices.size() - 1).toStation.getStation()))
+                returnTicket.add(t);
+        }
+
+        return returnTicket;
     }
 
-    public ArrayList<TempTicket> getTempTicketListByStation(Station fromStation, Station toStation, Client client) {
-        return new ArrayList<TempTicket>();
+    public ArrayList<TempTicket> getTempTicketListByStation (Station fromStation, Station toStation, Client c){
+        ArrayList<TempTicket> returnTicket = new ArrayList<>();
+        for(TempTicket t : tempList){
+            if(t.client.getPhoneNumber().equals(c.getPhoneNumber()) && t.client.getName().equals(c.getName())
+                    && fromStation.getStation().equals(t.railIndices.get(0).fromStation.getStation())
+                    && toStation.getStation().equals(t.railIndices.get(t.railIndices.size() - 1).toStation.getStation()))
+                returnTicket.add(t);
+        }
+
+        return returnTicket;
     }
+
+    // tempList 를 return 받을 수 있는 메서드
+    // 추가!!
+    public ArrayList<TempTicket> getTempTicket(){return tempList;};
 }
-
