@@ -28,13 +28,15 @@ public class Line {
         }
 
         // railList의 운행 구간에서 선행하는 rail의 도착역과 바로 뒤의 rail의 출발역이 같지 않은지 확인
-        for (int i = 0; i < railArrayList.size() - 1; i++) {
-            Rail currentRail = railArrayList.get(i);
-            Rail nextRail = railArrayList.get(i + 1);
-            if (!currentRail.toStation.equals(nextRail.fromStation)) {
-                throw new FileIntegrityException("무결성 오류: 선행하는 rail의 도착역과 바로 뒤의 rail의 출발역이 같지 않습니다.");
-            }
-        }
+        // 정현: 이 부분 getStationList 사용하면 될 거 같아서 일단 주석으로 해두겠습니다.
+//        for (int i = 0; i < railArrayList.size() - 1; i++) {
+//            Rail currentRail = railArrayList.get(i);
+//            Rail nextRail = railArrayList.get(i + 1);
+//            if (!currentRail.toStation.equals(nextRail.fromStation)) {
+//                throw new FileIntegrityException("무결성 오류: 선행하는 rail의 도착역과 바로 뒤의 rail의 출발역이 같지 않습니다.");
+//            }
+//        }
+        getStationList(); //getStationList 내의 throw FileIntegrityException이 연결되는 구간인지 체크하기 때문
     }
 
 
