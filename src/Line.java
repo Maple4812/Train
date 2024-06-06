@@ -121,7 +121,7 @@ public class Line {
                     구간이 연결되지 않은 것이므로 오류를 throw 합니다
                  */
                 else{
-                    throw new FileIntegrityException("구간이 연결되지 않습니다.");
+                    throw new FileIntegrityException("무결성 오류: 선행하는 rail의 도착역과 바로 뒤의 rail의 출발역이 같지 않습니다.");
                 }
             }
             i++;
