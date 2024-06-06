@@ -5,11 +5,15 @@ import java.util.Scanner;
 
 public class FileRail implements FileInterface{
     private String fileName;
-    private ArrayList<Rail> raillist;
+    private ArrayList<Rail> raillist = new ArrayList<>();
     Scanner scan;
 
     public FileRail(String fileName) throws FileNotFoundException {
         this.fileName = fileName;
+    }
+
+    public ArrayList<Rail> getRaillist(){
+        return this.raillist;
     }
 
     public Rail getRailByIndex(int index) {
@@ -34,21 +38,90 @@ public class FileRail implements FileInterface{
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
             Rail rail=new Rail(); //읽어온 줄의 정보를 저장할 Rail 객체
-            /*
-            각 줄의 모든 인자에 대해 그 인자에 맞는 무결성 검사 먼저 진행하는 부분
-             */
 
             /*
-            rail.rainIndex=Integer.parseInt(strArr[0]);
-            rail.fromStation=strArr........
-            이러한 형태로 Rail 객체의 member들에 값을 할당.
-            이렇게 만든 Rail 객체를 railList에 저장해 다른 무결성검사에 활용
+                이 부분에 csv에 저장된 운행 정보 인덱스가 숫자가 아닌 경우, NumberFormatException을 발생시킬지 말지 정해야함
              */
+            /*
+                레코드의 요소 개수가 5인지 검사 (인덱스, 출발역, 도착역, 소요 시간, 가격)
+             */
+            if(strArr.length!=5){
+                throw new FileIntegrityException("오류: Rail.csv 파일 인자 개수가 5개가 아닙니다.");
+            }
+
+            /*
+                운행 정보 인덱스의 형식 검사 (2차 기획서 내용 기반)
+                1. 운행 정보 인덱스는 0이 될 수 없다.
+                -> Rail 객체의 checkIntegrity에서 실행하므로 여기서 따로 처리하지 않고, while문 뒷부분에 rail.checkIntegrity를 실행
+             */
+//            if(Integer.parseInt(strArr[0])==0){
+//                throw new FileIntegrityException("오류: 노선 번호가 0인 열차가 존재합니다.");
+//            }
+
+            rail.railIndex=Integer.parseInt(strArr[0]);
+
+            /*
+                출발역과 도착역의 형식 검사
+                1. '역' 형식을 만족하는지 검사
+                2. 출발역과 도착역이 같은 경우는 Rail 객체의 checkIntegrity에서 검사
+             */
+            rail.fromStation = new Station(strArr[1]); //Station 객체 생성 시 Station.checkIntegrity가 자동 실행 되는 점 활용
+            rail.toStation = new Station(strArr[2]);
+
+            /*
+                소요 시간 형식 검사
+                1. 0보다 크고 300 이하인 정수
+             */
+            if(Integer.parseInt(strArr[3])<=0 || Integer.parseInt(strArr[3])>300){
+                throw new FileIntegrityException("오류: 소요 시간의 형식이 잘못 되었습니다.");
+            }
+            rail.duration = strArr[3];
+
+            /*
+                가격 형식 검사
+             */
+            rail.price = new Price(strArr[4]); //Price 객체 생성 시 Price.checkIntegrity가 자동 실행 되는 점 활용
+
+            rail.checkIntegrity(); //
+            raillist.add(rail);
         }
 
         /*
-        예) 운행 정보 인덱스가 1인 구간과 -1인 구간에 대해, 출발역 도착역만 다르고 나머지 정보는 일치하는지 무결성검사
-        그 외 추가 항목들 모두 이 아래에서 검사
+            <그 외 추가 항목들 모두 이 아래에서 검사>
+            동일한 운행 정보 인덱스를 갖는 Rail이 존재하는지 검사
          */
+        ArrayList<Integer> idxList=new ArrayList<>(); //운행 정보 인덱스를 중복 없이 저장하는 list. 무결성 검사용
+        for(Rail rail : raillist){
+            if(!idxList.contains(rail.railIndex)){ // 중복이 아닌 인덱스만 저장
+                idxList.add(rail.railIndex);
+            }
+        }
+        if(idxList.size()!=raillist.size()){
+            throw new FileIntegrityException("오류: 중복되는 운행 정보 인덱스가 존재합니다.");
+        }
+
+        /*
+                반대되는 운행 정보에 대한 무결성 검사
+                예) 운행 정보 인덱스가 1인 구간인 경우, 인덱스가 -1인 구간이 raillist에 존재하는지 검사
+         */
+        for(Rail rail : raillist){
+
+            if(getRailByIndex(-rail.railIndex)==null){
+                throw new FileIntegrityException("오류: 반대되는 운행 정보가 존재하지 않습니다.");
+            }
+            if(!rail.fromStation.getStation().equals(getRailByIndex(-rail.railIndex).toStation.getStation())){
+                throw new FileIntegrityException("오류: 반대되는 운행 정보와 역 정보가 일치하지 않습니다.");
+            }
+            if(!rail.toStation.getStation().equals(getRailByIndex(-rail.railIndex).fromStation.getStation())){
+                throw new FileIntegrityException("오류: 반대되는 운행 정보와 역 정보가 일치하지 않습니다.");
+            }
+            if(!rail.duration.equals(getRailByIndex(-rail.railIndex).duration)){
+                throw new FileIntegrityException("오류: 반대되는 운행 정보와 소요 시간 정보가 일치하지 않습니다.");
+            }
+            if(!rail.price.getPrice().equals(getRailByIndex(-rail.railIndex).price.getPrice())){
+                throw new FileIntegrityException("오류: 반대되는 운행 정보와 가격 정보가 일치하지 않습니다.");
+            }
+
+        }
     }
 }
