@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class Line {
     static String REGEXP_PATTERN_LINE = "^[A-Z][0-9]{4}$"; //노선 번호 문법 규칙
@@ -9,10 +10,31 @@ public class Line {
 
     public Line() {}
 
-    public static void checkIntegrity(String str) throws FileIntegrityException{
-        /*
+    // static 삭제했습니다.
+    public void checkIntegrity(String str) throws FileIntegrityException{
+        // 노선 번호 형식 확인
+        if (!Pattern.matches(REGEXP_PATTERN_LINE, str)) {
+            throw new FileIntegrityException("무결성 오류: 노선 번호가 올바른 형식이 아닙니다.");
+        }
 
-         */
+        // railList에서 같은 Rail 객체가 두 개 이상 존재하는지 확인
+        ArrayList<Rail> railArrayList = new ArrayList<>(railList.keySet());
+        for (int i = 0; i < railArrayList.size() - 1; i++) {
+            for (int j = i + 1; j < railArrayList.size(); j++) {
+                if (railArrayList.get(i).equals(railArrayList.get(j))) {
+                    throw new FileIntegrityException("무결성 오류: railList에 동일한 Rail 객체가 두 개 이상 존재합니다.");
+                }
+            }
+        }
+
+        // railList의 운행 구간에서 선행하는 rail의 도착역과 바로 뒤의 rail의 출발역이 같지 않은지 확인
+        for (int i = 0; i < railArrayList.size() - 1; i++) {
+            Rail currentRail = railArrayList.get(i);
+            Rail nextRail = railArrayList.get(i + 1);
+            if (!currentRail.toStation.equals(nextRail.fromStation)) {
+                throw new FileIntegrityException("무결성 오류: 선행하는 rail의 도착역과 바로 뒤의 rail의 출발역이 같지 않습니다.");
+            }
+        }
     }
 
 
