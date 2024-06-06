@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class FileRail implements FileInterface{
@@ -31,6 +33,49 @@ public class FileRail implements FileInterface{
          */
         return null;
     }
+
+    /*
+        사용자가 예약할 때 구간 정보를 보여주는 용.
+        예약 팀이 부탁
+     */
+    public void printRail(){
+        /*
+            FileRail을 railIndex를 기준으로 양수는 오름 차순으로, 음수는 내림 차순으로, 양수가 음수 보다 먼저 오도록 정렬
+         */
+        Comparator<Rail> FileRailComparator = new Comparator<Rail>() {
+
+            @Override
+            public int compare(Rail r1, Rail r2) {
+                int o1 = r1.railIndex;
+                int o2 = r2.railIndex;
+                if(o1>=0 && o2>=0){
+                    return o1-o2;
+                }else if (o1 < 0 && o2 < 0){
+                    return o2-o1;
+                }else if (o1 >= 0){
+                    return -1;
+                }else{
+                    return 1;
+                }
+            }
+        };
+        Collections.sort(raillist, FileRailComparator);
+
+        /*
+            각 Rail 객체와 그 정보들을 출력
+         */
+        System.out.println("운행 정보 인덱스\t출발역\t도착역");
+        for(Rail rail : raillist){
+            String str=Integer.toString(rail.railIndex);
+            str+="\t";
+            str+=rail.fromStation;
+            str+="\t";
+            str+=rail.toStation;
+            System.out.println(str);
+        }
+    }
+
+
 
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
