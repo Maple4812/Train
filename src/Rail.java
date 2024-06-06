@@ -15,7 +15,7 @@ public class Rail {
             throw new FileIntegrityException("무결성 오류: railIndex는 0이 될 수 없습니다.");
         }
 
-        if (fromStation.equals(toStation)){ //출발역과 도착역이 동일한 경우
+        if (fromStation.getStation().equals(toStation.getStation())){ //출발역과 도착역이 동일한 경우
             throw new FileIntegrityException("무결성 오류: 출발역과 도착역이 동일합니다.");
         }
 
@@ -23,7 +23,10 @@ public class Rail {
         Station.checkIntegrity(fromStation.getStation());
         Station.checkIntegrity(toStation.getStation());
         Price.checkIntegrity(price.getPrice());
-        Time.checkIntegrity(duration);
+
+        if(Integer.parseInt(duration)<=0 || Integer.parseInt(duration)>300){
+            throw new FileIntegrityException("오류: 소요 시간의 형식이 잘못 되었습니다.");
+        }
 
     }
 

@@ -104,15 +104,15 @@ public class FileTimeTable implements FileInterface{
             }
 
              /*
-                line 객체안에 파일에서 받아오 strArr 요소 추가 후 무결성 검사
+                line 객체안에 파일에서 받아온 strArr 요소 추가 후 무결성 검사
                 lineList.add
                 부가 확인 항목 1 : 각 구간이 이어지는지 무결성 검사 : line.checkIntegrity
              */
 
             line.lineNum=strArr[0];
             line.depTime=strArr[1];
-            for(int i=2;i<strArr.length;i++){
-                line.railList.put(railFile.getRailByIndex(Integer.parseInt(strArr[i])),Integer.parseInt(strArr[i+1]));
+            for(int i=1;i<strArr.length;i++){
+                line.railList.put(railFile.getRailByIndex(Integer.parseInt(strArr[2*i])),Integer.parseInt(strArr[2*i+1]));
             }
 
             line.checkIntegrity(strArr[0]);
@@ -240,7 +240,7 @@ public class FileTimeTable implements FileInterface{
 
     public void repos() throws FileNotFoundException, FileIntegrityException {
         /*
-            기존에 여석수 늘리거나 줄이는 경우, 또는 getLine을 사용하는 경우 repos를 통해 최신 데이터 파일을 받아옴 
+            기존에 여석수 늘리거나 줄이는 경우, 또는 getLine을 사용하는 경우 repos를 통해 최신 데이터 파일을 받아옴
          */
         lineList.clear();
         // 아래 부분을 checkIntegrity로 퉁쳐도 될것 같긴 한데 일단 그대로 두겠습니다.
