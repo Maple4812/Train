@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Line {
     static String REGEXP_PATTERN_LINE = "^[A-Z][0-9]{4}$"; //노선 번호 문법 규칙
@@ -30,15 +31,51 @@ public class Line {
     }
 
     /*
-        무결성 검사용
-        이 Line이 지나는 역을 지나는 순서대로 반환
-        railList에서 순서대로 Rail 객체를 받아오고,
-        railList[0].출발역을 저장
-        railList[0].도착역을 저장
-        이후 railList[0].도착역 과 railList[1].출발역이 일치하는지 검사하고, 일치하지 않으면 오류 처리 (구간이 연결되지 않음)
-        railList의 size만큼 반복
+        이 함수는 다음 두 가지 기능이 가능합니다.
+        1. 구간이 이어지는지 무결성 검사용으로 단독으로 사용 가능
+        2. return 되는 arraylist를 받아 slicing에 활용 가능
      */
-    public ArrayList<String> getStationList(){
+    public ArrayList<String> getStationList() throws FileIntegrityException {
+        /*
+            1. 저장된 Rail 정보가 없는 경우 null 반환
+            일단 null 반환으로 해놓았는데, 오류를 throw해도 될거같습니다.
+         */
+        if(this.railList.size()<=0){
+            return null;
+        }
+
+        ArrayList<String> stationList = new ArrayList<>(); //지나는 역을 저장할 list
+        int i = 0; //반복변수
+        
+        for (Map.Entry<Rail, Integer> entry : railList.entrySet()) {// railList에 저장된 모든 Rail 객체에 대해 검사
+            if (i == 0) {
+                /*
+                    i=0인 경우, Rail 객체에서 출발역 도착역이 동일한 경우를 이미 검사했으므로 추가적인 검사 X
+                 */
+                stationList.add(entry.getKey().fromStation.getStation()); //railList[0].출발역을 저장
+                stationList.add(entry.getKey().toStation.getStation()); //railList[0].도착역을 저장
+            }
+            else{
+                /*
+                    전 구간의 도착역과 다음 구간의 출발역이 일치하는 경우
+                    즉, 구간이 연결되는 경우라면,
+                    출발역(전 구간의 도착역)은 이미 stationList에 저장되어 있으므로 도착역만 저장한다.
+                 */
+                if(entry.getKey().fromStation.getStation().equals(stationList.get(i))){
+                    stationList.add(entry.getKey().toStation.getStation()); //도착역을 저장
+                }
+                /*
+                    전 구간의 도착역과 다음 구간의 출발역이 일치하지 않는 다면,
+                    구간이 연결되지 않은 것이므로 오류를 throw
+                 */
+                else{
+                    throw new FileIntegrityException("구간이 연결되지 않습니다.");
+                }
+            }
+            i++;
+        }
+        
+        return stationList;
 
     }
 
