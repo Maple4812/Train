@@ -1,15 +1,20 @@
 import java.io.*;
 import java.nio.file.Files;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileTimeTable implements FileInterface{
     private String fileName;
+    public FileRail railFile;
     private ArrayList<Line> lineList = new ArrayList<>();//timetable.csv의 한 줄에 저장된 정보를 각 줄 마다 Line 객체로 묶어 저장
     Scanner scan;
+    private final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
 
-    public FileTimeTable(String fileName) throws FileNotFoundException {
+    public FileTimeTable(String fileName, FileInterface railFile) throws FileNotFoundException {
         this.fileName = fileName;
+        this.railFile = (FileRail) railFile;
     }
 
     public ArrayList<Line> getLineList(){return this.lineList;}
@@ -96,86 +101,76 @@ public class FileTimeTable implements FileInterface{
                 throw new FileIntegrityException("무결성 오류: 파일에 인자의 개수가 옳지 않은 레코드가 존재합니다.");
             }
 
-            if(strArr[2].equals(strArr[4])){ // 부가 확인 항목 1: 출발역과 도착역이 같은 열차가 존재하는 경우
-                throw new FileIntegrityException("오류: 출발역과 도착역이 같은 열차가 있습니다.");
-            }
-            
-            /*
-                ********************************************************
-                이 부분은 기획서 수정이 필요해 보입니다. 기획서에 출발 시각과 도착 시각에 대한 규칙이 따로 정의되어 있지 않고
-                단지 시각 형식만 따른다고 되어 있습니다.
-                출발 시각과 도착 시각의 선후관계가 올바른지 무결성검사를 진행합니다.
-                ********************************************************
+             /*
+                line 객체안에 파일에서 받아오 strArr 요소 추가 후 무결성 검사
+                lineList.add
+                부가 확인 항목 1 : 각 구간이 이어지는지 무결성 검사 : line.checkIntegrity
              */
-            // 출발 시각의 연도가 더 큰 경우
-            if(Integer.parseInt(strArr[1].substring(0,4))>Integer.parseInt(strArr[3].substring(0,4))){
-                throw new FileIntegrityException("오류: 도착 시각이 출발 시각보다 이릅니다.");
+
+            line.lineNum=strArr[0];
+            line.depTime=strArr[1];
+            for(int i=2;i<strArr.length;i++){
+                line.railList.put(railFile.getRailByIndex(Integer.parseInt(strArr[i])),Integer.parseInt(strArr[i+1]));
             }
 
-            // 출발 시각의 월/일이 더 큰 경우
-            if(Integer.parseInt(strArr[1].substring(4,8))>Integer.parseInt(strArr[3].substring(4,8))){
-                throw new FileIntegrityException("오류: 도착 시각이 출발 시각보다 이릅니다.");
-            }
+            line.checkIntegrity(strArr[0]);
 
-            // 출발 시각의 시/분이 더 큰 경우
-            if(Integer.parseInt(strArr[1].substring(8,12))>Integer.parseInt(strArr[3].substring(8,12))){
-                throw new FileIntegrityException("오류: 도착 시각이 출발 시각보다 이릅니다.");
-            }
-
-            /*
-                여석 수의 의미 규칙에 따라 여석 수가 전체 좌석 수보다 큰지 무결성 검사를 진행합니다.
-                위에서 Seat.checkIntegrity()를 통해 여석 수, 전체 좌석 수의 무결성 검사를 이미 진행했기에
-                추가적인 형식 검사 없이 Integer.parseInt()를 사용합니다.
-             */
-            if(Integer.parseInt(strArr[6])>Integer.parseInt(strArr[7])){
-                throw new FileIntegrityException("오류: 여석 수가 전체 좌석 수 보다 큰 열차가 존재합니다.");
-            }
-
-
-            ticket.lineNum=strArr[0];
-            ticket.depTime=strArr[1];
-            ticket.fromStation=new Station(strArr[2]);
-            ticket.arrivalTime=strArr[3];
-            ticket.toStation=new Station(strArr[4]);
-            ticket.price=new Price(strArr[5]);
-            ticket.extraSeat=new Seat(strArr[6]);
-            ticket.entireSeat=new Seat(strArr[7]);
-
-            trainlist.add(ticket);
-
+            lineList.add(line);
         }
 
         /*
             부가 확인 항목 2
             노선 번호가 같은 열차가 존재하는지 무결성 검사를 진행합니다.
-            trainlist에 저장된 ticket 객체들의 노선 번호를 중복 없이 lineNumList에 저장하고 둘의 사이즈를 비교합니다.
+            linelist에 저장된 line 객체들의 노선 번호를 중복 없이 lineNumList에 저장하고 둘의 사이즈를 비교합니다.
             사이즈가 다르다면 중복된 노선 번호가 존재한다는 것이기 때문에 exception을 throw 합니다.
         */
-        for (Ticket ticket : trainlist) {
-            if (!lineNumList.contains(ticket.lineNum)) {
-                lineNumList.add(ticket.lineNum);
+        for (Line line : lineList) {
+            if (!lineNumList.contains(line.lineNum)) {
+                lineNumList.add(line.lineNum);
             }
         }
-        if(trainlist.size()!=lineNumList.size()){
+        if(lineList.size()!=lineNumList.size()){
             throw new FileIntegrityException("오류: 노선 번호가 같은 열차가 있습니다.");
         }
 
-/*
-    부가 확인 항목 3
-    출발시간과 출발역 및 도착역이 같은 열차가 존재하는지 무결성 검사를 진행합니다.
-    두 개의 for문을 사용해 (인덱스가 같은 경우를 제외하고) 출발시간과 출발역 및 도착역이 같은 열차가 존재한다면 exception을 throw 합니다.
-*/
-        for(int i=0;i<trainlist.size();i++){
-            for(int j=0;j< trainlist.size();j++){
-                if(i!=j){
-                    if(     trainlist.get(i).depTime.equals(trainlist.get(j).depTime)
-                            && trainlist.get(i).fromStation.getStation().equals(trainlist.get(j).fromStation.getStation())
-                            && trainlist.get(i).toStation.getStation().equals(trainlist.get(j).toStation.getStation())
-                    ){
-                        throw new FileIntegrityException("오류: 출발시간과 출발역 및 도착역이 같은 열차가 있습니다.");
+        /*
+            부가 확인 항목 3
+            5분이내에 같은 시각에 출발 또는 도착하는 열차가 있는지 확인합니다.
+            두 개의 for문을 사용해 (인덱스가 같은 경우를 제외하고) 출발시간과 출발역 및 도착역이 같은 열차가 존재한다면 exception을 throw 합니다.
+        */
+        for (Rail rail : railFile.getRaillist()) {
+
+            // 해당 인덱스의 출발 시각을 저장
+            ArrayList<String> depArr = new ArrayList<>();
+
+            for (Line line : lineList) {
+
+                // 만약 라인에 인덱스가 존재한다면
+                if (line.railList.containsKey(rail)) {
+                    depArr.add(line.caculateDeptime(rail.fromStation.getStation()));
+                }
+            }
+
+            // 배열에서 저장된 요소를 각각비교하여 5분이내면 exception을 throw 합니다.
+            for(int i = 0;i<depArr.size();i++){
+                for(int j=i;j<depArr.size();j++){
+
+                    long Date1;
+                    long Date2;
+                    try {
+
+                        Date1 = FORMATTER.parse(depArr.get(i)).getTime();
+                        Date2 = FORMATTER.parse(depArr.get(j)).getTime();
+
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if(Date2 - Date1 < 5 * 60 * 1000L && Date2 - Date1 > -5 * 60 * 1000L){
+                        throw new FileIntegrityException("오류: 같은역에서 출발 또는 도착시간이 5분이내인 기차가 있습니다");
                     }
                 }
             }
+
         }
 
     }
@@ -326,3 +321,19 @@ public class FileTimeTable implements FileInterface{
         writer.close();
     }
 }
+
+
+            /*
+                ********************************************************
+                이 부분은 기획서 수정이 필요해 보입니다. 기획서에 출발 시각과 도착 시각에 대한 규칙이 따로 정의되어 있지 않고
+                단지 시각 형식만 따른다고 되어 있습니다.
+                출발 시각과 도착 시각의 선후관계가 올바른지 무결성검사를 진행합니다.
+                ********************************************************
+             */
+
+
+            /*
+                여석 수의 의미 규칙에 따라 여석 수가 전체 좌석 수보다 큰지 무결성 검사를 진행합니다.
+                위에서 Seat.checkIntegrity()를 통해 여석 수, 전체 좌석 수의 무결성 검사를 이미 진행했기에
+                추가적인 형식 검사 없이 Integer.parseInt()를 사용합니다.
+             */
