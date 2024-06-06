@@ -1,12 +1,13 @@
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Line {
     static String REGEXP_PATTERN_LINE = "^[A-Z][0-9]{4}$"; //노선 번호 문법 규칙
     String lineNum, depTime, arrivalTime; //노선 번호, 출발 시각, 도착 시각
     LinkedHashMap<Rail, Integer> railList; // <운행 정보, 여석 수>
+    private final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
 
     public Line() {}
 
@@ -92,6 +93,27 @@ public class Line {
 
     }
 
+    public String caculateDeptime(String fromstation){
+
+        try {
+            // 처음 출발 시각
+            long depDate = FORMATTER.parse(depTime).getTime();
+
+            // 해당하는 출발역이 나올때까지 계속 더해줌
+            for (Map.Entry<Rail, Integer> entry : railList.entrySet()) {
+                if(Objects.equals(entry.getKey().fromStation.getStation(), fromstation)){
+                    break;
+                }
+                depDate += Integer.parseInt(entry.getKey().duration) * 60 * 1000L;
+            }
+            return FORMATTER.format(new Date(depDate));
+
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+    }    
+
     /*
         이 함수는 다음 두 가지 기능이 가능합니다.
         1. 구간이 이어지는지 무결성 검사용으로 단독으로 사용 가능
@@ -108,7 +130,7 @@ public class Line {
 
         ArrayList<String> stationList = new ArrayList<>(); //지나는 역을 저장할 list
         int i = 0; //반복변수
-        
+
         for (Map.Entry<Rail, Integer> entry : railList.entrySet()) {// railList에 저장된 모든 Rail 객체에 대해 검사
             if (i == 0) {
                 /*
@@ -136,7 +158,7 @@ public class Line {
             }
             i++;
         }
-        
+
         return stationList;
 
     }
