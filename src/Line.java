@@ -37,6 +37,14 @@ public class Line {
 //            }
 //        }
         getStationList(); //getStationList 내의 throw FileIntegrityException이 연결되는 구간인지 체크하기 때문
+
+        // 각 rail의 인덱스가 rail.csv 파일 내에 존재하는지 확인
+        // FileRail의 getRailByIndex가 static이 아니어서 오류가 생기는 것 같습니다.(추후 논의 필요)
+        for (Rail rail : railArrayList) {
+            if (FileRail.getRailByIndex(rail.railIndex) == null) {
+                throw new FileIntegrityException("무결성 오류: rail.csv 파일에 존재하지 않는 rail 인덱스가 포함되어 있습니다.");
+            }
+        }
     }
 
 
