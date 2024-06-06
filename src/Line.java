@@ -71,7 +71,7 @@ public class Line {
                 }
                 /*
                     전 구간의 도착역과 다음 구간의 출발역이 일치하지 않는 다면,
-                    구간이 연결되지 않은 것이므로 오류를 throw
+                    구간이 연결되지 않은 것이므로 오류를 throw 합니다
                  */
                 else{
                     throw new FileIntegrityException("구간이 연결되지 않습니다.");
