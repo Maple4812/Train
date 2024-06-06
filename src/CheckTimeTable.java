@@ -151,12 +151,13 @@ public class CheckTimeTable {
                     Depdate = dtFormat.parse(ticket.depTime);
                     diff = inputdate.getTime() - Depdate.getTime();
                     if ((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))) {
-                        if (n == 0){System.out.println("노선 번호 / 출발 시각 / 출발 역 / 도착 시각 / 도착 역 / (여석 수 / 전체 좌석 수)");}
+                        if (n == 0){System.out.println("노선 번호 / 노선 정보 / 출발 시각 / 운행 구간 / 도착 역 / 여석 수 / 가격");}
                         n++;
                         printTicket(ticket);
                     }
                 }
             }
+
             if (n == 0) {
                 System.out.println("검색에 해당하는 열차가 없습니다!");
                 continue;
@@ -246,6 +247,23 @@ public class CheckTimeTable {
 
     // 티켓 객체의 가격과 도착시간을 계산 후 출력
     public void printTicket(Ticket ticket){
+
+        String printstr;
+
+        printstr = ticket.line.lineNum + "  " + ticket.railIndices.get(0).railIndex;
+        for (var i = 0; i < ticket.railIndices.size(); i++) {
+            printstr += "/" + ticket.railIndices.get(i).railIndex;
+        }
+
+        printstr += ticket.depTime + "  " + ticket.railIndices.get(0).fromStation;
+        for (var i = 0; i < ticket.railIndices.size(); i++) {
+            printstr += "-" + ticket.railIndices.get(i).toStation;
+        }
+
+        //좌석 출력을 어떻게 해야할지 몰라서 일단 좌석만 제외
+        printstr += ticket.calculateArrivalTime() + "  " + ticket.calculatePrice();
+
+        System.out.println(printstr);
 
     }
 }
