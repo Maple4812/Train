@@ -3,6 +3,8 @@ import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class FileTimeTable implements FileInterface{
@@ -175,60 +177,65 @@ public class FileTimeTable implements FileInterface{
 
     }
 
-    public void reduceExtraSeat(String lineNum, int n) throws IOException {
+    public void reduceExtraSeat(String lineNum, int startIdx, int endIdx, int n) throws IOException, FileIntegrityException {
         repos();
-        Ticket ticket = getTicket(lineNum);
-        ticket.extraSeat.reduceSeat(n);
+        Line line = getLine(lineNum);
         scan = new Scanner(new File(fileName));
 
-        PrintWriter tempWriter = new PrintWriter(new FileWriter("temp.csv"));  // 파일의 내용을 지우고 수정하는 데 있어서 파일 삭제가 불가피했습니다.
+        ArrayList<String> strToWrite = new ArrayList<>();
         String newString = null;
         while(scan.hasNextLine()) {
-            String[] strArr = scan.nextLine().split(",");
-            StringBuilder newStr = new StringBuilder();
+            String record = scan.nextLine();
+            String[] strArr = record.split(",");
+            StringBuilder sb = new StringBuilder();
+            boolean inRange = false;
             if (strArr[0].equals(lineNum)) {
-                int seatTemp = Integer.parseInt(strArr[6]);
-                seatTemp = seatTemp - n;
-                for (int i = 0; i < strArr.length; i++) {
-                    if(i < strArr.length - 1) {
-                        if (i == 6) {
-                            newStr.append(seatTemp).append(",");
-                        }
-                        else {
-                            newStr.append(strArr[i]).append(",");
-                        }
+                for (Map.Entry<Rail, Integer> entry: line.railList.entrySet()) {
+                    Rail key = entry.getKey();
+                    if(key.equals(railFile.getRailByIndex(startIdx))) {
+                        inRange = true;
                     }
-                    else {
-                        newStr.append(strArr[i]);
+                    // startIdx와 endIdx 사이일 때
+                    if (inRange) {
+                        // n 만큼 감소
+                        line.railList.put(key, entry.getValue() - n);
+                    }
+                    if (key.equals(railFile.getRailByIndex(endIdx))) {
+                        break;
                     }
                 }
-                newString = newStr.toString();
+                // 새로운 레코드 작성
+                sb.append(strArr[0]);
+                sb.append(",");
+                sb.append(strArr[1]);
+                sb.append(",");
+
+                int currentIndex = 0;
+                for(Map.Entry<Rail, Integer> entry: line.railList.entrySet()) {
+                    currentIndex++;
+                    sb.append(entry.getKey().railIndex);
+                    sb.append(",");
+                    sb.append((entry.getValue()));
+                    if(currentIndex < line.railList.size()) {
+                        sb.append(",");
+                    }
+                }
+                newString = sb.toString();
             }
             else {
-                for (int i = 0; i < strArr.length; i++) {
-                    if(i < strArr.length - 1) {
-                        newStr.append(strArr[i]).append(",");
-                    }
-                    else {
-                        newStr.append(strArr[i]);
-                    }
-                }
-                tempWriter.println(newStr);
+                strToWrite.add(record);
             }
         }
-        tempWriter.println(newString);
-        tempWriter.close();
-
-        File originalFile = new File(fileName);
-        File tempFile = new File("temp.csv");
-        Scanner scan = new Scanner(tempFile);
-
-        PrintWriter writer = new PrintWriter(new FileWriter(originalFile));
-        while(scan.hasNextLine()) {
-            writer.println(scan.nextLine());
+        // 기존의 파일 내용 삭제
+        PrintWriter writer = new PrintWriter(new FileWriter(fileName, false));
+        // lineNum 이외의 레코드(Line) 작성
+        for (String s: strToWrite) {
+            writer.println(s);
         }
-        scan.close();
+        // 여석 수가 변화한 레코드(Line) 작성
+        writer.println(newString);
         writer.close();
+        scan.close();
     }
 
     public void repos() throws FileNotFoundException, FileIntegrityException {
@@ -258,60 +265,65 @@ public class FileTimeTable implements FileInterface{
 
     }
 
-    public void increaseExtraSeat(String lineNum, int n) throws IOException {
+    public void increaseExtraSeat(String lineNum, int startIdx, int endIdx, int n) throws IOException, FileIntegrityException {
         repos();
-        Ticket ticket = getTicket(lineNum);
-        ticket.extraSeat.reduceSeat(n);
+        Line line = getLine(lineNum);
         scan = new Scanner(new File(fileName));
 
-        PrintWriter tempWriter = new PrintWriter(new FileWriter("temp.csv"));  // 파일의 내용을 지우고 수정하는 데 있어서 파일 삭제가 불가피했습니다.
+        ArrayList<String> strToWrite = new ArrayList<>();
         String newString = null;
         while(scan.hasNextLine()) {
-            String[] strArr = scan.nextLine().split(",");
-            StringBuilder newStr = new StringBuilder();
+            String record = scan.nextLine();
+            String[] strArr = record.split(",");
+            StringBuilder sb = new StringBuilder();
+            boolean inRange = false;
             if (strArr[0].equals(lineNum)) {
-                int seatTemp = Integer.parseInt(strArr[6]);
-                seatTemp = seatTemp + n;
-                for (int i = 0; i < strArr.length; i++) {
-                    if(i < strArr.length - 1) {
-                        if (i == 6) {
-                            newStr.append(seatTemp).append(",");
-                        }
-                        else {
-                            newStr.append(strArr[i]).append(",");
-                        }
+                for (Map.Entry<Rail, Integer> entry: line.railList.entrySet()) {
+                    Rail key = entry.getKey();
+                    if(key.equals(railFile.getRailByIndex(startIdx))) {
+                        inRange = true;
                     }
-                    else {
-                        newStr.append(strArr[i]);
+                    // startIdx와 endIdx 사이일 때
+                    if (inRange) {
+                        // n 만큼 증가
+                        line.railList.put(key, entry.getValue() + n);
+                    }
+                    if (key.equals(railFile.getRailByIndex(endIdx))) {
+                        break;
                     }
                 }
-                newString = newStr.toString();
+                // 새로운 레코드 작성
+                sb.append(strArr[0]);
+                sb.append(",");
+                sb.append(strArr[1]);
+                sb.append(",");
+
+                int currentIndex = 0;
+                for(Map.Entry<Rail, Integer> entry: line.railList.entrySet()) {
+                    currentIndex++;
+                    sb.append(entry.getKey().railIndex);
+                    sb.append(",");
+                    sb.append((entry.getValue()));
+                    if(currentIndex < line.railList.size()) {
+                        sb.append(",");
+                    }
+                }
+                newString = sb.toString();
             }
             else {
-                for (int i = 0; i < strArr.length; i++) {
-                    if(i < strArr.length - 1) {
-                        newStr.append(strArr[i]).append(",");
-                    }
-                    else {
-                        newStr.append(strArr[i]);
-                    }
-                }
-                tempWriter.println(newStr);
+                strToWrite.add(record);
             }
         }
-        tempWriter.println(newString);
-        tempWriter.close();
-
-        File originalFile = new File(fileName);
-        File tempFile = new File("temp.csv");
-        Scanner scan = new Scanner(tempFile);
-
-        PrintWriter writer = new PrintWriter(new FileWriter(originalFile));
-        while(scan.hasNextLine()) {
-            writer.println(scan.nextLine());
+        // 기존의 파일 내용 삭제
+        PrintWriter writer = new PrintWriter(new FileWriter(fileName, false));
+        // lineNum 이외의 레코드(Line) 작성
+        for (String s: strToWrite) {
+            writer.println(s);
         }
-        scan.close();
+        // 여석 수가 변화한 레코드(Line) 작성
+        writer.println(newString);
         writer.close();
+        scan.close();
     }
 }
 
