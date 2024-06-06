@@ -19,7 +19,7 @@ public class FileTimeTable implements FileInterface{
 
     public ArrayList<Line> getLineList(){return this.lineList;}
 
-    public Line getLine(String str){
+    public Line getLine(String str) throws FileIntegrityException {
         /*
             데이터 파일 최신화
          */
@@ -231,38 +231,31 @@ public class FileTimeTable implements FileInterface{
         writer.close();
     }
 
-    public void repos() throws FileNotFoundException {
+    public void repos() throws FileNotFoundException, FileIntegrityException {
+        /*
+            기존에 여석수 늘리거나 줄이는 경우, 또는 getLine을 사용하는 경우 repos를 통해 최신 데이터 파일을 받아옴 
+         */
         lineList.clear();
-        scan = new Scanner(new File("timeTable.csv"));
+        // 아래 부분을 checkIntegrity로 퉁쳐도 될것 같긴 한데 일단 그대로 두겠습니다.
+        scan = new Scanner(new File(fileName));
         lineList = new ArrayList<>();
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
             Line line=new Line();
-
-            /*
-                strArr[0]이 '노선 번호'의 문법 규칙을 만족하는 지 검사
-                문법 규칙을 만족한다면 line.lineNum에 할당
-                만족하지 않으면 FileIntegrityException을 throw
-             */
-            line.lineNum=strArr[0]; //노선 번호
-            /*
-                strArr[1]이 '시각' 문법 규칙을 만족하는지 검사
-                문법 규칙을 만족한다면 값을 할당
-                만족하지 않으면 FileIntegrityException을 throw
-             */
-            line.depTime=strArr[1]; //출발 시각
-            try {
-                ticket.fromStation=new Station(strArr[2]);
-                ticket.arrivalTime=strArr[3];
-                ticket.toStation=new Station(strArr[4]);
-                ticket.price=new Price(strArr[5]);
-                ticket.extraSeat=new Seat(strArr[6]);
-                ticket.entireSeat=new Seat(strArr[7]);
-            } catch (FileIntegrityException e) {
-                throw new RuntimeException(e);
+            if( !((strArr.length>=4) && (strArr.length % 2 == 0))) {
+                throw new FileIntegrityException("무결성 오류: 파일에 인자의 개수가 옳지 않은 레코드가 존재합니다.");
             }
-            trainlist.add(ticket);
+            line.lineNum=strArr[0];
+            line.depTime=strArr[1];
+            for(int i=2;i<strArr.length;i++){
+                line.railList.put(railFile.getRailByIndex(Integer.parseInt(strArr[i])),Integer.parseInt(strArr[i+1]));
+            }
+
+            line.checkIntegrity(strArr[0]);
+
+            lineList.add(line);
         }
+
     }
 
     public void increaseExtraSeat(String lineNum, int n) throws IOException {
