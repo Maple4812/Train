@@ -12,6 +12,22 @@ public class FileRail implements FileInterface{
         this.fileName = fileName;
     }
 
+    public Rail getRailByIndex(int index) {
+        /*
+            입력 받은 index 값과 동일한 운행 정보 인덱스를 갖는 Rail 객체가 존재하면 반환
+         */
+        for(Rail rail : raillist){
+            if(rail.railIndex == index){
+                return rail;
+            }
+        }
+
+        /*
+            존재하지 않는 경우 null을 반환
+         */
+        return null;
+    }
+
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
         scan= new Scanner(new File(fileName));
