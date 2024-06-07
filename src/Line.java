@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class Line {
     static String REGEXP_PATTERN_LINE = "^[A-Z][0-9]{4}$"; //노선 번호 문법 규칙
-    String lineNum, depTime, arrivalTime; //노선 번호, 출발 시각, 도착 시각
+    String lineNum, depTime; //노선 번호, 출발 시각
     LinkedHashMap<Rail, Integer> railList; // <운행 정보, 여석 수>
     private final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
 
