@@ -660,24 +660,24 @@ public class ReservationAndCancel {
     }
     //열차 취소시 csv파일에서 삭제
 
-    public static void clearCSVContent(String fileName) {
-        try {
-            // FileWriter 객체를 생성할 때, 두 번째 매개변수로 false를 주어 파일의 내용을 덮어쓰게 함
-            FileWriter fw = new FileWriter(fileName, false);
-
-            // 파일을 빈 내용으로 덮어쓰기
-            fw.write("");
-
-            // FileWriter 닫기
-            fw.close();
-
-            System.out.println(fileName + "의 내용이 성공적으로 지워졌습니다.");
-        } catch (IOException e) {
-            // IO 예외 처리
-            e.printStackTrace();
-            System.out.println(fileName + "의 내용을 지우는 데 실패했습니다.");
-        }
-    }
+//    public static void clearCSVContent(String fileName) {
+//        try {
+//            // FileWriter 객체를 생성할 때, 두 번째 매개변수로 false를 주어 파일의 내용을 덮어쓰게 함
+//            FileWriter fw = new FileWriter(fileName, false);
+//
+//            // 파일을 빈 내용으로 덮어쓰기
+//            fw.write("");
+//
+//            // FileWriter 닫기
+//            fw.close();
+//
+//            System.out.println(fileName + "의 내용이 성공적으로 지워졌습니다.");
+//        } catch (IOException e) {
+//            // IO 예외 처리
+//            e.printStackTrace();
+//            System.out.println(fileName + "의 내용을 지우는 데 실패했습니다.");
+//        }
+//    }
 
     private int rowIndicesHandle(String[] inputArr) {
         int arrLength = inputArr.length;

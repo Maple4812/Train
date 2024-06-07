@@ -45,42 +45,42 @@ public class FileTimeTable implements FileInterface{
     아래는 다른 파트에서 쓰는 부분
      */
 
-    public Ticket getTicketByLineNum(String lineNum) {
-        for (Ticket ticket : trainlist) {
-            if (ticket.lineNum.equals(lineNum))
-                return ticket;
-        }
-        return null;
-    }
-
-    public ArrayList<Ticket> getTicketByDepStation(String depStation) {
-        ArrayList<Ticket> arrayList = new ArrayList<>();
-        for (Ticket ticket : trainlist) {
-            if (ticket.fromStation.getStation().equals(depStation))
-                arrayList.add(ticket);
-        }
-        return arrayList;
-    }
-
-    public ArrayList<Ticket> getTicketByArrStation(String arrStation) {
-        ArrayList<Ticket> arrayList = new ArrayList<>();
-        for (Ticket ticket : trainlist) {
-            if (ticket.toStation.getStation().equals(arrStation))
-                arrayList.add(ticket);
-        }
-        return arrayList;
-    }
-
-    public ArrayList<Ticket> getTicketByDepArrStation(String depStation, String arrStation) {
-        ArrayList<Ticket> arrayList = new ArrayList<>();
-        for (Ticket ticket : trainlist) {
-            if (ticket.fromStation.getStation().equals(depStation)) {
-                if (ticket.toStation.getStation().equals(arrStation))
-                    arrayList.add(ticket);
-            }
-        }
-        return arrayList;
-    }
+//    public Ticket getTicketByLineNum(String lineNum) {
+//        for (Ticket ticket : trainlist) {
+//            if (ticket.lineNum.equals(lineNum))
+//                return ticket;
+//        }
+//        return null;
+//    }
+//
+//    public ArrayList<Ticket> getTicketByDepStation(String depStation) {
+//        ArrayList<Ticket> arrayList = new ArrayList<>();
+//        for (Ticket ticket : trainlist) {
+//            if (ticket.fromStation.getStation().equals(depStation))
+//                arrayList.add(ticket);
+//        }
+//        return arrayList;
+//    }
+//
+//    public ArrayList<Ticket> getTicketByArrStation(String arrStation) {
+//        ArrayList<Ticket> arrayList = new ArrayList<>();
+//        for (Ticket ticket : trainlist) {
+//            if (ticket.toStation.getStation().equals(arrStation))
+//                arrayList.add(ticket);
+//        }
+//        return arrayList;
+//    }
+//
+//    public ArrayList<Ticket> getTicketByDepArrStation(String depStation, String arrStation) {
+//        ArrayList<Ticket> arrayList = new ArrayList<>();
+//        for (Ticket ticket : trainlist) {
+//            if (ticket.fromStation.getStation().equals(depStation)) {
+//                if (ticket.toStation.getStation().equals(arrStation))
+//                    arrayList.add(ticket);
+//            }
+//        }
+//        return arrayList;
+//    }
 
     /*
         위는 다른 파트에서 쓰는 부분
