@@ -16,9 +16,9 @@ public class Main {
             // 각 파일객체에서 무결성검사를 하고, 오류가 있으면 error 를 throw 한다.
             fileStationInterval.checkIntegrity(); // 확장
             fileUserInfo.checkIntegrity();
+            fileTimeTable.checkIntegrity();
             fileReserve.checkIntegrity();
             fileTempReserve.checkIntegrity();
-            fileTimeTable.checkIntegrity();
         } catch (Exception e)
         {
             // error 가 catch 되면 이를 사용자에게 알리고 프로그램을 종료한다.
@@ -37,7 +37,7 @@ public class Main {
         // NOTE! 구간 정보 파일이 필요한 경우, 기능 객체의 시작 파라미터로 파일 객체를 넣으시면 됩니다.
         LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput();
         CheckTimeTable checkTimeTable = new CheckTimeTable(fileTimeTable);
-        TempReservation tempReservation = new TempReservation(fileUserInfo, fileReserve, fileTempReserve, fileTimeTable);
+        TempReservation tempReservation = new TempReservation(fileReserve, fileTempReserve, fileTimeTable);
         ReservationAndCancel reservationAndCancel = new ReservationAndCancel(fileTempReserve, fileReserve, fileTimeTable);
 
         // 가장 처음 사용자로부터 정보들을 입력받습니다.

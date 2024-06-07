@@ -9,6 +9,7 @@ import java.util.Date;
 public class CheckTimeTable {
 
     public FileTimeTable timeTableFile;
+    public FileRail railFile;
     public String[] inputArr;
 
     // 사용자가 앞에서 입력한 시간을 받아옴
@@ -19,8 +20,9 @@ public class CheckTimeTable {
     Date inputdate = new Date();
     Date Depdate = new Date();
 
-    public CheckTimeTable(FileInterface timeTableFile) {
+    public CheckTimeTable(FileInterface timeTableFile,FileInterface railFile) {
         this.timeTableFile = (FileTimeTable) timeTableFile;
+        this.railFile = (FileRail) railFile;
     }
 
     public int init() throws IOException, FileIntegrityException, ParseException {
@@ -31,17 +33,17 @@ public class CheckTimeTable {
         /*
             출발역을 중복 제거하여 역 리스트에 추가
          */
-        for (int i = 0; i < timeTableFile.getTrainlist().size(); i++) {
-            if(!STlist.contains(timeTableFile.getTrainlist().get(i).fromStation.getStation())){
-                STlist.add(timeTableFile.getTrainlist().get(i).fromStation.getStation());
+        for (int i = 0; i < railFile.getRaillist().size(); i++) {
+            if(!STlist.contains(railFile.getRaillist().get(i).fromStation.getStation())){
+                STlist.add(railFile.getRaillist().get(i).fromStation.getStation());
             }
         }
         /*
             도착역을 중복 제거하여 역 리스트에 추가
          */
-        for (int i = 0; i < timeTableFile.getTrainlist().size(); i++) {
-            if(!STlist.contains(timeTableFile.getTrainlist().get(i).toStation.getStation())){
-                STlist.add(timeTableFile.getTrainlist().get(i).toStation.getStation());
+        for (int i = 0; i < railFile.getRaillist().size(); i++) {
+            if(!STlist.contains(railFile.getRaillist().get(i).toStation.getStation())){
+                STlist.add(railFile.getRaillist().get(i).toStation.getStation());
             }
         }
 
@@ -134,8 +136,35 @@ public class CheckTimeTable {
             // 조건을 모두 만족시 다음으로 이동
 
 
-            // 검색에 부합하는 기차 정보 출력
+            // 검색에 부합하는 기차 정보 출력(새로 작성)
+            int n = 0;
+            for (int i = 0; i < timeTableFile.getLineList().size(); i++) {
+                if (timeTableFile.getLineList().get(i).slicing(inputArr[0], inputArr[1]) != null) {
 
+                    //티켓 객체 임시 생성
+                    Ticket ticket = new Ticket();
+                    ticket.railIndices = timeTableFile.getLineList().get(i).slicing(inputArr[0], inputArr[1]);
+                    ticket.line = timeTableFile.getLineList().get(i);
+                    ticket.depTime = timeTableFile.getLineList().get(i).caculateDeptime(inputArr[0]); // caculateDeptime : 역입력 시 출발 시각 반환 함수
+
+                    //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
+                    Depdate = dtFormat.parse(ticket.depTime);
+                    diff = inputdate.getTime() - Depdate.getTime();
+                    if ((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))) {
+                        if (n == 0){System.out.println("노선 번호 / 노선 정보 / 출발 시각 / 운행 구간 / 도착 역 / 여석 수 / 가격");}
+                        n++;
+                        printTicket(ticket);
+                    }
+                }
+            }
+
+            if (n == 0) {
+                System.out.println("검색에 해당하는 열차가 없습니다!");
+                continue;
+            }
+            break;
+
+            /* 검색에 부합하는 기차 정보 출력(기존)
             int n = 0;
             for (int i = 0; i < timeTableFile.getTrainlist().size(); i++) {
                 if (timeTableFile.getTrainlist().get(i).fromStation.getStation().equals(inputArr[0])) {
@@ -171,7 +200,10 @@ public class CheckTimeTable {
                 continue;
             }
             break;
+        */
         }
+
+
 
 
         // 기차 정보 출력이후 예약 메뉴 진입 여부
@@ -212,4 +244,28 @@ public class CheckTimeTable {
     public void repos(String file){
 
     }
+
+    // 티켓 객체의 가격과 도착시간을 계산 후 출력
+    public void printTicket(Ticket ticket){
+
+        String printstr;
+
+        printstr = ticket.line.lineNum + "  " + ticket.railIndices.get(0).railIndex;
+        for (var i = 0; i < ticket.railIndices.size(); i++) {
+            printstr += "/" + ticket.railIndices.get(i).railIndex;
+        }
+
+        printstr += ticket.depTime + "  " + ticket.railIndices.get(0).fromStation;
+        for (var i = 0; i < ticket.railIndices.size(); i++) {
+            printstr += "-" + ticket.railIndices.get(i).toStation;
+        }
+
+        //좌석 출력을 어떻게 해야할지 몰라서 일단 좌석만 제외
+        printstr += ticket.calculateArrivalTime() + "  " + ticket.calculatePrice();
+
+        System.out.println(printstr);
+
+    }
 }
+
+

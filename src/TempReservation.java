@@ -10,15 +10,13 @@ import java.util.regex.Pattern;
 public class TempReservation {
     private final static SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
     private static FileTempReserve tempReserveFile;
-    private FileUserInfo userInfoFile;
     private static FileReserve reserveFile;
     private static FileTimeTable timeTableFile;
     private static Client loginClient;
     Scanner scan = new Scanner(System.in);
 
-    public TempReservation(FileInterface userInfoFile, FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile) {
+    public TempReservation(FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile) {
         this.tempReserveFile = (FileTempReserve) tempReserveFile;
-        this.userInfoFile = (FileUserInfo) userInfoFile;
         this.reserveFile = (FileReserve) reserveFile;
         this.timeTableFile = (FileTimeTable) timeTableFile;
     }
