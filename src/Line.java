@@ -172,17 +172,17 @@ public class Line {
     }
 
     /*
-        충돌 무결성 검사용
+        충돌 무결성 검사용, 일단 쓸 일 없어서 주석 처리
         각 구간을 지나는 출발시간을 list로 반환
      */
-    public ArrayList<String> getDeptimeList(){
-
-    }
+//    public ArrayList<String> getDeptimeList(){
+//
+//    }
 
     /*
-        중복 구간이 있는지 무결성 검사하는 용
+        중복 구간이 있는지 무결성 검사하는 용, 일단 쓸 일 없어서 주석 처리
      */
-    public ArrayList<Integer> getRailIndecies(){
-
-    }
+//    public ArrayList<Integer> getRailIndecies(){
+//
+//    }
 }
