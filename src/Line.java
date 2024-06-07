@@ -45,6 +45,7 @@ public class Line {
         // 일단 try catch 문으로 묶어서 filerail 생성
         try{
             FileRail filerail = new FileRail("rail.csv");
+            filerail.checkIntegrity(); //checkIntegrity를 통해 여기서 만든 filerail의 raillist를 생성
             for (Rail rail : railArrayList) {
                 if (filerail.getRailByIndex(rail.railIndex) == null) {
                     throw new FileIntegrityException("무결성 오류: rail.csv 파일에 존재하지 않는 rail 인덱스가 포함되어 있습니다.");
