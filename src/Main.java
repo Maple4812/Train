@@ -10,12 +10,14 @@ public class Main {
         FileInterface fileUserInfo = new FileUserInfo("UserInfo.csv");
         FileInterface fileReserve = new FileReserve("reserve.csv");
         FileInterface fileTempReserve = new FileTempReserve("tempReserve.csv");
-        FileInterface fileTimeTable = new FileTimeTable("timeTable.csv");
+        FileInterface fileRail = new FileRail("rail.csv");
+        FileInterface fileTimeTable = new FileTimeTable("timeTable.csv", fileRail);
 
         try{
             // 각 파일객체에서 무결성검사를 하고, 오류가 있으면 error 를 throw 한다.
             fileStationInterval.checkIntegrity(); // 확장
             fileUserInfo.checkIntegrity();
+            fileRail.checkIntegrity();
             fileTimeTable.checkIntegrity();
             fileReserve.checkIntegrity();
             fileTempReserve.checkIntegrity();
@@ -36,7 +38,7 @@ public class Main {
 
         // NOTE! 구간 정보 파일이 필요한 경우, 기능 객체의 시작 파라미터로 파일 객체를 넣으시면 됩니다.
         LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput();
-        CheckTimeTable checkTimeTable = new CheckTimeTable(fileTimeTable);
+        CheckTimeTable checkTimeTable = new CheckTimeTable(fileTimeTable, fileRail);
         TempReservation tempReservation = new TempReservation(fileReserve, fileTempReserve, fileTimeTable);
         ReservationAndCancel reservationAndCancel = new ReservationAndCancel(fileTempReserve, fileReserve, fileTimeTable);
 
