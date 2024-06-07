@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -5,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class Line {
     static String REGEXP_PATTERN_LINE = "^[A-Z][0-9]{4}$"; //노선 번호 문법 규칙
-    String lineNum, depTime, arrivalTime; //노선 번호, 출발 시각, 도착 시각
+    String lineNum, depTime; //노선 번호, 출발 시각
     LinkedHashMap<Rail, Integer> railList; // <운행 정보, 여석 수>
     private final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
 
@@ -41,11 +42,18 @@ public class Line {
 
         // 각 rail의 인덱스가 rail.csv 파일 내에 존재하는지 확인
         // FileRail의 getRailByIndex가 static이 아니어서 오류가 생기는 것 같습니다.(추후 논의 필요)
-        for (Rail rail : railArrayList) {
-            if (FileRail.getRailByIndex(rail.railIndex) == null) {
-                throw new FileIntegrityException("무결성 오류: rail.csv 파일에 존재하지 않는 rail 인덱스가 포함되어 있습니다.");
+        // 일단 try catch 문으로 묶어서 filerail 생성
+        try{
+            FileRail filerail = new FileRail("rail.csv");
+            for (Rail rail : railArrayList) {
+                if (filerail.getRailByIndex(rail.railIndex) == null) {
+                    throw new FileIntegrityException("무결성 오류: rail.csv 파일에 존재하지 않는 rail 인덱스가 포함되어 있습니다.");
+                }
             }
+        }catch (FileNotFoundException e){
+            throw new FileIntegrityException("오류: rail.csv를 읽어오는중 문제 발생");
         }
+
     }
 
 
@@ -164,17 +172,17 @@ public class Line {
     }
 
     /*
-        충돌 무결성 검사용
+        충돌 무결성 검사용, 일단 쓸 일 없어서 주석 처리
         각 구간을 지나는 출발시간을 list로 반환
      */
-    public ArrayList<String> getDeptimeList(){
-
-    }
+//    public ArrayList<String> getDeptimeList(){
+//
+//    }
 
     /*
-        중복 구간이 있는지 무결성 검사하는 용
+        중복 구간이 있는지 무결성 검사하는 용, 일단 쓸 일 없어서 주석 처리
      */
-    public ArrayList<Integer> getRailIndecies(){
-
-    }
+//    public ArrayList<Integer> getRailIndecies(){
+//
+//    }
 }
