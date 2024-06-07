@@ -98,6 +98,7 @@ public class FileTimeTable implements FileInterface{
                 데이터 파일이 노선 번호, 출발 시각, <운행 정보 인덱스, 여석> ... 형태를 갖는지 확인합니다.
                 이때 strArr의 개수는 4 이상의 짝수
                 (한 Line이 최대 20개? 의 구간만 지날 수 있다는 조건이 있었던거 같은데 확인 필요. 일단 현재는 4 이상 짝수이면 모두 만족)
+                (이 부분 수정 시 아래 repos도 수정해야함)
              */
             if( !((strArr.length>=4) && (strArr.length % 2 == 0))) {
                 throw new FileIntegrityException("무결성 오류: 파일에 인자의 개수가 옳지 않은 레코드가 존재합니다.");
