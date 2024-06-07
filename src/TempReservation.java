@@ -27,15 +27,17 @@ public class TempReservation {
         String lineNum = "";
         boolean isConfirmed = false;
         int tickets = 1;
-        Ticket ticket = null;
 
         while (true) {
-            System.out.print("예약하시고 싶은 기차표의 노선번호, 확정 여부, 개수(없을 경우 1개)를 입력해주세요: ");
+            System.out.print("예약하시고 싶은 기차표의 노선번호, 노선 정보, 확정 여부, 개수(없을 경우 1개)를 입력해주세요: ");
             String input = scan.next();
             LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
             TempReservation.removeTimeOutReserve();
             String[] inputArr = input.split(",");
+            Ticket ticket = new Ticket();
+            TempTicket tempTicket = new TempTicket();
             int n = inputArr.length;
+            // 1개가 입력되었을 때
             if (n == 1) {
                 if (inputArr[0].equals("Q")) {
                     System.out.println("메인 프롬프트로 돌아갑니다");
@@ -44,160 +46,134 @@ public class TempReservation {
                     System.out.println("잘못된 입력입니다.");
                     continue;
                 }
-            } else if (n == 2) {
+            }
+            // 3개가 입력되었을 때
+            else if (n == 3) {
+                String[] strArr = inputArr[1].split("/");
+                ArrayList<Rail> list = new ArrayList<>();
                 try {
-                    Ticket.checkIntegrity(inputArr[0]);
-                } catch (FileIntegrityException e) {
-                    System.out.println("잘못된 노선 번호입니다.");
-                    continue;
-                }
-
-                /*
-                ********************************************************************************************************************
-                    현재 시각 이전의 열차인지 체크합니다.
-                    timeCheckTicket: 입력 받은 노선 번호의 티켓
-                    timeCheckDepTime: 입력 받은 노선 번호 열차의 출발시간
-                 */
-                Ticket timeCheckTicket = timeTableFile.getTicket(inputArr[0]);
-                //실제로 존재하는 노선 번호인지 확인
-                if (timeCheckTicket == null) {
-                    System.out.println("잘못된 노선 번호입니다.");
-                    continue;
-                }
-                String timeCheckDepTime = timeCheckTicket.depTime;
-
-                /*
-                    현재 시각과 예약 하려는 열차의 출발 시각 간 연도 비교
-                 */
-                if (Integer.parseInt(timeCheckDepTime.substring(0, 4)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4))) {
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
-                    continue;
-                }
-                /*
-                    현재 시각과 예약 하려는 열차의 출발 시각 간 월, 일 비교
-                 */
-                if (
-                        Integer.parseInt(timeCheckDepTime.substring(0, 4)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4)) &&
-                                Integer.parseInt(timeCheckDepTime.substring(4, 8)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4, 8))
-                ) {
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
-                    continue;
-                }
-                /*
-                    현재 시각과 예약 하려는 열차의 출발 시각 간 시, 분 비교
-                 */
-                if (
-                        Integer.parseInt(timeCheckDepTime.substring(0, 4)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4)) &&
-                                Integer.parseInt(timeCheckDepTime.substring(4, 8)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4, 8)) &&
-                                Integer.parseInt(timeCheckDepTime.substring(8, 12)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8, 12))
-                ) {
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
-                    continue;
-                }
-                /*
-                 **********************************************************************************************************************************
-                 */
-                try {
-                    if (!(trueList.contains(inputArr[1]) || falseList.contains(inputArr[1]))) {
+                    if (!(trueList.contains(inputArr[2]) || falseList.contains(inputArr[2]))) {
                         throw new FileIntegrityException();
                     }
                 } catch (FileIntegrityException e) {
                     System.out.println("잘못된 입력입니다.");
                     continue;
                 }
-            } else if (n == 3) {
+                if(trueList.contains(inputArr[2])) {
+                    try {
+                        ticket.line = timeTableFile.getLine(inputArr[0]);
+                    } catch (FileIntegrityException e) {
+                        System.out.println("잘못된 노선 번호입니다.");
+                    }
+                    ticket.client = LogInAndTimeInput.getClient();
+                    for (int i = 0; i < strArr.length; i++) {
+                        list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
+                    }
+                    ticket.railIndices = list;
+                    ticket.reserveTime = LogInAndTimeInput.getNowTime();
+                    ticket.arrivalTime = ticket.calculateArrivalTime();
+                    ticket.price = new Price(Integer.toString(ticket.calculatePrice()));
+                    try {
+                        ticket.depTime = ticket.line.caculateDeptime(list.get(0).fromStation.getStation());
+                        ticket.checkIntegrityAboutTime(LogInAndTimeInput.getNowTime());
+                    } catch (FileIntegrityException e) {
+                        System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
+                    }
+                    try {
+                        ticket.checkIntegrity();
+                    } catch (FileIntegrityException e) {
+                        System.out.print("");
+                    }
+                    reserveFile.addTicket(ticket);
+                    reserveFile.update();
+                } else {
+                    tempTicket.line = timeTableFile.getLine(inputArr[0]);
+                    tempTicket.client = LogInAndTimeInput.getClient();
+                    for (int i = 0; i < strArr.length; i++) {
+                        list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
+                    }
+                    tempTicket.railIndices = list;
+                    tempTicket.reserveTime = LogInAndTimeInput.getNowTime();
+                    tempTicket.arrivalTime = tempTicket.calculateArrivalTime();
+                    tempTicket.price = new Price(Integer.toString(tempTicket.calculatePrice()));
+                    tempTicket.setReserveComputerTime(LogInAndTimeInput.getNowComputerTime());
+                    try {
+                        tempTicket.depTime = tempTicket.line.caculateDeptime(list.get(0).fromStation.getStation());
+                        tempTicket.checkIntegrityAboutTime(LogInAndTimeInput.getNowTime());
+                    } catch (FileIntegrityException e) {
+                        System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
+                    }
+                    tempReserveFile.addTempTicket(tempTicket);
+                    tempReserveFile.update();
+                }
+                timeTableFile.reduceExtraSeat(inputArr[0], list.get(0).railIndex, list.get(list.size() - 1).railIndex, 1);
+            } else if (n == 4) {
+                // 중요함@@@@@@@ : 예약 개수에 대한 무결성 검사 필수!!!!
+                int numberOfReservation = Integer.parseInt(inputArr[3]);
+                String[] strArr = inputArr[1].split("/");
+                ArrayList<Rail> list = new ArrayList<>();
                 try {
-                    Ticket.checkIntegrity(inputArr[0]);
-                } catch (FileIntegrityException e) {
-                    System.out.println("잘못된 노선 번호입니다.");
-                    continue;
-                }
-
-                /*
-                ********************************************************************************************************************
-                    현재 시각 이전의 열차인지 체크합니다.
-                    timeCheckTicket: 입력 받은 노선 번호의 티켓
-                    timeCheckDepTime: 입력 받은 노선 번호 열차의 출발시간
-                 */
-                Ticket timeCheckTicket = timeTableFile.getTicket(inputArr[0]);
-                //실제로 존재하는 노선 번호인지 확인
-                if (timeCheckTicket == null) {
-                    System.out.println("잘못된 노선 번호입니다.");
-                    continue;
-                }
-                String timeCheckDepTime = timeCheckTicket.depTime;
-                /*
-                    현재 시각과 예약 하려는 열차의 출발 시각 간 연도 비교
-                 */
-                if (Integer.parseInt(timeCheckDepTime.substring(0, 4)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4))) {
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
-                    continue;
-                }
-                /*
-                    현재 시각과 예약 하려는 열차의 출발 시각 간 월, 일 비교
-                 */
-                if (
-                        Integer.parseInt(timeCheckDepTime.substring(0, 4)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4)) &&
-                                Integer.parseInt(timeCheckDepTime.substring(4, 8)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4, 8))
-                ) {
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
-                    continue;
-                }
-                /*
-                    현재 시각과 예약 하려는 열차의 출발 시각 간 시, 분 비교
-                 */
-                if (
-                        Integer.parseInt(timeCheckDepTime.substring(0, 4)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(0, 4)) &&
-                                Integer.parseInt(timeCheckDepTime.substring(4, 8)) == Integer.parseInt(LogInAndTimeInput.getNowTime().substring(4, 8)) &&
-                                Integer.parseInt(timeCheckDepTime.substring(8, 12)) < Integer.parseInt(LogInAndTimeInput.getNowTime().substring(8, 12))
-                ) {
-                    System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
-                    continue;
-                }
-                /*
-                 **********************************************************************************************************************************
-                 */
-
-                try {
-                    if (!(trueList.contains(inputArr[1]) || falseList.contains(inputArr[1]))) {
+                    if (!(trueList.contains(inputArr[2]) || falseList.contains(inputArr[2]))) {
                         throw new FileIntegrityException();
                     }
                 } catch (FileIntegrityException e) {
                     System.out.println("잘못된 입력입니다.");
                     continue;
                 }
-                try {
-                    tickets = Integer.parseInt(inputArr[2]);  // 정수형태로 parseInt
-                    if (tickets <= 0) {  //자연수인지 확인
-                        throw new FileIntegrityException();
+                if(trueList.contains(inputArr[2])) {
+                    try {
+                        ticket.line = timeTableFile.getLine(inputArr[0]);
+                    } catch (FileIntegrityException e) {
+                        System.out.println("잘못된 노선 번호입니다.");
                     }
-                } catch (NumberFormatException e) {  // 정수가 아닐 때
-                    System.out.println("잘못된 입력입니다.");
-                    continue;
-                } catch (FileIntegrityException e) {  // 1 이상의 정수가 아닐 때
-                    System.out.println("예매 수가 올바르지 않습니다. 1 이상의 정수를 입력하세요.");
-                    continue;
+                    ticket.client = LogInAndTimeInput.getClient();
+                    for (int i = 0; i < strArr.length; i++) {
+                        list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
+                    }
+                    ticket.railIndices = list;
+                    ticket.reserveTime = LogInAndTimeInput.getNowTime();
+                    ticket.arrivalTime = ticket.calculateArrivalTime();
+                    ticket.price = new Price(Integer.toString(ticket.calculatePrice()));
+                    try {
+                        ticket.depTime = ticket.line.caculateDeptime(list.get(0).fromStation.getStation());
+                        ticket.checkIntegrityAboutTime(LogInAndTimeInput.getNowTime());
+                    } catch (FileIntegrityException e) {
+                        System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
+                    }
+                    try {
+                        ticket.checkIntegrity();
+                    } catch (FileIntegrityException e) {
+                        System.out.print("");
+                    }
+                    for (int i = 0; i < numberOfReservation; i++) {
+                        reserveFile.addTicket(ticket);
+                    }
+                    reserveFile.update();
+                } else {
+                    tempTicket.line = timeTableFile.getLine(inputArr[0]);
+                    tempTicket.client = LogInAndTimeInput.getClient();
+                    for (int i = 0; i < strArr.length; i++) {
+                        list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
+                    }
+                    tempTicket.railIndices = list;
+                    tempTicket.reserveTime = LogInAndTimeInput.getNowTime();
+                    tempTicket.arrivalTime = tempTicket.calculateArrivalTime();
+                    tempTicket.price = new Price(Integer.toString(tempTicket.calculatePrice()));
+                    tempTicket.setReserveComputerTime(LogInAndTimeInput.getNowComputerTime());
+                    try {
+                        tempTicket.depTime = tempTicket.line.caculateDeptime(list.get(0).fromStation.getStation());
+                        tempTicket.checkIntegrityAboutTime(LogInAndTimeInput.getNowTime());
+                    } catch (FileIntegrityException e) {
+                        System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
+                    }
+                    for (int i = 0; i < numberOfReservation; i++) {
+                        tempReserveFile.addTempTicket(tempTicket);
+                    }
+                    tempReserveFile.update();
                 }
+                timeTableFile.reduceExtraSeat(inputArr[0], list.get(0).railIndex, list.get(list.size() - 1).railIndex, 1);
             } else {
                 System.out.println("잘못된 입력입니다.");
-                continue;
-            }
-            lineNum = inputArr[0];                //여기서 각 인수를 변수에 넣는다
-            if (trueList.contains(inputArr[1])) {
-                isConfirmed = true;
-            } else if (falseList.contains(inputArr[1])) {
-                isConfirmed = false;
-            }
-            ticket = timeTableFile.getTicket(lineNum);  // 티켓의 노선번호로 티켓 객체를 가져오는 임의의 함수입니다.
-            if (ticket == null) {
-                System.out.println("잘못된 노선번호입니다.");
-                continue;
-            }
-            if (tickets > ticket.extraSeat.getSeat()) {
-                System.out.println("해당 열차에서는 최대 " + ticket.extraSeat.getSeat() + "개의 좌석만 예약할 수 있습니다.");
-                continue;
-            } else {
-                break;
             }
         }
         timeTableFile.reduceExtraSeat(lineNum, tickets);

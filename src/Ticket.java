@@ -15,7 +15,7 @@ public class Ticket {
     public Ticket(){}
 
     //노선 번호 무결성 검사
-    public void checkIntegrity(String str) throws FileIntegrityException {
+    public void checkIntegrity() throws FileIntegrityException {
         // 1. railIndices 안에 있는 Rail 객체들의 나열이 실제 존재하는 노선 정보인지 확인
 
         // line 안에 해당 Rail 객체들의 나열이 존재하는지 확인하려면 우선 line 안에 LinkedHashMap 을 가져와야한다.
