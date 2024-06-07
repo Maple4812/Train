@@ -282,11 +282,11 @@ public class TempReservation {
         System.out.println();
         int num = 0;
         for (Ticket ticket : ticketArrayList) {
-            System.out.println("노선번호: " + ticket.lineNum);
+            System.out.println("노선번호: " + ticket.line.lineNum);
             System.out.println("출발시각: " + ticket.depTime);
-            System.out.println("출발역: " + ticket.fromStation.getStation());
+            System.out.println("출발역: " + ticket.railIndices.get(0).fromStation.getStation());
             System.out.println("도착시각: " + ticket.arrivalTime);
-            System.out.println("도착역: " + ticket.toStation.getStation());
+            System.out.println("도착역: " + ticket.railIndices.get(ticket.railIndices.size()-1).toStation.getStation());
             System.out.println();
             num++;
         }
