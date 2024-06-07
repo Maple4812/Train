@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -41,11 +42,18 @@ public class Line {
 
         // 각 rail의 인덱스가 rail.csv 파일 내에 존재하는지 확인
         // FileRail의 getRailByIndex가 static이 아니어서 오류가 생기는 것 같습니다.(추후 논의 필요)
-        for (Rail rail : railArrayList) {
-            if (FileRail.getRailByIndex(rail.railIndex) == null) {
-                throw new FileIntegrityException("무결성 오류: rail.csv 파일에 존재하지 않는 rail 인덱스가 포함되어 있습니다.");
+        // 일단 try catch 문으로 묶어서 filerail 생성
+        try{
+            FileRail filerail = new FileRail("rail.csv");
+            for (Rail rail : railArrayList) {
+                if (filerail.getRailByIndex(rail.railIndex) == null) {
+                    throw new FileIntegrityException("무결성 오류: rail.csv 파일에 존재하지 않는 rail 인덱스가 포함되어 있습니다.");
+                }
             }
+        }catch (FileNotFoundException e){
+            throw new FileIntegrityException("오류: rail.csv를 읽어오는중 문제 발생");
         }
+
     }
 
 
