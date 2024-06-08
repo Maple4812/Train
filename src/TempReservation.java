@@ -24,9 +24,6 @@ public class TempReservation {
     public void init() throws FileIntegrityException, IOException, ParseException {
         ArrayList<String> trueList = new ArrayList<>(Arrays.asList("T", "t", "예", "ㅇ", "1"));
         ArrayList<String> falseList = new ArrayList<>(Arrays.asList("F", "f", "아니오", "ㄴ", "0"));
-        String lineNum = "";
-        boolean isConfirmed = false;
-        int tickets = 1;
 
         while (true) {
             System.out.print("예약하시고 싶은 기차표의 노선번호, 노선 정보, 확정 여부, 개수(없을 경우 1개)를 입력해주세요: ");
@@ -59,6 +56,7 @@ public class TempReservation {
                     System.out.println("잘못된 입력입니다.");
                     continue;
                 }
+                // 예매 확정인 경우
                 if(trueList.contains(inputArr[2])) {
                     try {
                         ticket.line = timeTableFile.getLine(inputArr[0]);
@@ -85,8 +83,11 @@ public class TempReservation {
                         System.out.print("");
                     }
                     reserveFile.addTicket(ticket);
+                    System.out.println(FORMATTER.parse(ticket.depTime) + "에 출발하는 " + ticket.line.lineNum + " 1장을 예매 확정지었습니다.");
                     reserveFile.update();
-                } else {
+                }
+                // 가예약인 경우
+                else {
                     tempTicket.line = timeTableFile.getLine(inputArr[0]);
                     tempTicket.client = LogInAndTimeInput.getClient();
                     for (int i = 0; i < strArr.length; i++) {
@@ -105,10 +106,11 @@ public class TempReservation {
                     }
                     tempReserveFile.addTempTicket(tempTicket);
                     tempReserveFile.update();
+                    System.out.println(FORMATTER.parse(tempTicket.depTime) + "에 출발하는 " + tempTicket.line.lineNum + " 1장을 가예약 했습니다.");
                 }
                 timeTableFile.reduceExtraSeat(inputArr[0], list.get(0).railIndex, list.get(list.size() - 1).railIndex, 1);
             } else if (n == 4) {
-                // 중요함@@@@@@@ : 예약 개수에 대한 무결성 검사 필수!!!!
+                // 중요함@@@@@@@ : 예약 개수와 실제 여석을 비교하는 무결성 검사 필수!!!!
                 int numberOfReservation = Integer.parseInt(inputArr[3]);
                 String[] strArr = inputArr[1].split("/");
                 ArrayList<Rail> list = new ArrayList<>();
@@ -148,6 +150,7 @@ public class TempReservation {
                     for (int i = 0; i < numberOfReservation; i++) {
                         reserveFile.addTicket(ticket);
                     }
+                    System.out.println(FORMATTER.parse(ticket.depTime) + "에 출발하는 " + ticket.line.lineNum + " " + numberOfReservation + "장을 예매 확정지었습니다.");
                     reserveFile.update();
                 } else {
                     tempTicket.line = timeTableFile.getLine(inputArr[0]);
@@ -169,29 +172,13 @@ public class TempReservation {
                     for (int i = 0; i < numberOfReservation; i++) {
                         tempReserveFile.addTempTicket(tempTicket);
                     }
+                    System.out.println(FORMATTER.parse(tempTicket.depTime) + "에 출발하는 " + tempTicket.line.lineNum + " " + numberOfReservation + "장을 가예약 했습니다.");
                     tempReserveFile.update();
                 }
-                timeTableFile.reduceExtraSeat(inputArr[0], list.get(0).railIndex, list.get(list.size() - 1).railIndex, 1);
+                timeTableFile.reduceExtraSeat(inputArr[0], list.get(0).railIndex, list.get(list.size() - 1).railIndex, numberOfReservation);
             } else {
                 System.out.println("잘못된 입력입니다.");
             }
-        }
-        timeTableFile.reduceExtraSeat(lineNum, tickets);
-        loginClient = LogInAndTimeInput.getClient();
-        //일반 예약인 경우
-        if (isConfirmed) {
-            for (int i = 0; i < tickets; i++) {
-                reserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime);
-            }
-            System.out.println(FORMATTER.parse(ticket.depTime) + "에 출발하는 " + ticket.lineNum + " " + tickets + "장을 예매 확정지었습니다.");
-        }
-        //가예약인 경우
-        else {
-            for (int i = 0; i < tickets; i++) {
-                Date now = new Date();
-                tempReserveFile.write(loginClient.getName(), loginClient.getPhoneNumber(), ticket.lineNum, ticket.depTime, LogInAndTimeInput.getNowTime(), FORMATTER.format(new Date()));
-            }
-            System.out.println(FORMATTER.parse(ticket.depTime) + "에 출발하는 " + ticket.lineNum + " " + tickets + "장을 가예약 했습니다.");
         }
     }
 
