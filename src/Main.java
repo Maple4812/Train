@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         // 각각의 파일 객체를 생성하고 각 생성자의 인자로 파일 경로를 받는다.
-        FileStationInterval fileStationInterval = new FileStationInterval("stationInterval.csv"); // 확장
+//        FileStationInterval fileStationInterval = new FileStationInterval("stationInterval.csv"); // 확장
         FileInterface fileUserInfo = new FileUserInfo("UserInfo.csv");
         FileInterface fileReserve = new FileReserve("reserve.csv");
         FileInterface fileTempReserve = new FileTempReserve("tempReserve.csv");
@@ -15,7 +15,7 @@ public class Main {
 
         try{
             // 각 파일객체에서 무결성검사를 하고, 오류가 있으면 error 를 throw 한다.
-            fileStationInterval.checkIntegrity(); // 확장
+//            fileStationInterval.checkIntegrity(); // 확장
             fileUserInfo.checkIntegrity();
             fileRail.checkIntegrity();
             fileTimeTable.checkIntegrity();

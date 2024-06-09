@@ -251,14 +251,16 @@ public class CheckTimeTable {
         String printstr;
 
         printstr = ticket.line.lineNum + "  " + ticket.railIndices.get(0).railIndex;
-        for (var i = 0; i < ticket.railIndices.size(); i++) {
+        for (var i = 1; i < ticket.railIndices.size(); i++) {
             printstr += "/" + ticket.railIndices.get(i).railIndex;
         }
+        printstr += " ";
 
-        printstr += ticket.depTime + "  " + ticket.railIndices.get(0).fromStation;
+        printstr += ticket.depTime + "  " + ticket.railIndices.get(0).fromStation.getStation();
         for (var i = 0; i < ticket.railIndices.size(); i++) {
-            printstr += "-" + ticket.railIndices.get(i).toStation;
+            printstr += "-" + ticket.railIndices.get(i).toStation.getStation();
         }
+        printstr += " ";
 
         //좌석 출력을 어떻게 해야할지 몰라서 일단 좌석만 제외
         printstr += ticket.calculateArrivalTime() + "  " + ticket.calculatePrice();
