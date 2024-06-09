@@ -1,7 +1,4 @@
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -236,7 +233,7 @@ public class ReservationAndCancel {
         System.out.println("가예약 취소 예약 취소를 선택하세요.");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-        switch (input){
+        switch (input) {
             case "가예약 취소":
                 tempReserveCancel();
             case "예약 취소":
@@ -246,8 +243,8 @@ public class ReservationAndCancel {
         }
     }
 
-    public void tempReserveCancel(){
-        refreshData();
+    public void tempReserveCancel() {
+        refreshFileData();
 
         //가예약 목록만 불러오기
         clientTempReservationList = fileTempReserve.getTempTicketListByClient(client);
@@ -273,7 +270,7 @@ public class ReservationAndCancel {
             Scanner inputScan = new Scanner(System.in);
             String[] inputArr = inputScan.nextLine().split(",");
 
-            refreshData();
+            refreshFileData();
 
             switch (inputArr.length) {
                 case 1:
@@ -301,8 +298,7 @@ public class ReservationAndCancel {
                         }
 
                         for (int i = 0; i < num; i++) {
-                            reserveList.add(clientTempReservationList.get(i));
-                            confirmedTempTicketList.add(clientTempReservationList.get(i));
+                            cancelTempTicketList.add(clientTempReservationList.get(i));
                             tempList.remove(clientTempReservationList.get(i));
                         }
                     } else if (inputArr[1].equals("출발")) {
@@ -311,8 +307,7 @@ public class ReservationAndCancel {
                             clientTempReservationList = fileTempReserve.getTempTicketListByfromStation(fromStation, client);
 
                             for (TempTicket tempTicket : clientTempReservationList) {
-                                reserveList.add(tempTicket);
-                                confirmedTempTicketList.add(tempTicket);
+                                cancelTempTicketList.add(tempTicket);
                                 tempList.remove(tempTicket);
                             }
                         } catch (FileIntegrityException e) {
@@ -326,8 +321,7 @@ public class ReservationAndCancel {
                             clientTempReservationList = fileTempReserve.getTempTicketListBytoStation(toStation, client);
 
                             for (TempTicket tempTicket : clientTempReservationList) {
-                                reserveList.add(tempTicket);
-                                confirmedTempTicketList.add(tempTicket);
+                                cancelTempTicketList.add(tempTicket);
                                 tempList.remove(tempTicket);
                             }
                         } catch (FileIntegrityException e) {
@@ -340,7 +334,7 @@ public class ReservationAndCancel {
 
                 case 3:
                     if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
-                        flag = rowIndicesHandle(inputArr);
+                        flag = removeTempTicketbyRowNum(inputArr);
                     }
                     break;
 
@@ -354,8 +348,7 @@ public class ReservationAndCancel {
                             clientTempReservationList = fileTempReserve.getTempTicketListByStation(fromStation, toStation, client);
 
                             for (TempTicket tempTicket : clientTempReservationList) {
-                                reserveList.add(tempTicket);
-                                confirmedTempTicketList.add(tempTicket);
+                                cancelTempTicketList.add(tempTicket);
                                 tempList.remove(tempTicket);
                             }
                         } catch (FileIntegrityException e) {
@@ -369,27 +362,24 @@ public class ReservationAndCancel {
                 default:
                     flag = rowIndicesHandle(inputArr);
             }
+            refreshFileData();
 
-            fileTempReserve.update();
-            fileReserve.update();
-
-            for (TempTicket tempTicket : confirmedTempTicketList) {
+            for (TempTicket tempTicket : cancelTempTicketList) {
                 System.out.println(tempTicket.toString());
             }
         } while (flag == -1);
 
 
+    }
+
+
+    public void ReserveCancel() {
+        refreshFileData();
 
     }
 
 
-    public void ReserveCancel(){
-        refreshData();
-
-    }
-
-
-    public void refreshData(){
+    public void refreshFileData() {
         fileTempReserve.repos();
         fileReserve.repos();
     }
@@ -404,12 +394,12 @@ public class ReservationAndCancel {
         System.out.println();
     }
 
-    private void printClientInfo(){
+    private void printClientInfo() {
         System.out.println(client.getPhoneNumber() + "/" + client.getName() + " 고객님의 예약정보입니다.");
         System.out.println("행 번호 / 노선 번호 / 출발 시각 / 출발 역 / 도착 시간 / 도착 역");
     }
 
-    private void removeExpiredTempTicket(){
+    private void removeExpiredTempTicket() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         int rowNum = 0;
 
@@ -433,10 +423,6 @@ public class ReservationAndCancel {
             }
         }
     }
-
-
-
-
 
 
     //legacyCode
@@ -535,7 +521,8 @@ public class ReservationAndCancel {
         return 1;
     }
 
-    private int removeTempTicketbyRowNum(String[] inputArr){
+    //rowIndicesHandle 과 비슷한 역할을 하나 오버라이딩 하기 애매해서 별도로 함수 구현
+    private int removeTempTicketbyRowNum(String[] inputArr) {
         int arrLength = inputArr.length;
         boolean patternFlag = true;
         for (int i = 0; i < arrLength; i++) {
