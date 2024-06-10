@@ -145,15 +145,16 @@ public class CheckTimeTable {
                     Ticket ticket = new Ticket();
                     ticket.railIndices = timeTableFile.getLineList().get(i).slicing(inputArr[0], inputArr[1]);
                     ticket.line = timeTableFile.getLineList().get(i);
-                    ticket.depTime = timeTableFile.getLineList().get(i).caculateDeptime(inputArr[0]); // caculateDeptime : 역입력 시 출발 시각 반환 함수
+                    ticket.depTime = timeTableFile.getLineList().get(i).caculateDeptime(ticket.railIndices.get(0).railIndex); // caculateDeptime : 역입력 시 출발 시각 반환 함수
+                    int seat = timeTableFile.getLineList().get(i).caculateSeat(ticket.railIndices.get(0).railIndex, ticket.railIndices.get(ticket.railIndices.size()-1).railIndex);
 
                     //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
                     Depdate = dtFormat.parse(ticket.depTime);
                     diff = inputdate.getTime() - Depdate.getTime();
                     if ((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))) {
-                        if (n == 0){System.out.println("노선 번호 / 노선 정보 / 출발 시각 / 운행 구간 / 도착 역 / 여석 수 / 가격");}
+                        if (n == 0){System.out.println("노선 번호 / 노선 정보 / 출발 시각 / 운행 구간 / 도착 시각 / 여석 수 / 가격");}
                         n++;
-                        printTicket(ticket);
+                        printTicket(ticket, seat);
                     }
                 }
             }
@@ -246,7 +247,7 @@ public class CheckTimeTable {
     }
 
     // 티켓 객체의 가격과 도착시간을 계산 후 출력
-    public void printTicket(Ticket ticket){
+    public void printTicket(Ticket ticket, int seat){
 
         String printstr;
 
@@ -254,16 +255,16 @@ public class CheckTimeTable {
         for (var i = 1; i < ticket.railIndices.size(); i++) {
             printstr += "/" + ticket.railIndices.get(i).railIndex;
         }
-        printstr += " ";
+        printstr += "  ";
 
         printstr += ticket.depTime + "  " + ticket.railIndices.get(0).fromStation.getStation();
         for (var i = 0; i < ticket.railIndices.size(); i++) {
             printstr += "-" + ticket.railIndices.get(i).toStation.getStation();
         }
-        printstr += " ";
+        printstr += "  ";
 
         //좌석 출력을 어떻게 해야할지 몰라서 일단 좌석만 제외
-        printstr += ticket.calculateArrivalTime() + "  " + ticket.calculatePrice();
+        printstr += ticket.calculateArrivalTime() + "  " + seat + "  " + ticket.calculatePrice();
 
         System.out.println(printstr);
 
