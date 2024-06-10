@@ -102,19 +102,20 @@ public class Line {
 
     }
 
-    public ArrayList<ArrayList<Rail>> NEWslicing1(String fromstation, String tostation) throws FileIntegrityException{
+    public ArrayList<ArrayList<Rail>> NEWslicing(String fromstation, String tostation) throws FileIntegrityException{
         /*
-            정현: 수정중인 slicing으로, 아직 미완성입니다.
-            case 1: 서울-강릉-대전-서울-대전-대구-대전-부산-대전... 에서 서울~대전을 뽑아내는경우
-                     0   1    2   3   4   5   6   7    8      [0,2] [0,4] [0,6] [0,8] [3,4] [3,6] [3,8]
-                     그럼 출발역이랑 같은 역 정보가 들어있는 인덱스만 알아내서 각 인덱스별로 뒤에 대전 있는지 돌리면 되는거 아닌가?
-                     서울:[0,3]
-                     대전:[2,4,6,8]
-            stationList: 서울-강릉-대전-서울-대전-대구-대전-부산-대전
-            stationCNT: {서울=[0, 3], 강릉=[1], 대전=[2,4,6,8], 대구=[5], 부산=[7]}
+            정현: 2024.06.11.02:24 완성...
+            case : 서울-강릉-대전-서울-대전-대구-대전-부산-대전... 에서 서울~대전을 뽑아내는경우
+                    0   1    2   3   4   5   6   7    8      [0,2] [0,4] [0,6] [0,8] [3,4] [3,6] [3,8]
+                   그럼 출발역이랑 같은 역 정보가 들어있는 인덱스만 알아내서 각 인덱스별로 뒤에 대전 있는지 이중 for문 돌리면 되는거 아닌가?
+                   서울:[0,3]
+                   대전:[2,4,6,8]
+                   stationList: 서울-강릉-대전-서울-대전-대구-대전-부산-대전
+                   stationCNT: {서울=[0, 3], 강릉=[1], 대전=[2,4,6,8], 대구=[5], 부산=[7]}
          */
         ArrayList<String> stationList = getStationList(); //이 Line이 지나는 역을 순서대로 반환
-        Map<String, Set<Integer>> stationCNT = new LinkedHashMap<>();
+        Map<String, Set<Integer>> stationCNT = new LinkedHashMap<>(); // 특정역을 몇번째로 지나는지 저장(위 예시 참고)
+        ArrayList<ArrayList<Rail>> slicedList = new ArrayList<>(); // 이 메소드가 return 할 arraylist
 
 
         for (int i = 0; i < stationList.size(); i++) {
@@ -125,13 +126,48 @@ public class Line {
 
         if(stationCNT.containsKey(fromstation) && stationCNT.containsKey(tostation)){
             /*
-                지나는 역 중에 출발역, 도착역이 모두 존재하는 경우
+                지나는 역 중에 fromstation과 동일한 출발역, tostation과 동일한 도착역이 모두 존재하는 경우
              */
-            ArrayList<Rail> slicedList = new ArrayList<>(); //return 할 arraylist의 인자로 추가될 작은 arraylist
-//            for(int )
+            for(int startIdx : stationCNT.get(fromstation)){ //startIdx: 서울 [0,3]
+                for(int endIdx : stationCNT.get(tostation)){ //endIdx: 대전 [2,4,6,8]
+                    if(startIdx<endIdx){
+                        /*
+                            모든 fromstation과 동일한 출발역에 대해,
+                            출발역보다 뒤에 tostation과 동일한 도착역이 존재한다면 slicing해서 반환할 arraylist에 저장
+                         */
+                        ArrayList<Rail> tempList = new ArrayList<>(); //임시 ArrayList
+                        int i=0;
+                        for (Map.Entry<Rail, Integer> entry : railList.entrySet()){
+                            /*
+                                startIdx=0 이고 endIdx=2인 경우
+                                (서울, 강릉) 구간과 (강릉, 대전) 구간을 저장해야함 (즉 railList의 인덱스 0번과 1번을 저장해야함)
+                                즉 startIdx부터 endIdx-1 까지의 Rail 정보를 저장
+                             */
+                            if(i>=startIdx && i<=endIdx-1){
+                                tempList.add(entry.getKey());
+                            }
+                            i++;
+                        }
+                        slicedList.add(tempList); // 이 메소드가 return 할 slicedList에 저장
+                    }
+                }
+            }
+            /*
+                fromstation과 일치하는 출발역 정보와 tostation과 일치하는 도착역 정보가 존재하지만 slicedList에 아무것도 저장되지 않은 경우,
+                즉 startIdx>=endIdx인 경우들만 존재하는 경우 null을 반환한다.
+                예) 대전-서울 을 지나는 Line에 대해 Line.slicing(서울, 대전)을 한 경우
+             */
+            if(slicedList.isEmpty()){
+                return null;
+            }
+            return slicedList;
         }
-
-        return null;
+        else{
+            /*
+                지나는 역 중 출발역, 도착역 중 한 가지라도 없는 경우 null 반환
+             */
+            return null;
+        }
     }
 
     //인덱스에 따른 출발시각 반환
