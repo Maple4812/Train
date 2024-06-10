@@ -103,7 +103,7 @@ public class Line {
     }
 
     //인덱스에 따른 출발시각 반환
-    public String caculateDeptime(int index){
+    public String calculateDepTime(int index){
 
         try {
             // 처음 출발 시각
@@ -125,7 +125,7 @@ public class Line {
     }
 
     //인덱스에 따른 최소 여석 수 반환
-    public int caculateSeat(int index1, int index2){
+    public int calculateSeat(int index1, int index2){
         int n = 0;
         int seat = 0;
 

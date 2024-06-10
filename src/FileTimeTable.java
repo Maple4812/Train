@@ -1,5 +1,4 @@
 import java.io.*;
-import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -154,7 +153,7 @@ public class FileTimeTable implements FileInterface{
 
                 // 만약 라인에 인덱스가 존재한다면
                 if (line.railList.containsKey(rail)) {
-                    depArr.add(line.caculateDeptime(rail.railIndex));
+                    depArr.add(line.calculateDepTime(rail.railIndex));
                 }
             }
 

@@ -145,8 +145,8 @@ public class CheckTimeTable {
                     Ticket ticket = new Ticket();
                     ticket.railIndices = timeTableFile.getLineList().get(i).slicing(inputArr[0], inputArr[1]);
                     ticket.line = timeTableFile.getLineList().get(i);
-                    ticket.depTime = timeTableFile.getLineList().get(i).caculateDeptime(ticket.railIndices.get(0).railIndex); // caculateDeptime : 역입력 시 출발 시각 반환 함수
-                    int seat = timeTableFile.getLineList().get(i).caculateSeat(ticket.railIndices.get(0).railIndex, ticket.railIndices.get(ticket.railIndices.size()-1).railIndex);
+                    ticket.depTime = timeTableFile.getLineList().get(i).calculateDepTime(ticket.railIndices.get(0).railIndex); // caculateDeptime : 역입력 시 출발 시각 반환 함수
+                    int seat = timeTableFile.getLineList().get(i).calculateSeat(ticket.railIndices.get(0).railIndex, ticket.railIndices.get(ticket.railIndices.size()-1).railIndex);
 
                     //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
                     Depdate = dtFormat.parse(ticket.depTime);
