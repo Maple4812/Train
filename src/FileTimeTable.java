@@ -142,6 +142,9 @@ public class FileTimeTable implements FileInterface{
             5분이내에 같은 시각에 출발 또는 도착하는 열차가 있는지 확인합니다.
             두 개의 for문을 사용해 (인덱스가 같은 경우를 제외하고) 출발시간과 출발역 및 도착역이 같은 열차가 존재한다면 exception을 throw 합니다.
         */
+
+
+
         for (Rail rail : railFile.getRaillist()) {
 
             // 해당 인덱스의 출발 시각을 저장
@@ -151,11 +154,12 @@ public class FileTimeTable implements FileInterface{
 
                 // 만약 라인에 인덱스가 존재한다면
                 if (line.railList.containsKey(rail)) {
-                    depArr.add(line.caculateDeptime(rail.fromStation.getStation()));
+                    depArr.add(line.caculateDeptime(rail.railIndex));
                 }
             }
 
             // 배열에서 저장된 요소를 각각비교하여 5분이내면 exception을 throw 합니다.
+
             for(int i = 0;i<depArr.size();i++){
                 for(int j=i;j<depArr.size();j++){
 
@@ -169,13 +173,16 @@ public class FileTimeTable implements FileInterface{
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
-                    if(Date2 - Date1 < 5 * 60 * 1000L && Date2 - Date1 > -5 * 60 * 1000L){
+                    if(Date2 - Date1 < 5 * 60 * 1000L && Date2 - Date1 > 5 * 60 * 1000L && Date2 != Date1){
                         throw new FileIntegrityException("오류: 같은역에서 출발 또는 도착시간이 5분이내인 기차가 있습니다");
                     }
                 }
             }
 
+
         }
+
+
 
     }
 
