@@ -161,4 +161,7 @@ public class Ticket {
     public String getReserveTime(){return reserveTime;}
 
     public void setReserveTime(String reserveTime){this.reserveTime = reserveTime;}
+
+    //lineNum getter
+    public String getLineNum(){return line.lineNum;}
 }
