@@ -11,8 +11,8 @@ public class ReservationAndCancel {
      *
      * @author 변수혁
      */
-    private FileTempReserve fileTempReserve;
-    private FileReserve fileReserve;
+    private final FileTempReserve fileTempReserve;
+    private final FileReserve fileReserve;
     private ArrayList<TempTicket> clientTempReservationList;
     private ArrayList<Ticket> clientReservationList;
     private ArrayList<TempTicket> tempList;
@@ -20,8 +20,8 @@ public class ReservationAndCancel {
     ArrayList<TempTicket> confirmedTempTicketList = new ArrayList<>();
     ArrayList<TempTicket> cancelTempTicketList = new ArrayList<>();
     ArrayList<Ticket> cancelTicketList = new ArrayList<>();
-    private FileTimeTable timeTableFile;
-    private Client client = LogInAndTimeInput.getClient();
+    private final FileTimeTable timeTableFile;
+    private final Client client = LogInAndTimeInput.getClient();
 
     public ReservationAndCancel(FileInterface fileTempReserve, FileInterface fileReserve, FileInterface timeTableFile) {
         this.fileReserve = (FileReserve) fileReserve;
@@ -419,8 +419,13 @@ public class ReservationAndCancel {
                     } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
                         clientReservationList = fileReserve.getTicketListByLineNum(inputArr[0], client);
                         for (Ticket ticket : clientReservationList) {
-                            reserveList.remove(ticket);
+                            try {
+                                timeTableFile.increaseExtraSeat(inputArr[0], ticket.getFirstRailofTicket(), ticket.getLastRailofTicket(), clientReservationList.size()); //이거 맞는지 모르겠음요..
+                            } catch (IOException | FileIntegrityException e) {
+                                throw new RuntimeException(e);
+                            }
                             cancelTicketList.add(ticket);
+                            reserveList.remove(ticket);
                         }
                     }
                     break;
@@ -437,9 +442,14 @@ public class ReservationAndCancel {
                             flag = -1;
                         }
 
-                        for (int i = 0; i < num; i++) {
-                            reserveList.remove(clientReservationList.get(i));
-                            cancelTicketList.add(clientReservationList.get(i));
+                        for (Ticket ticket : clientReservationList) {
+                            try {
+                                timeTableFile.increaseExtraSeat(inputArr[0], ticket.getFirstRailofTicket(), ticket.getLastRailofTicket(), clientReservationList.size()); //이거 맞는지 모르겠음요..
+                            } catch (IOException | FileIntegrityException e) {
+                                throw new RuntimeException(e);
+                            }
+                            cancelTicketList.add(ticket);
+                            reserveList.remove(ticket);
                         }
                     } else if (inputArr[1].equals("출발")) {
                         try {
@@ -447,8 +457,13 @@ public class ReservationAndCancel {
                             clientReservationList = fileReserve.getTicketListByfromStation(fromStation, client);
 
                             for (Ticket ticket : clientReservationList) {
-                                reserveList.remove(ticket);
+                                try {
+                                    timeTableFile.increaseExtraSeat(inputArr[0], ticket.getFirstRailofTicket(), ticket.getLastRailofTicket(), clientReservationList.size()); //이거 맞는지 모르겠음요..
+                                } catch (IOException | FileIntegrityException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 cancelTicketList.add(ticket);
+                                reserveList.remove(ticket);
                             }
                         } catch (FileIntegrityException e) {
                             e.printStackTrace();
@@ -461,8 +476,13 @@ public class ReservationAndCancel {
                             clientReservationList = fileReserve.getTicketListBytoStation(toStation, client);
 
                             for (Ticket ticket : clientReservationList) {
-                                reserveList.remove(ticket);
+                                try {
+                                    timeTableFile.increaseExtraSeat(inputArr[0], ticket.getFirstRailofTicket(), ticket.getLastRailofTicket(), clientReservationList.size()); //이거 맞는지 모르겠음요..
+                                } catch (IOException | FileIntegrityException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 cancelTicketList.add(ticket);
+                                reserveList.remove(ticket);
                             }
                         } catch (FileIntegrityException e) {
                             e.printStackTrace();
@@ -488,8 +508,13 @@ public class ReservationAndCancel {
                             clientReservationList = fileReserve.getTicketListByStation(fromStation, toStation, client);
 
                             for (Ticket ticket : clientReservationList) {
-                                reserveList.remove(ticket);
+                                try {
+                                    timeTableFile.increaseExtraSeat(inputArr[0], ticket.getFirstRailofTicket(), ticket.getLastRailofTicket(), clientReservationList.size()); //이거 맞는지 모르겠음요..
+                                } catch (IOException | FileIntegrityException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 cancelTicketList.add(ticket);
+                                reserveList.remove(ticket);
                             }
                         } catch (FileIntegrityException e) {
                             e.printStackTrace();
@@ -640,8 +665,7 @@ public class ReservationAndCancel {
         int arrLength = inputArr.length;
         boolean patternFlag = true;
         for (int i = 0; i < arrLength; i++) {
-            if (!(Pattern.matches("^\\#[1-9]$", inputArr[i])))
-                patternFlag = false;
+            if (!(Pattern.matches("^\\#[1-9]$", inputArr[i]))) patternFlag = false;
         }
 
         if (!patternFlag) {
@@ -665,21 +689,20 @@ public class ReservationAndCancel {
     private int removeTempTicketByRowNum(String[] inputArr) {
         int arrLength = inputArr.length;
         boolean patternFlag = true;
-        for (int i = 0; i < arrLength; i++) {
-            if (!(Pattern.matches("^\\#[1-9]$", inputArr[i])))
-                patternFlag = false;
+        for (String string : inputArr) {
+            if (!(Pattern.matches("^\\#[1-9]$", string))) patternFlag = false;
         }
 
         if (!patternFlag) {
             return -1;
         }
 
-        for (int i = 0; i < arrLength; i++) {
-            int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
+        for (String s : inputArr) {
+            int index = Integer.parseInt(s.replace("#", "")) - 1;
 
             if (index >= 0 && index < clientTempReservationList.size()) {
-                cancelTempTicketList.add(clientTempReservationList.get(i));
-                tempList.remove(clientTempReservationList.get(i));
+                cancelTempTicketList.add(clientTempReservationList.get(index)); //index 인지 i 인지
+                tempList.remove(clientTempReservationList.get(index));
             }
         }
 
@@ -687,11 +710,14 @@ public class ReservationAndCancel {
     }
 
     private int removeTicketByRowNum(String[] inputArr) {
+        return removeTicketByRowNum(inputArr, 1);
+
+    }
+    private int removeTicketByRowNum(String[] inputArr, int seatCount) {
         int arrLength = inputArr.length;
         boolean patternFlag = true;
-        for (int i = 0; i < arrLength; i++) {
-            if (!(Pattern.matches("^\\#[1-9]$", inputArr[i])))
-                patternFlag = false;
+        for (String s : inputArr) {
+            if (!(Pattern.matches("^\\#[1-9]$", s))) patternFlag = false;
         }
 
         if (!patternFlag) {
@@ -702,11 +728,19 @@ public class ReservationAndCancel {
             int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
 
             if (index >= 0 && index < clientReservationList.size()) {
-                cancelTicketList.add(clientReservationList.get(i));
+                try {
+                    var reserve = clientReservationList.get(index);
+                    timeTableFile.increaseExtraSeat(reserve.getLineNum(), reserve.getFirstRailofTicket(), reserve.getLastRailofTicket(), seatCount);
+                    //이거 코드 너무 길긴한데 방법이 없네요..
+                } catch (IOException | FileIntegrityException e) {
+                    throw new RuntimeException(e);
+                }
+                cancelTicketList.add(clientReservationList.get(index));
                 reserveList.remove(clientReservationList.get(index));
             }
         }
 
         return 1;
     }
+
 }
