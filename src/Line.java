@@ -102,6 +102,38 @@ public class Line {
 
     }
 
+    public ArrayList<ArrayList<Rail>> NEWslicing1(String fromstation, String tostation) throws FileIntegrityException{
+        /*
+            정현: 수정중인 slicing으로, 아직 미완성입니다.
+            case 1: 서울-강릉-대전-서울-대전-대구-대전-부산-대전... 에서 서울~대전을 뽑아내는경우
+                     0   1    2   3   4   5   6   7    8      [0,2] [0,4] [0,6] [0,8] [3,4] [3,6] [3,8]
+                     그럼 출발역이랑 같은 역 정보가 들어있는 인덱스만 알아내서 각 인덱스별로 뒤에 대전 있는지 돌리면 되는거 아닌가?
+                     서울:[0,3]
+                     대전:[2,4,6,8]
+            stationList: 서울-강릉-대전-서울-대전-대구-대전-부산-대전
+            stationCNT: {서울=[0, 3], 강릉=[1], 대전=[2,4,6,8], 대구=[5], 부산=[7]}
+         */
+        ArrayList<String> stationList = getStationList(); //이 Line이 지나는 역을 순서대로 반환
+        Map<String, Set<Integer>> stationCNT = new LinkedHashMap<>();
+
+
+        for (int i = 0; i < stationList.size(); i++) {
+            String value = stationList.get(i);
+            stationCNT.computeIfAbsent(value, k -> new LinkedHashSet<>())
+                    .add(i); //computeIfAbsent는 Map에서 특정 키에 해당하는 값이 존재하지 않는다면 새로 만들어서 추가해줌. 이때 Key는 역 이름, value는 인덱스
+        }
+
+        if(stationCNT.containsKey(fromstation) && stationCNT.containsKey(tostation)){
+            /*
+                지나는 역 중에 출발역, 도착역이 모두 존재하는 경우
+             */
+            ArrayList<Rail> slicedList = new ArrayList<>(); //return 할 arraylist의 인자로 추가될 작은 arraylist
+//            for(int )
+        }
+
+        return null;
+    }
+
     //인덱스에 따른 출발시각 반환
     public String calculateDepTime(int index){
 
