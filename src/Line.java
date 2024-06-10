@@ -102,15 +102,16 @@ public class Line {
 
     }
 
-    public String caculateDeptime(String fromstation){
+    //인덱스에 따른 출발시각 반환
+    public String caculateDeptime(int index){
 
         try {
             // 처음 출발 시각
             long depDate = FORMATTER.parse(depTime).getTime();
 
-            // 해당하는 출발역이 나올때까지 계속 더해줌
+            // 해당하는 인덱스가 나올때까지 계속 더해줌
             for (Map.Entry<Rail, Integer> entry : railList.entrySet()) {
-                if(Objects.equals(entry.getKey().fromStation.getStation(), fromstation)){
+                if(Objects.equals(entry.getKey().railIndex, index)){
                     break;
                 }
                 depDate += Integer.parseInt(entry.getKey().duration) * 60 * 1000L;
@@ -121,7 +122,27 @@ public class Line {
             throw new RuntimeException(e);
         }
 
-    }    
+    }
+
+    //인덱스에 따른 최소 여석 수 반환
+    public int caculateSeat(int index1, int index2){
+        int n = 0;
+        int seat = 0;
+
+        for (Map.Entry<Rail, Integer> entry : railList.entrySet()) {
+            if(Objects.equals(entry.getKey().railIndex, index1)){
+                n = 1;
+                seat = entry.getValue();
+            } else if (n == 1) {
+                if (seat < entry.getValue()) {seat = entry.getValue();}
+            } else if (Objects.equals(entry.getKey().railIndex, index2)){
+                if (seat < entry.getValue()) {seat = entry.getValue();}
+                break;
+            }
+        }
+
+        return seat;
+    }
 
     /*
         이 함수는 다음 두 가지 기능이 가능합니다.
