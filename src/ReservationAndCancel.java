@@ -418,40 +418,37 @@ public class ReservationAndCancel {
                         //좌석수 추가
                     } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
                         clientReservationList = fileReserve.getTicketListByLineNum(inputArr[0], client);
-                        for (TempTicket tempTicket : clientTempReservationList) {
-                            reserveList.remove(tempTicket);
-                            cancelTicketList.add(tempTicket);
+                        for (Ticket ticket : clientReservationList) {
+                            reserveList.remove(ticket);
+                            cancelTicketList.add(ticket);
                         }
                     }
                     break;
 
-                    //여기까지 일단 수정 완료... 너무 졸려서 월요일에 수정예정
                 case 2:
                     if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
                         flag = removeTicketByRowNum(inputArr);
                     } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
-                        clientTempReservationList = fileTempReserve.getTempTicketListByLineNum(inputArr[0], client);
+                        clientReservationList = fileReserve.getTicketListByLineNum(inputArr[0], client);
                         int num = Integer.parseInt(inputArr[1]);
 
-                        if (num > clientTempReservationList.size()) {
+                        if (num > clientReservationList.size()) {
                             System.out.println("입력하신 표의 개수가 많습니다. 가예약하신 표의 개수만큼 입력해주세요.");
                             flag = -1;
                         }
 
                         for (int i = 0; i < num; i++) {
-                            reserveList.add(clientTempReservationList.get(i));
-                            confirmedTempTicketList.add(clientTempReservationList.get(i));
-                            tempList.remove(clientTempReservationList.get(i));
+                            reserveList.remove(clientReservationList.get(i));
+                            cancelTicketList.add(clientReservationList.get(i));
                         }
                     } else if (inputArr[1].equals("출발")) {
                         try {
                             Station fromStation = new Station(inputArr[0]);
-                            clientTempReservationList = fileTempReserve.getTempTicketListByfromStation(fromStation, client);
+                            clientReservationList = fileReserve.getTicketListByfromStation(fromStation, client);
 
-                            for (TempTicket tempTicket : clientTempReservationList) {
-                                reserveList.add(tempTicket);
-                                confirmedTempTicketList.add(tempTicket);
-                                tempList.remove(tempTicket);
+                            for (Ticket ticket : clientReservationList) {
+                                reserveList.remove(ticket);
+                                cancelTicketList.add(ticket);
                             }
                         } catch (FileIntegrityException e) {
                             e.printStackTrace();
@@ -461,12 +458,11 @@ public class ReservationAndCancel {
                     } else if (inputArr[1].equals("도착")) {
                         try {
                             Station toStation = new Station(inputArr[0]);
-                            clientTempReservationList = fileTempReserve.getTempTicketListBytoStation(toStation, client);
+                            clientReservationList = fileReserve.getTicketListBytoStation(toStation, client);
 
-                            for (TempTicket tempTicket : clientTempReservationList) {
-                                reserveList.add(tempTicket);
-                                confirmedTempTicketList.add(tempTicket);
-                                tempList.remove(tempTicket);
+                            for (Ticket ticket : clientReservationList) {
+                                reserveList.remove(ticket);
+                                cancelTicketList.add(ticket);
                             }
                         } catch (FileIntegrityException e) {
                             e.printStackTrace();
@@ -489,12 +485,11 @@ public class ReservationAndCancel {
                         try {
                             Station fromStation = new Station(inputArr[0]);
                             Station toStation = new Station(inputArr[2]);
-                            clientTempReservationList = fileTempReserve.getTempTicketListByStation(fromStation, toStation, client);
+                            clientReservationList = fileReserve.getTicketListByStation(fromStation, toStation, client);
 
-                            for (TempTicket tempTicket : clientTempReservationList) {
-                                reserveList.add(tempTicket);
-                                confirmedTempTicketList.add(tempTicket);
-                                tempList.remove(tempTicket);
+                            for (Ticket ticket : clientReservationList) {
+                                reserveList.remove(ticket);
+                                cancelTicketList.add(ticket);
                             }
                         } catch (FileIntegrityException e) {
                             e.printStackTrace();
@@ -511,7 +506,7 @@ public class ReservationAndCancel {
             fileTempReserve.update();
             fileReserve.update();
 
-            for (Ticket ticket:cancelTicketList) {
+            for (Ticket ticket : cancelTicketList) {
                 System.out.println(ticket.toString());
             }
         } while (flag == -1);
