@@ -262,8 +262,10 @@ public class FileTimeTable implements FileInterface{
             }
             line.lineNum=strArr[0];
             line.depTime=strArr[1];
-            for(int i=2;i<strArr.length;i++){
-                line.railList.put(railFile.getRailByIndex(Integer.parseInt(strArr[i])),Integer.parseInt(strArr[i+1]));
+            line.railList=new LinkedHashMap<>();
+
+            for(int i=1;i<strArr.length/2;i++){
+                line.railList.put(railFile.getRailByIndex(Integer.parseInt(strArr[2*i])),Integer.parseInt(strArr[2*i+1]));
             }
 
             line.checkIntegrity(strArr[0]);
