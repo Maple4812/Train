@@ -83,6 +83,7 @@ public class FileReserve implements FileInterface{
                 // 노선정보
                 // RailIndex 에 맞는 Rail 객체를 받아오기 위해 FileRail 객체 생성,,,
                 FileRail fileRail = new FileRail("rail.csv");
+                fileRail.checkIntegrity();
 
                 // strArr[5] : 노선정보
                 String[] railIndices = strArr[5].split("/");

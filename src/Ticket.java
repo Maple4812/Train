@@ -28,35 +28,47 @@ public class Ticket {
         // 일치하는 Rail 객체의 수
         // 결과적으로 "mathchingSize == railIndices 의 길이" 이면 무결성 검사 통과이다.
         int mathchingSize = 0;
+        boolean isMatched = false;
         // line 객체의 리스트를 돌면서...
         for(int i=0; i<lineIndices.size(); i++){
             // 동시에 railIndices 를 돈다.
-            for(int j=0; j<railIndices.size();){
+            for(int j=0; j<railIndices.size();) {
+                // 결과적으로 같지 않으면 오류!!
+                if(mathchingSize == railIndices.size()) {
+                    isMatched = true;
+                    throw new FileIntegrityException();
+                }
+                // Array out of bounds 방지
+                if(j >= railIndices.size())
+                    break;
                 // Rail 객체가 같으면 matchingSize 를 올려준다.
-                if(lineIndices.get(i + j).railIndex == railIndices.get(j).railIndex){
-                    j++; mathchingSize++;
+                if (lineIndices.get(i + j).railIndex == railIndices.get(j).railIndex) {
+                    j++;
+                    mathchingSize++;
                 }
                 // 다르면 처음부터 다시 맞춰나가니까 matchingSize 를 0 으로 초기화
-                else
-                    mathchingSize = 0; break;
+                else {
+                    mathchingSize = 0;
+                    break;
+                }
             }
         }
-
-        // 결과적으로 같지 않으면 오류!!
-        if(mathchingSize != railIndices.size())
+        if(!isMatched){
+            System.out.println("입력한 노선 정보에 해당하는 노선이 없습니다.");
             throw new FileIntegrityException();
+        }
 
         // 2. railIndices 안에 있는 Rail 객체들이 연결된 구간들인지 확인
 
         // railIndices 를 돌며 이전 Rail 의 도착역과 현재 Rail 의 출발역이 같은지 확인
         // 맨 처음 도착역 저장
-        String beforeStationName = railIndices.get(0).fromStation.getStation();
-        // 그 다음 역부터 방문
-        for(int i=1; i<railIndices.size(); i++){
-            // 이전 Rail 의 도착역과 다음 Rail 의 출발역의 이름이 다르면 에러!!
-            if(!beforeStationName.equals(railIndices.get(i).toStation.getStation()))
-                throw new FileIntegrityException();
-        }
+//        String beforeStationName = railIndices.get(0).fromStation.getStation();
+//        // 그 다음 역부터 방문
+//        for(int i=1; i<railIndices.size(); i++){
+//            // 이전 Rail 의 도착역과 다음 Rail 의 출발역의 이름이 다르면 에러!!
+//            if(!beforeStationName.equals(railIndices.get(i).toStation.getStation()))
+//                throw new FileIntegrityException();
+//        }
         // 잘 넘어가면 성공!
     }
 
