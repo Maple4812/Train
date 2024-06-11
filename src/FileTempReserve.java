@@ -76,6 +76,7 @@ public class FileTempReserve implements FileInterface {
 
                 // Line 객체를 받아오기 위해 어쩔 수 없이 FileTimeTable 객체와 FileRail 객체 생성.. 다른 좋은 방법이 있을 수도...
                 FileRail rail = new FileRail("rail.csv");
+                rail.checkIntegrity();
                 FileTimeTable table = new FileTimeTable("timeTable.csv", rail);
                 // strArr[2] : 노선번호
                 ticket.line = table.getLine(strArr[2]);
@@ -93,6 +94,8 @@ public class FileTempReserve implements FileInterface {
                 // 노선정보
                 // RailIndex 에 맞는 Rail 객체를 받아오기 위해 FileRail 객체 생성,,,
                 FileRail fileRail = new FileRail("rail.csv");
+                fileRail.checkIntegrity();
+                rail.checkIntegrity();
 
                 // strArr[6] : 노선정보
                 String[] railIndices = strArr[6].split("/");
@@ -217,6 +220,7 @@ public class FileTempReserve implements FileInterface {
                 if (diff > 4) {
                     // 차이가 5 분 보다 크다면 삭제한다.
                     FileRail rail = new FileRail("rail.csv");
+                    rail.checkIntegrity();
                     FileTimeTable table = new FileTimeTable("timeTable.csv", rail);
                     table.increaseExtraSeat(t.line.lineNum, t.getFirstRailofTicket(), t.getLastRailofTicket(), 1);
                     // ArrayList 상에서만 지우고 update 해주면 되니까...
