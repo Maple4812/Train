@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="191e8e04-fd09-4e42-8e98-0ae6eb7d151a" name="Changes" comment="">
+    <list default="true" id="191e8e04-fd09-4e42-8e98-0ae6eb7d151a" name="Changes" comment="ReservationAndCancel rowIndicesHandle 수정">
+      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UserInfo.csv" beforeDir="false" afterPath="$PROJECT_DIR$/UserInfo.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReservationAndCancel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReservationAndCancel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/timeTable.csv" beforeDir="false" afterPath="$PROJECT_DIR$/timeTable.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +42,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
@@ -95,7 +98,8 @@
       <workItem from="1717697483065" duration="588000" />
       <workItem from="1717743017642" duration="191000" />
       <workItem from="1717853303300" duration="304000" />
-      <workItem from="1718068011140" duration="3651000" />
+      <workItem from="1718068011140" duration="5122000" />
+      <workItem from="1718091080302" duration="883000" />
     </task>
     <task id="LOCAL-00001" summary="ReservationAndCancel init1() 수정 완료&#10;가예약 확정 기능 완성">
       <created>1717691739946</created>
@@ -111,7 +115,21 @@
       <option name="project" value="LOCAL" />
       <updated>1717743190080</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="ReservationAndCancel rowIndicesHandle 수정">
+      <created>1718073011014</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1718073011014</updated>
+    </task>
+    <task id="LOCAL-00004" summary="ReservationAndCancel rowIndicesHandle 수정">
+      <created>1718073053579</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1718073053579</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,6 +150,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="ReservationAndCancel init1() 수정 완료&#10;가예약 확정 기능 완성" />
     <MESSAGE value="대체된 get 메소드들 주석 처리" />
-    <option name="LAST_COMMIT_MESSAGE" value="대체된 get 메소드들 주석 처리" />
+    <MESSAGE value="ReservationAndCancel rowIndicesHandle 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="ReservationAndCancel rowIndicesHandle 수정" />
   </component>
 </project>
