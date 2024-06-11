@@ -1,8 +1,9 @@
-import java.io.*;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class ReservationAndCancel {
@@ -686,7 +687,7 @@ public class ReservationAndCancel {
     }
 
     //rowIndicesHandle 과 비슷한 역할을 하나 오버라이딩 하기 애매해서 별도로 함수 구현
-    private int removeTempTicketByRowNum(String[] inputArr) {
+    private int removeTempTicketByRowNum(String[] inputArr, int seatCount) {
         int arrLength = inputArr.length;
         boolean patternFlag = true;
         for (String string : inputArr) {
@@ -701,6 +702,12 @@ public class ReservationAndCancel {
             int index = Integer.parseInt(s.replace("#", "")) - 1;
 
             if (index >= 0 && index < clientTempReservationList.size()) {
+                var reserve = clientReservationList.get(index);
+                try {
+                    timeTableFile.increaseExtraSeat(reserve.getLineNum(), reserve.getFirstRailofTicket(), reserve.getLastRailofTicket(), seatCount);
+                } catch (IOException | FileIntegrityException e) {
+                    throw new RuntimeException(e);
+                }
                 cancelTempTicketList.add(clientTempReservationList.get(index)); //index 인지 i 인지
                 tempList.remove(clientTempReservationList.get(index));
             }
@@ -709,10 +716,10 @@ public class ReservationAndCancel {
         return 1;
     }
 
-    private int removeTicketByRowNum(String[] inputArr) {
-        return removeTicketByRowNum(inputArr, 1);
-
+    private int removeTempTicketByRowNum(String[] inputArr) {
+        return removeTempTicketByRowNum(inputArr, 1);
     }
+
     private int removeTicketByRowNum(String[] inputArr, int seatCount) {
         int arrLength = inputArr.length;
         boolean patternFlag = true;
@@ -741,6 +748,11 @@ public class ReservationAndCancel {
         }
 
         return 1;
+    }
+
+    private int removeTicketByRowNum(String[] inputArr) {
+        return removeTicketByRowNum(inputArr, 1);
+
     }
 
 }
