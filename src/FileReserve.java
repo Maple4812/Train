@@ -138,7 +138,7 @@ public class FileReserve implements FileInterface{
             writer = new PrintWriter(fw);
             for(Ticket t : reserveList){
                 String str = t.client.getName() + "," + t.client.getPhoneNumber() + "," + t.line.lineNum + "," +
-                        t.depTime + "," + t.getRailIndicesToString();
+                        t.depTime + "," + LogInAndTimeInput.getNowTime() + "," + t.getRailIndicesToString();
                 writer.println(str);
             }
             writer.close();
