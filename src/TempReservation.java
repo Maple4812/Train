@@ -70,15 +70,15 @@ public class TempReservation {
                         System.out.println("해당 열차에서는 최대 0개의 좌석만 예약할 수 있습니다.");
                         break;
                     }
-                    ticket.reserveTime = LogInAndTimeInput.getNowTime();
-                    ticket.arrivalTime = ticket.calculateArrivalTime();
-                    ticket.price = new Price(Integer.toString(ticket.calculatePrice()));
                     try {
                         ticket.depTime = ticket.line.calculateDepTime(list.get(0).railIndex);
                         ticket.checkIntegrityAboutTime(LogInAndTimeInput.getNowTime());
                     } catch (FileIntegrityException e) {
                         System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     }
+                    ticket.reserveTime = LogInAndTimeInput.getNowTime();
+                    ticket.arrivalTime = ticket.calculateArrivalTime();
+                    ticket.price = new Price(Integer.toString(ticket.calculatePrice()));
                     try {
                         ticket.checkIntegrity();
                     } catch (FileIntegrityException e) {
