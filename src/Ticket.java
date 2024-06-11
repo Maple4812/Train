@@ -37,14 +37,14 @@ public class Ticket {
         for(int i=0; i<lineIndices.size(); i++){
             // 동시에 railIndices 를 돈다.
             for(int j=0; j<railIndices.size();) {
-                if(mathchingSize == railIndices.size()) {
-                    isMatched = true;
-                    break;
-                }
                 // Rail 객체가 같으면 matchingSize 를 올려준다.
                 if (lineIndices.get(i + j).railIndex == railIndices.get(j).railIndex) {
                     j++;
                     mathchingSize++;
+                    if(mathchingSize == railIndices.size()) {
+                        isMatched = true;
+                        break;
+                    }
                 }
                 // 다르면 처음부터 다시 맞춰나가니까 matchingSize 를 0 으로 초기화
                 else {
