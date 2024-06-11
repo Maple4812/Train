@@ -15,7 +15,7 @@ public class ReservationAndCancel {
     private final FileTempReserve fileTempReserve;
     private final FileReserve fileReserve;
     private final FileTimeTable timeTableFile;
-    private final Client client = LogInAndTimeInput.getClient();
+    private Client client;
     ArrayList<TempTicket> confirmedTempTicketList = new ArrayList<>();
     ArrayList<TempTicket> cancelTempTicketList = new ArrayList<>();
     ArrayList<Ticket> cancelTicketList = new ArrayList<>();
@@ -56,6 +56,7 @@ public class ReservationAndCancel {
     }
 
     public void init1() throws IOException {
+        client = LogInAndTimeInput.getClient();
         fileTempReserve.repos();
         fileReserve.repos();
 
@@ -230,13 +231,14 @@ public class ReservationAndCancel {
 
 
     public void init2() {
+        client = LogInAndTimeInput.getClient();
         System.out.println("가예약 취소 예약 취소를 선택하세요.");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         switch (input) {
-            case "가예약 취소":
+            case "가예약취소":
                 tempReserveCancel();
-            case "예약 취소":
+            case "예약취소":
                 ReserveCancel();
             default:
                 System.out.println("잘못된 입력입니다.");
@@ -420,15 +422,14 @@ public class ReservationAndCancel {
 
         printClientInfo();
 
+
         int rowNum = 0;
         for (Ticket ticket : clientReservationList) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             LocalDateTime departureTime = LocalDateTime.parse(ticket.depTime, formatter);
 
-            if (departureTime.isAfter(LocalDateTime.now())) {
                 printTicketInfo(rowNum, ticket);
                 rowNum++;
-            }
         }
 
         if (clientReservationList.isEmpty()) {

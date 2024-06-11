@@ -83,6 +83,7 @@ public class FileTempReserve implements FileInterface {
                 // 출발시각
                 // strArr[3] : String type 출발 시각
                 ticket.depTime = strArr[3];
+                ticket.arrivalTime = ticket.calculateArrivalTime();
 
                 // 예약시각
                 ticket.setReserveTime(strArr[4]);

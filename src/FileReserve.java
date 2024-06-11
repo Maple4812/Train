@@ -75,6 +75,7 @@ public class FileReserve implements FileInterface{
                 // 출발시각
                 // strArr[3] : String type 출발 시각
                 ticket.depTime = strArr[3];
+                ticket.arrivalTime = ticket.calculateArrivalTime();
 
                 // 예약시각
                 // strArr[4] : String type 에약 시각
