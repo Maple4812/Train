@@ -70,15 +70,15 @@ public class TempReservation {
                         System.out.println("해당 열차에서는 최대 0개의 좌석만 예약할 수 있습니다.");
                         break;
                     }
-                    ticket.reserveTime = LogInAndTimeInput.getNowTime();
-                    ticket.arrivalTime = ticket.calculateArrivalTime();
-                    ticket.price = new Price(Integer.toString(ticket.calculatePrice()));
                     try {
                         ticket.depTime = ticket.line.calculateDepTime(list.get(0).railIndex);
                         ticket.checkIntegrityAboutTime(LogInAndTimeInput.getNowTime());
                     } catch (FileIntegrityException e) {
                         System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     }
+                    ticket.reserveTime = LogInAndTimeInput.getNowTime();
+                    ticket.arrivalTime = ticket.calculateArrivalTime();
+                    ticket.price = new Price(Integer.toString(ticket.calculatePrice()));
                     try {
                         ticket.checkIntegrity();
                     } catch (FileIntegrityException e) {
@@ -102,16 +102,16 @@ public class TempReservation {
                         System.out.println("해당 열차에서는 최대 0개의 좌석만 예약할 수 있습니다.");
                         break;
                     }
-                    tempTicket.reserveTime = LogInAndTimeInput.getNowTime();
-                    tempTicket.arrivalTime = tempTicket.calculateArrivalTime();
-                    tempTicket.price = new Price(Integer.toString(tempTicket.calculatePrice()));
-                    tempTicket.setReserveComputerTime(LogInAndTimeInput.getNowComputerTime());
                     try {
                         tempTicket.depTime = tempTicket.line.calculateDepTime(list.get(0).railIndex);
                         tempTicket.checkIntegrityAboutTime(LogInAndTimeInput.getNowTime());
                     } catch (FileIntegrityException e) {
                         System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     }
+                    tempTicket.reserveTime = LogInAndTimeInput.getNowTime();
+                    tempTicket.arrivalTime = tempTicket.calculateArrivalTime();
+                    tempTicket.price = new Price(Integer.toString(tempTicket.calculatePrice()));
+                    tempTicket.setReserveComputerTime(LogInAndTimeInput.getNowComputerTime());
                     tempReserveFile.addTempTicket(tempTicket);
                     tempReserveFile.update();
                     System.out.println(FORMATTER.parse(tempTicket.depTime) + "에 출발하는 " + tempTicket.line.lineNum + " 1장을 가예약 했습니다.");
@@ -150,14 +150,15 @@ public class TempReservation {
                         break;
                     }
                     ticket.reserveTime = LogInAndTimeInput.getNowTime();
-                    ticket.arrivalTime = ticket.calculateArrivalTime();
-                    ticket.price = new Price(Integer.toString(ticket.calculatePrice()));
+
                     try {
                         ticket.depTime = ticket.line.calculateDepTime(list.get(0).railIndex);
                         ticket.checkIntegrityAboutTime(LogInAndTimeInput.getNowTime());
                     } catch (FileIntegrityException e) {
                         System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     }
+                    ticket.arrivalTime = ticket.calculateArrivalTime();
+                    ticket.price = new Price(Integer.toString(ticket.calculatePrice()));
                     try {
                         ticket.checkIntegrity();
                     } catch (FileIntegrityException e) {
@@ -181,16 +182,16 @@ public class TempReservation {
                         System.out.println("해당 열차에서는 최대 "+ numberOfReservation + "개의 좌석만 예약할 수 있습니다.");
                         break;
                     }
-                    tempTicket.reserveTime = LogInAndTimeInput.getNowTime();
-                    tempTicket.arrivalTime = tempTicket.calculateArrivalTime();
-                    tempTicket.price = new Price(Integer.toString(tempTicket.calculatePrice()));
-                    tempTicket.setReserveComputerTime(LogInAndTimeInput.getNowComputerTime());
                     try {
                         tempTicket.depTime = tempTicket.line.calculateDepTime(list.get(0).railIndex);
                         tempTicket.checkIntegrityAboutTime(LogInAndTimeInput.getNowTime());
                     } catch (FileIntegrityException e) {
                         System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     }
+                    tempTicket.reserveTime = LogInAndTimeInput.getNowTime();
+                    tempTicket.arrivalTime = tempTicket.calculateArrivalTime();
+                    tempTicket.price = new Price(Integer.toString(tempTicket.calculatePrice()));
+                    tempTicket.setReserveComputerTime(LogInAndTimeInput.getNowComputerTime());
                     for (int i = 0; i < numberOfReservation; i++) {
                         tempReserveFile.addTempTicket(tempTicket);
                     }
