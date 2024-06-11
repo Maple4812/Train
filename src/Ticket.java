@@ -167,7 +167,18 @@ public class Ticket {
     //Ticket 정보 출력하기 위한 toString
     @Override
     public String toString() {
-        return this.getLineNum() + " " + depTime + " " + railIndices.get(0).fromStation.toString() + " " + arrivalTime + " " + railIndices.get(railIndices.size()-1).toStation.toString();
+        String lineNum = this.getLineNum();
+        String depTime = this.depTime;
+        String fromStation = railIndices.get(0).fromStation.getStation();
+        String arrivalTime = this.arrivalTime;
+        String toStation = railIndices.get(railIndices.size() - 1).toStation.getStation();
+
+        return "취소 열차 정보:\n" +
+               "노선 번호: " + lineNum + "\n" +
+               "출발 시각: " + depTime + "\n" +
+               "출발 역: " + fromStation + "\n" +
+               "도착 시각: " + arrivalTime + "\n" +
+               "도착 역: " + toStation;
     }
 
     public String getReserveTime(){return reserveTime;}

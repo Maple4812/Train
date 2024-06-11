@@ -80,11 +80,6 @@ public class FileTempReserve implements FileInterface {
                 // strArr[2] : 노선번호
                 ticket.line = table.getLine(strArr[2]);
 
-                // 출발시각
-                // strArr[3] : String type 출발 시각
-                ticket.depTime = strArr[3];
-                ticket.arrivalTime = ticket.calculateArrivalTime();
-
                 // 예약시각
                 ticket.setReserveTime(strArr[4]);
 
@@ -99,6 +94,7 @@ public class FileTempReserve implements FileInterface {
 
                 // strArr[6] : 노선정보
                 String[] railIndices = strArr[6].split("/");
+
                 ArrayList<Rail> temp = new ArrayList<>();
                 for (int i = 0; i < railIndices.length; i++) {
                     // getRailByIndex 를 통해 노선정보인덱스에 해당하는 Rail 객체를 받아온다.
