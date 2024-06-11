@@ -675,9 +675,9 @@ public class ReservationAndCancel {
             int index = Integer.parseInt(inputArr[i].replace("#", "")) - 1;
 
             if (index >= 0 && index < clientTempReservationList.size()) {
-                reserveList.add(clientTempReservationList.get(i));
-                confirmedTempTicketList.add(clientTempReservationList.get(i));
-                tempList.remove(clientTempReservationList.get(i));
+                reserveList.add(clientTempReservationList.get(index));
+                confirmedTempTicketList.add(clientTempReservationList.get(index));
+                tempList.remove(clientTempReservationList.get(index));
             }
         }
 
