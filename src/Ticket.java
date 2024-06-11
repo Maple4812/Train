@@ -113,31 +113,7 @@ public class Ticket {
             long depDate = FORMATTER.parse(depTime).getTime();
             // Rail 객체들을 돌면서 시간을 더함
             for(Rail r : railIndices){
-                /*
-                    duration만 형식이 달라서 parsing error 발생
-                    임시로 처리해 두었습니다 - 정현
-                 */
-                String dur;
-                int t= Integer.parseInt(r.duration);
-                int h=t/60;
-                int m=t%60;
-                if(h<10 && m<10){
-                    dur = "00000000"+"0"+h+"0"+m;
-                }
-                else if(h<10 && m>=10){
-                    dur = "00000000"+"0"+h+m;
-                }
-                else if(h>=10 && m<10){
-                    dur = "00000000"+h+"0"+m;
-                }
-                else{
-                    dur = "00000000"+h+m;
-                }
-//                depDate += FORMATTER.parse(r.duration).getTime();
-                depDate += FORMATTER.parse(dur).getTime();
-                /*
-
-                 */
+                depDate += Integer.parseInt(r.duration) * 60 * 1000L;
             }
             // return
             return FORMATTER.format(new Date(depDate));
@@ -145,6 +121,7 @@ public class Ticket {
             throw new RuntimeException(e);
         }
     }
+
 
     public int getFirstRailofTicket(){
         return railIndices.get(0).railIndex;
