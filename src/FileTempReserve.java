@@ -44,7 +44,6 @@ public class FileTempReserve implements FileInterface {
             LinkedHashMap<Rail, Integer> map = new LinkedHashMap<>();
 
             for (String s : rl) {
-                fileRail.checkIntegrity();
                 Rail rail = fileRail.getRailByIndex(Integer.parseInt(s));
                 rail.checkIntegrity();
                 map.put(rail, 0);
