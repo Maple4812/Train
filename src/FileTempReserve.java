@@ -39,6 +39,7 @@ public class FileTempReserve implements FileInterface {
 
             Line l = new Line();
             FileRail fileRail = new FileRail("rail.csv");
+            fileRail.checkIntegrity();
             String[] rl = strArr[6].split("/");
             LinkedHashMap<Rail, Integer> map = new LinkedHashMap<>();
 
