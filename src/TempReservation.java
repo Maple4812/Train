@@ -150,7 +150,7 @@ public class TempReservation {
                         break;
                     }
                     ticket.reserveTime = LogInAndTimeInput.getNowTime();
-                    ticket.arrivalTime = ticket.calculateArrivalTime();
+
                     ticket.price = new Price(Integer.toString(ticket.calculatePrice()));
                     try {
                         ticket.depTime = ticket.line.calculateDepTime(list.get(0).railIndex);
@@ -158,6 +158,7 @@ public class TempReservation {
                     } catch (FileIntegrityException e) {
                         System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
                     }
+                    ticket.arrivalTime = ticket.calculateArrivalTime();
                     try {
                         ticket.checkIntegrity();
                     } catch (FileIntegrityException e) {

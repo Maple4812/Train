@@ -148,7 +148,7 @@ public class Ticket {
         for(int i=0; i<railIndices.size() - 1; i++){
             returnStr += String.valueOf(railIndices.get(i).railIndex) + "/";
         }
-        returnStr += String.valueOf(railIndices.get(railIndices.size() - 1));
+        returnStr += String.valueOf(railIndices.get(railIndices.size() - 1).railIndex);
         return returnStr;
     }
 
