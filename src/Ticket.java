@@ -25,6 +25,10 @@ public class Ticket {
             lineIndices.add(r);
         }
 
+        if(lineIndices.size() < railIndices.size()){
+            throw new FileIntegrityException();
+        }
+
         // 일치하는 Rail 객체의 수
         // 결과적으로 "mathchingSize == railIndices 의 길이" 이면 무결성 검사 통과이다.
         int mathchingSize = 0;
@@ -33,14 +37,10 @@ public class Ticket {
         for(int i=0; i<lineIndices.size(); i++){
             // 동시에 railIndices 를 돈다.
             for(int j=0; j<railIndices.size();) {
-                // 결과적으로 같지 않으면 오류!!
                 if(mathchingSize == railIndices.size()) {
                     isMatched = true;
-                    throw new FileIntegrityException();
-                }
-                // Array out of bounds 방지
-                if(j >= railIndices.size())
                     break;
+                }
                 // Rail 객체가 같으면 matchingSize 를 올려준다.
                 if (lineIndices.get(i + j).railIndex == railIndices.get(j).railIndex) {
                     j++;

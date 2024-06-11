@@ -584,7 +584,7 @@ public class ReservationAndCancel {
                 System.out.println(ticket.toString());
             }
             for (Ticket ticket : cancelTicketList) {
-                System.out.println(calcCancelFee(ticket.depTime, ticket.arrivalTime, ticket.calculatePrice()));
+                System.out.println("취소 수수료:" + calcCancelFee(ticket.depTime, ticket.arrivalTime, ticket.calculatePrice()));
             }
 
 
