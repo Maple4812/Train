@@ -82,9 +82,9 @@ public class ReservationAndCancel {
                 System.out.print("#" + rowNum + " / ");
                 System.out.print(tempTicket.line.lineNum + " / ");
                 System.out.print(tempTicket.depTime + " / ");
-                System.out.print(tempTicket.railIndices.get(0).fromStation + " / ");
+                System.out.print(tempTicket.railIndices.getFirst().fromStation + " / ");
                 System.out.print(tempTicket.arrivalTime + " / ");
-                System.out.print(tempTicket.railIndices.get(tempTicket.railIndices.size() - 1).toStation);
+                System.out.print(tempTicket.railIndices.getLast().toStation);
                 System.out.println();
                 if (minutesBetween > 20) {
                     System.out.println("- 20분이 지나 삭제되었습니다.");
@@ -325,8 +325,12 @@ public class ReservationAndCancel {
                             Station fromStation = new Station(inputArr[0]);
                             clientTempReservationList = fileTempReserve.getTempTicketListByfromStation(fromStation, client);
 
-
                             for (TempTicket tempTicket : clientTempReservationList) {
+                                try {
+                                    timeTableFile.increaseExtraSeat(inputArr[0], tempTicket.getFirstRailofTicket(), tempTicket.getLastRailofTicket(), 1); //이거 맞는지 모르겠음요..
+                                } catch (IOException | FileIntegrityException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 cancelTempTicketList.add(tempTicket);
                                 tempList.remove(tempTicket);
                             }
@@ -341,6 +345,11 @@ public class ReservationAndCancel {
                             clientTempReservationList = fileTempReserve.getTempTicketListBytoStation(toStation, client);
 
                             for (TempTicket tempTicket : clientTempReservationList) {
+                                try {
+                                    timeTableFile.increaseExtraSeat(inputArr[0], tempTicket.getFirstRailofTicket(), tempTicket.getLastRailofTicket(), 1); //이거 맞는지 모르겠음요..
+                                } catch (IOException | FileIntegrityException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 cancelTempTicketList.add(tempTicket);
                                 tempList.remove(tempTicket);
                             }
@@ -354,13 +363,13 @@ public class ReservationAndCancel {
 
                 case 3:
                     if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
-                        flag = removeTempTicketByRowNum(inputArr);
+                        flag = removeTempTicketByRowNum(inputArr,3);
                     }
                     break;
 
                 case 4:
                     if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
-                        flag = removeTempTicketByRowNum(inputArr);
+                        flag = removeTempTicketByRowNum(inputArr,4);
                     } else if (inputArr[1].equals("출발")) {
                         try {
                             Station fromStation = new Station(inputArr[0]);
@@ -368,6 +377,11 @@ public class ReservationAndCancel {
                             clientTempReservationList = fileTempReserve.getTempTicketListByStation(fromStation, toStation, client);
 
                             for (TempTicket tempTicket : clientTempReservationList) {
+                                try {
+                                    timeTableFile.increaseExtraSeat(inputArr[0], tempTicket.getFirstRailofTicket(), tempTicket.getLastRailofTicket(), 1); //이거 맞는지 모르겠음요..
+                                } catch (IOException | FileIntegrityException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 cancelTempTicketList.add(tempTicket);
                                 tempList.remove(tempTicket);
                             }
@@ -566,6 +580,12 @@ public class ReservationAndCancel {
             for (Ticket ticket : cancelTicketList) {
                 System.out.println(ticket.toString());
             }
+            for(Ticket ticket: cancelTicketList){
+                System.out.println(calcCancelFee(ticket.depTime, ticket.arrivalTime, ticket.calculatePrice()));
+            }
+
+
+
         } while (flag == -1);
 
     }
