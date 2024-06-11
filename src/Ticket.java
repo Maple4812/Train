@@ -167,7 +167,7 @@ public class Ticket {
     //Ticket 정보 출력하기 위한 toString
     @Override
     public String toString() {
-        return this.getLineNum() + " " + depTime + " " + railIndices.getFirst().fromStation.toString() + " " + arrivalTime + " " + railIndices.getFirst().toStation.toString();
+        return this.getLineNum() + " " + depTime + " " + railIndices.get(0).fromStation.toString() + " " + arrivalTime + " " + railIndices.get(railIndices.size()-1).toStation.toString();
     }
 
     public String getReserveTime(){return reserveTime;}
