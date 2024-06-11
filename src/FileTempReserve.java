@@ -17,6 +17,7 @@ public class FileTempReserve implements FileInterface {
 
     public FileTempReserve(String fileName) {
         this.fileName = fileName;
+        repos();
     }
 
     Scanner scan;
@@ -101,7 +102,6 @@ public class FileTempReserve implements FileInterface {
                     temp.add(fileRail.getRailByIndex(Integer.parseInt(railIndices[i])));
                 }
                 ticket.railIndices = temp;
-
                 // 만들어진 ticket 을 TempList 에 저장
                 tempList.add(ticket);
             }
@@ -206,9 +206,9 @@ public class FileTempReserve implements FileInterface {
             Date savedNowDate = FORMATTER.parse(LogInAndTimeInput.getNowTime());
             long NowTime = savedNowDate.getTime();
 
-            for (TempTicket t : tempList) {
+            for (int i=tempList.size()-1; i>=0; i--) {
                 // 저장된 예약 시각들을 받는다.
-                Date reserveDate = FORMATTER.parse(t.getReserveTime());
+                Date reserveDate = FORMATTER.parse(tempList.get(i).getReserveTime());
                 long reserveTime = reserveDate.getTime();
 
                 // 현재시각과 예약시각의 차이를 분 단위로 구한다.
@@ -218,10 +218,10 @@ public class FileTempReserve implements FileInterface {
                     FileRail rail = new FileRail("rail.csv");
                     rail.checkIntegrity();
                     FileTimeTable table = new FileTimeTable("timeTable.csv", rail);
-                    table.increaseExtraSeat(t.line.lineNum, t.getFirstRailofTicket(), t.getLastRailofTicket(), 1);
+                    table.increaseExtraSeat(tempList.get(i).line.lineNum, tempList.get(i).getFirstRailofTicket(), tempList.get(i).getLastRailofTicket(), 1);
                     // ArrayList 상에서만 지우고 update 해주면 되니까...
                     // removeLineByTime(record.get(4));
-                    tempList.remove(t);
+                    tempList.remove(i);
                     System.out.println("시간이 지나 가예약이 삭제되었습니다!");
                 }
             }
@@ -291,8 +291,8 @@ public class FileTempReserve implements FileInterface {
                 String str = t.client.getName() + "," + t.client.getPhoneNumber() + "," + t.line.lineNum + "," +
                         t.depTime + "," + t.getReserveTime() + "," + t.getReserveComputerTime() + "," + t.getRailIndicesToString();
                 writer.println(str);
-                writer.close();
             }
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

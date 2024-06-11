@@ -146,7 +146,7 @@ public class TempReservation {
                     // 해당 노선 정보에 해당하는 여석이 남아있지 않은 경우
                     int remainSeat = ticket.line.calculateSeat(list.get(0).railIndex, list.get(list.size() - 1).railIndex);
                     if(remainSeat < numberOfReservation) {
-                        System.out.println("해당 열차에서는 최대 "+ numberOfReservation + "개의 좌석만 예약할 수 있습니다.");
+                        System.out.println("해당 열차에서는 최대 "+ remainSeat + "개의 좌석만 예약할 수 있습니다.");
                         break;
                     }
                     ticket.reserveTime = LogInAndTimeInput.getNowTime();
@@ -179,7 +179,7 @@ public class TempReservation {
                     // 해당 노선 정보에 해당하는 여석이 남아있지 않은 경우
                     int remainSeat = tempTicket.line.calculateSeat(list.get(0).railIndex, list.get(list.size() - 1).railIndex);
                     if(remainSeat < numberOfReservation) {
-                        System.out.println("해당 열차에서는 최대 "+ numberOfReservation + "개의 좌석만 예약할 수 있습니다.");
+                        System.out.println("해당 열차에서는 최대 "+ remainSeat + "개의 좌석만 예약할 수 있습니다.");
                         break;
                     }
                     try {
