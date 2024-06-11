@@ -87,6 +87,7 @@ public class FileTimeTable implements FileInterface{
 
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
+        lineList.clear();
         scan= new Scanner(new File(fileName));
         ArrayList<String> lineNumList=new ArrayList<>(); // 노선 번호 중복을 체크하기 위해 노선 번호만 저장 할 리스트
         while(scan.hasNextLine()){
