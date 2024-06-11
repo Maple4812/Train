@@ -137,6 +137,7 @@ public class FileReserve implements FileInterface{
     // 추가!!!
     public void update(){
         File file = new File(fileName);
+        System.out.println(reserveList.size());
         try {
             fw = new FileWriter(file, false);
             writer = new PrintWriter(fw);
