@@ -240,7 +240,6 @@ public class ReservationAndCancel {
             default:
                 System.out.println("잘못된 입력입니다.");
         }
-        scanner.close();
     }
 
     public void tempReserveCancel() {
