@@ -79,6 +79,7 @@ public class FileRail implements FileInterface{
 
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
+        raillist.clear();
         scan= new Scanner(new File(fileName));
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다음 split
