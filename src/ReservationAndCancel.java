@@ -76,16 +76,17 @@ public class ReservationAndCancel {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             LocalDateTime departureTime = LocalDateTime.parse(tempTicket.depTime, formatter);
             LocalDateTime reserveTime = LocalDateTime.parse(tempTicket.getReserveTime(), formatter);
+            LocalDateTime nowTime = LocalDateTime.parse(LogInAndTimeInput.getNowTime(), formatter);
 
-            if (departureTime.isAfter(LocalDateTime.now())) {
+            if (departureTime.isAfter(nowTime)) {
                 long minutesBetween = Duration.between(LocalDateTime.now(), reserveTime).toMinutes();
 
                 System.out.print("#" + rowNum + " / ");
                 System.out.print(tempTicket.line.lineNum + " / ");
                 System.out.print(tempTicket.depTime + " / ");
-                System.out.print(tempTicket.railIndices.get(0).fromStation + " / ");
+                System.out.print(tempTicket.railIndices.get(0).fromStation.getStation() + " / ");
                 System.out.print(tempTicket.arrivalTime + " / ");
-                System.out.print(tempTicket.railIndices.get(tempTicket.railIndices.size() - 1).toStation);
+                System.out.print(tempTicket.railIndices.get(tempTicket.railIndices.size()-1).toStation);
                 System.out.println();
                 if (minutesBetween > 20) {
                     System.out.println("- 20분이 지나 삭제되었습니다.");

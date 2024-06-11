@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="191e8e04-fd09-4e42-8e98-0ae6eb7d151a" name="Changes" comment="ReservationAndCancel rowIndicesHandle 수정">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserInfo.csv" beforeDir="false" afterPath="$PROJECT_DIR$/UserInfo.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserInfo.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReservationAndCancel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReservationAndCancel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tempReserve.csv" beforeDir="false" afterPath="$PROJECT_DIR$/tempReserve.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/timeTable.csv" beforeDir="false" afterPath="$PROJECT_DIR$/timeTable.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
