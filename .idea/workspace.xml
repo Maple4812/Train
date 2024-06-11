@@ -4,9 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="191e8e04-fd09-4e42-8e98-0ae6eb7d151a" name="Changes" comment="">
+    <list default="true" id="191e8e04-fd09-4e42-8e98-0ae6eb7d151a" name="Changes" comment="ReservationAndCancel time 제어 개선">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_11_24__10_39__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_11_24__10_39__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserInfo.csv" beforeDir="false" afterPath="$PROJECT_DIR$/UserInfo.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reserve.csv" beforeDir="false" afterPath="$PROJECT_DIR$/reserve.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FileReserve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileReserve.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FileTempReserve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileTempReserve.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReservationAndCancel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReservationAndCancel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Ticket.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tempReserve.csv" beforeDir="false" afterPath="$PROJECT_DIR$/tempReserve.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/timeTable.csv" beforeDir="false" afterPath="$PROJECT_DIR$/timeTable.csv" afterDir="false" />
     </list>
@@ -23,6 +29,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="283aabcd6d4eb7e4a4a6e62b52a29f483ea2d15d" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
   </component>
@@ -81,6 +92,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.ReservationAndCancelTest.test" />
         <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.ReservationAndCancelTest.test" />
       </list>

@@ -9,7 +9,7 @@ public class FileTempReserve implements FileInterface {
     private FileWriter fw;
     private PrintWriter writer;
     private final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmm");
-    private ArrayList<TempTicket> tempList;
+    public ArrayList<TempTicket> tempList;
 
     public ArrayList<TempTicket> getTempList() {
         return tempList;

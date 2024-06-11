@@ -81,11 +81,11 @@ public class ReservationAndCancel {
             if (departureTime.isAfter(nowTime)) {
                 long minutesBetween = Duration.between(LocalDateTime.now(), reserveTime).toMinutes();
 
-                System.out.print("#" + rowNum + " / ");
+                System.out.print("#" + (rowNum+1) + " / ");
                 System.out.print(tempTicket.line.lineNum + " / ");
                 System.out.print(tempTicket.depTime + " / ");
                 System.out.print(tempTicket.railIndices.get(0).fromStation.getStation() + " / ");
-                System.out.print(tempTicket.arrivalTime + " / ");
+                System.out.print(tempTicket.calculateArrivalTime() + " / ");
                 System.out.print(tempTicket.railIndices.get(tempTicket.railIndices.size()-1).toStation.getStation());
                 System.out.println();
                 if (minutesBetween > 20) {
@@ -209,6 +209,8 @@ public class ReservationAndCancel {
                     flag = rowIndicesHandle(inputArr);
             }
 
+            fileTempReserve.tempList = (ArrayList<TempTicket>) tempList.clone();
+            fileReserve.reserveList = (ArrayList<Ticket>) reserveList.clone();
             fileTempReserve.update();
             fileReserve.update();
 

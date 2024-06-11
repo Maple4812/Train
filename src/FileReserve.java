@@ -12,7 +12,7 @@ public class FileReserve implements FileInterface{
     public FileReserve(String fileName) {
         this.fileName = fileName;
     }
-    private ArrayList<Ticket> reserveList = new ArrayList<>();
+    public ArrayList<Ticket> reserveList = new ArrayList<>();
 
     public ArrayList<Ticket> getReserveList() {
         return reserveList;
