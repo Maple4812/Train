@@ -65,6 +65,12 @@ public class TempReservation {
                         list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
                     }
                     ticket.railIndices = list;
+                    try {
+                        ticket.checkIntegrity();
+                    } catch (FileIntegrityException e) {
+                        System.out.print("");
+                        continue;
+                    }
                     // 해당 노선 정보에 해당하는 여석이 남아있지 않은 경우
                     int remainSeat = ticket.line.calculateSeat(list.get(0).railIndex, list.get(list.size() - 1).railIndex);
                     if(remainSeat < 1) {
@@ -81,12 +87,6 @@ public class TempReservation {
                     ticket.reserveTime = LogInAndTimeInput.getNowTime();
                     ticket.arrivalTime = ticket.calculateArrivalTime();
                     ticket.price = new Price(Integer.toString(ticket.calculatePrice()));
-                    try {
-                        ticket.checkIntegrity();
-                    } catch (FileIntegrityException e) {
-                        System.out.print("");
-                        continue;
-                    }
                     reserveFile.addTicket(ticket);
                     System.out.println(FORMATTER.parse(ticket.depTime) + "에 출발하는 " + ticket.line.lineNum + " 1장을 예매 확정지었습니다.");
                     reserveFile.update();
@@ -99,6 +99,11 @@ public class TempReservation {
                         list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
                     }
                     tempTicket.railIndices = list;
+                    try{
+                        tempTicket.checkIntegrity();
+                    }catch (FileIntegrityException e){
+                        continue;
+                    }
                     // 해당 노선 정보에 해당하는 여석이 남아있지 않은 경우
                     int remainSeat = tempTicket.line.calculateSeat(list.get(0).railIndex, list.get(list.size() - 1).railIndex);
                     if(remainSeat < 1) {
@@ -110,11 +115,6 @@ public class TempReservation {
                         tempTicket.checkIntegrityAboutTime(LogInAndTimeInput.getNowTime());
                     } catch (FileIntegrityException e) {
                         System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
-                        continue;
-                    }
-                    try{
-                        tempTicket.checkIntegrity();
-                    }catch (FileIntegrityException e){
                         continue;
                     }
                     tempTicket.reserveTime = LogInAndTimeInput.getNowTime();
@@ -153,6 +153,12 @@ public class TempReservation {
                         list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
                     }
                     ticket.railIndices = list;
+                    try {
+                        ticket.checkIntegrity();
+                    } catch (FileIntegrityException e) {
+                        System.out.print("");
+                        continue;
+                    }
                     // 해당 노선 정보에 해당하는 여석이 남아있지 않은 경우
                     int remainSeat = ticket.line.calculateSeat(list.get(0).railIndex, list.get(list.size() - 1).railIndex);
                     if(remainSeat < numberOfReservation) {
@@ -170,12 +176,6 @@ public class TempReservation {
                     }
                     ticket.arrivalTime = ticket.calculateArrivalTime();
                     ticket.price = new Price(Integer.toString(ticket.calculatePrice()));
-                    try {
-                        ticket.checkIntegrity();
-                    } catch (FileIntegrityException e) {
-                        System.out.print("");
-                        continue;
-                    }
                     for (int i = 0; i < numberOfReservation; i++) {
                         reserveFile.addTicket(ticket);
                     }
@@ -188,6 +188,11 @@ public class TempReservation {
                         list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
                     }
                     tempTicket.railIndices = list;
+                    try{
+                        tempTicket.checkIntegrity();
+                    }catch (FileIntegrityException e){
+                        continue;
+                    }
                     // 해당 노선 정보에 해당하는 여석이 남아있지 않은 경우
                     int remainSeat = tempTicket.line.calculateSeat(list.get(0).railIndex, list.get(list.size() - 1).railIndex);
                     if(remainSeat < numberOfReservation) {
@@ -199,11 +204,6 @@ public class TempReservation {
                         tempTicket.checkIntegrityAboutTime(LogInAndTimeInput.getNowTime());
                     } catch (FileIntegrityException e) {
                         System.out.println("출발시간을 확인해주세요. 현재 시각은 " + LogInAndTimeInput.getNowTime() + "입니다.");
-                        continue;
-                    }
-                    try{
-                        tempTicket.checkIntegrity();
-                    }catch (FileIntegrityException e){
                         continue;
                     }
                     tempTicket.reserveTime = LogInAndTimeInput.getNowTime();
