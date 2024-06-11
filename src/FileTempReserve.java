@@ -81,6 +81,9 @@ public class FileTempReserve implements FileInterface {
                 // strArr[2] : 노선번호
                 ticket.line = table.getLine(strArr[2]);
 
+                // strArr[3] : 출발시각
+                ticket.depTime = strArr[3];
+
                 // 예약시각
                 ticket.setReserveTime(strArr[4]);
 
