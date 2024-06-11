@@ -83,9 +83,9 @@ public class ReservationAndCancel {
                 System.out.print("#" + rowNum + " / ");
                 System.out.print(tempTicket.line.lineNum + " / ");
                 System.out.print(tempTicket.depTime + " / ");
-                System.out.print(tempTicket.railIndices.getFirst().fromStation + " / ");
+                System.out.print(tempTicket.railIndices.get(0).fromStation + " / ");
                 System.out.print(tempTicket.arrivalTime + " / ");
-                System.out.print(tempTicket.railIndices.getLast().toStation);
+                System.out.print(tempTicket.railIndices.get(tempTicket.railIndices.size() - 1).toStation);
                 System.out.println();
                 if (minutesBetween > 20) {
                     System.out.println("- 20분이 지나 삭제되었습니다.");
