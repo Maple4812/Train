@@ -233,7 +233,7 @@ public class ReservationAndCancel {
 
     public void init2() {
         client = LogInAndTimeInput.getClient();
-        System.out.println("가예약 취소 예약 취소를 선택하세요.");
+        System.out.println("가예약취소/예약취소를 선택하세요.");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         switch (input) {
