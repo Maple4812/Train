@@ -2,10 +2,7 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 public class FileTempReserve implements FileInterface {
     private String fileName;
@@ -29,15 +26,30 @@ public class FileTempReserve implements FileInterface {
         scan = new Scanner(new File(fileName));
         while (scan.hasNextLine()) {
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다은 split
-            if (strArr.length != 6) {
+            if (strArr.length != 7) {
                 throw new FileIntegrityException("무결성 오류: 파일에 인자의 개수가 옳지 않은 레코드가 존재합니다.");
             }
             UserName.checkIntegrity(strArr[0]);  //사용자 이름 무결성 확인
             PhoneNumber.checkIntegrity(strArr[1]);  //사용자 전화번호 무결성 확인
-            // Ticket.checkIntegrity(strArr[2]);  //노선번호 무결성 확인
             Time.checkIntegrity(strArr[3]);  //출발 시각 무결성 확인
             Time.checkIntegrity(strArr[4]);  //예약 시각 무결성 확인
             Time.checkIntegrity(strArr[5]);  //예약 컴퓨터 시각 무결성 확인
+
+            // 일회용의 Rail, Line 객체를 만들어 무결성 확인
+
+            Line l = new Line();
+            FileRail fileRail = new FileRail("rail.csv");
+            String[] rl = strArr[6].split("/");
+            LinkedHashMap<Rail, Integer> map = new LinkedHashMap<>();
+
+            for (String s : rl) {
+                Rail rail = fileRail.getRailByIndex(Integer.parseInt(s));
+                rail.checkIntegrity();
+                map.put(rail, 0);
+            }
+
+            l.railList = map;
+            l.checkIntegrity(strArr[2]);
         }
     }
 

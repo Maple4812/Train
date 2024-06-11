@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 public class FileReserve implements FileInterface{
@@ -22,13 +23,29 @@ public class FileReserve implements FileInterface{
         scan = new Scanner(new File(fileName));
         while(scan.hasNextLine()){
             String[] strArr = scan.nextLine().split(","); //한 줄 읽어온 다은 split
-            if(strArr.length != 5) {
+            if(strArr.length != 6) {
                 throw new FileIntegrityException("무결성 오류: 파일에 인자의 개수가 옳지 않은 레코드가 존재합니다.");
             }
             UserName.checkIntegrity(strArr[0]);  //사용자 이름 무결성 확인
             PhoneNumber.checkIntegrity(strArr[1]);  //전화번호 무결성 확인
-            // Ticket.checkIntegrity(strArr[2]);  //노선번호 무결성 확인
             Time.checkIntegrity(strArr[3]);  //출발 시각 무결성 확인
+            Time.checkIntegrity(strArr[4]);  //예약 시각 무결성 확인
+
+            // 일회용의 Rail, Line 객체를 만들어 무결성 확인
+
+            Line l = new Line();
+            FileRail fileRail = new FileRail("rail.csv");
+            String[] rl = strArr[5].split("/");
+            LinkedHashMap<Rail, Integer> map = new LinkedHashMap<>();
+
+            for (String s : rl) {
+                Rail rail = fileRail.getRailByIndex(Integer.parseInt(s));
+                rail.checkIntegrity();
+                map.put(rail, 0);
+            }
+
+            l.railList = map;
+            l.checkIntegrity(strArr[2]);
         }
     }
 
@@ -58,12 +75,16 @@ public class FileReserve implements FileInterface{
                 // strArr[3] : String type 출발 시각
                 ticket.depTime = strArr[3];
 
+                // 예약시각
+                // strArr[4] : String type 에약 시각
+                ticket.reserveTime = strArr[4];
+
                 // 노선정보
                 // RailIndex 에 맞는 Rail 객체를 받아오기 위해 FileRail 객체 생성,,,
                 FileRail fileRail = new FileRail("rail.csv");
 
-                // strArr[6] : 노선정보
-                String[] railIndices = strArr[6].split("/");
+                // strArr[5] : 노선정보
+                String[] railIndices = strArr[5].split("/");
                 ArrayList<Rail> temp = new ArrayList<>();
                 for(int i=0; i<railIndices.length; i++){
                     // getRailByIndex 를 통해 노선정보인덱스에 해당하는 Rail 객체를 받아온다.
