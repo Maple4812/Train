@@ -48,7 +48,9 @@ public class FileReserve implements FileInterface{
 
                 // Line 객체를 받아오기 위해 어쩔 수 없이 FileTimeTable 객체 생성.. 다른 좋은 방법이 있을 수도...
                 FileRail rail = new FileRail("rail.csv");
+                rail.checkIntegrity();
                 FileTimeTable table = new FileTimeTable("timeTable.csv", rail);
+                table.checkIntegrity();
                 // strArr[2] : 노선번호
                 ticket.line = table.getLine(strArr[2]);
 
