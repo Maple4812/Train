@@ -21,7 +21,7 @@ public class ReservationAndCancel {
     ArrayList<TempTicket> cancelTempTicketList = new ArrayList<>();
     ArrayList<Ticket> cancelTicketList = new ArrayList<>();
     private final FileTimeTable timeTableFile;
-    private final Client client = LogInAndTimeInput.getClient();
+    private Client client;
 
     public ReservationAndCancel(FileInterface fileTempReserve, FileInterface fileReserve, FileInterface timeTableFile) {
         this.fileReserve = (FileReserve) fileReserve;
@@ -55,6 +55,7 @@ public class ReservationAndCancel {
     }
 
     public void init1() throws IOException {
+        client = LogInAndTimeInput.getClient();
         fileTempReserve.repos();
         fileReserve.repos();
 
@@ -229,6 +230,7 @@ public class ReservationAndCancel {
 
 
     public void init2() {
+        client = LogInAndTimeInput.getClient();
         System.out.println("가예약 취소 예약 취소를 선택하세요.");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
