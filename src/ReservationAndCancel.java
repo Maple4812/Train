@@ -239,8 +239,10 @@ public class ReservationAndCancel {
         switch (input) {
             case "가예약취소":
                 tempReserveCancel();
+                break;
             case "예약취소":
                 ReserveCancel();
+                break;
             default:
                 System.out.println("잘못된 입력입니다.");
         }
