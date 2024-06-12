@@ -116,7 +116,7 @@ public class Ticket {
                 depDate += Integer.parseInt(r.duration) * 60 * 1000L;
             }
             // return
-            return FORMATTER.format(new Date(depDate));
+            return arrivalTime = FORMATTER.format(new Date(depDate));
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -147,7 +147,7 @@ public class Ticket {
         String lineNum = this.getLineNum();
         String depTime = this.depTime;
         String fromStation = railIndices.get(0).fromStation.getStation();
-        String arrivalTime = this.arrivalTime;
+        String arrivalTime = this.calculateArrivalTime();
         String toStation = railIndices.get(railIndices.size() - 1).toStation.getStation();
 
         return "취소 열차 정보:\n" +

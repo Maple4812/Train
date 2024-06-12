@@ -45,6 +45,14 @@ public class TempReservation {
                 String[] strArr = inputArr[1].split("/");
                 ArrayList<Rail> list = new ArrayList<>();
                 try {
+                    for (String s : strArr) {
+                        list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(s)));
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("잘못된 입력입니다.");
+                    continue;
+                }
+                try {
                     if (!(trueList.contains(inputArr[2]) || falseList.contains(inputArr[2]))) {
                         throw new FileIntegrityException();
                     }
@@ -52,6 +60,7 @@ public class TempReservation {
                     System.out.println("잘못된 입력입니다.");
                     continue;
                 }
+
                 // 예매 확정인 경우
                 if(trueList.contains(inputArr[2])) {
                     try {
@@ -61,9 +70,6 @@ public class TempReservation {
                         continue;
                     }
                     ticket.client = LogInAndTimeInput.getClient();
-                    for (int i = 0; i < strArr.length; i++) {
-                        list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
-                    }
                     ticket.railIndices = list;
                     try {
                         ticket.checkIntegrity();
@@ -95,9 +101,6 @@ public class TempReservation {
                 else {
                     tempTicket.line = timeTableFile.getLine(inputArr[0]);
                     tempTicket.client = LogInAndTimeInput.getClient();
-                    for (int i = 0; i < strArr.length; i++) {
-                        list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
-                    }
                     tempTicket.railIndices = list;
                     try{
                         tempTicket.checkIntegrity();
@@ -133,6 +136,14 @@ public class TempReservation {
                 String[] strArr = inputArr[1].split("/");
                 ArrayList<Rail> list = new ArrayList<>();
                 try {
+                    for (String s : strArr) {
+                        list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(s)));
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("잘못된 입력입니다.");
+                    continue;
+                }
+                try {
                     if (!(trueList.contains(inputArr[2]) || falseList.contains(inputArr[2]))) {
                         throw new FileIntegrityException();
                     }
@@ -149,9 +160,6 @@ public class TempReservation {
                         continue;
                     }
                     ticket.client = LogInAndTimeInput.getClient();
-                    for (int i = 0; i < strArr.length; i++) {
-                        list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
-                    }
                     ticket.railIndices = list;
                     try {
                         ticket.checkIntegrity();
@@ -184,9 +192,6 @@ public class TempReservation {
                 } else {
                     tempTicket.line = timeTableFile.getLine(inputArr[0]);
                     tempTicket.client = LogInAndTimeInput.getClient();
-                    for (int i = 0; i < strArr.length; i++) {
-                        list.add(timeTableFile.railFile.getRailByIndex(Integer.parseInt(strArr[i])));
-                    }
                     tempTicket.railIndices = list;
                     try{
                         tempTicket.checkIntegrity();
