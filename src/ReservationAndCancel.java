@@ -465,11 +465,12 @@ public class ReservationAndCancel {
                                 throw new RuntimeException(e);
                             }
                             cancelTicketList.add(ticket);
-                            reserveList.remove(ticket);
+                            fileReserve.reserveList.remove(ticket);
                         }
                     }
                     break;
 
+                    //Case1 Test Complete
                 case 2:
                     if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
                         flag = removeTicketByRowNum(inputArr, 2);
@@ -612,6 +613,7 @@ public class ReservationAndCancel {
     }
 
     private void printTicketInfo(int rowNum, Ticket Ticket) {
+        rowNum++;
         System.out.print("#" + rowNum + " / ");
         System.out.print(Ticket.line.lineNum + " / ");
         System.out.print(Ticket.depTime + " / ");
@@ -647,78 +649,7 @@ public class ReservationAndCancel {
     }
 
 
-    //legacyCode
-//    public void removeRowsByTrainNumber(String csvFilePath, String trainNumber) {
-//        removeRowsByTrainNumber(csvFilePath, trainNumber, Integer.MAX_VALUE);
-//    }
-//
-//    public void removeRowsByTrainNumber(String csvFilePath, String trainNumber, int count) {
-//        List<String[]> matchingRows = new ArrayList<>();
-//        int removedCount = 0;
-//
-//        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-//            String line;
-//            while ((line = br.readLine()) != null) {
-//                String[] row = line.split(",");
-//                if (row[2].equals(trainNumber)) {
-//                    matchingRows.add(row);
-//                    removedCount++;
-//                    if (removedCount == count) {
-//                        break; // 지정된 개수만큼 삭제하면 종료
-//                    }
-//                }
-//            }
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return;
-//        }
-//
-//        // 파일 재작성: 매칭되는 행을 제외한 나머지 행을 파일에 씀
-//        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFilePath))) {
-//            try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-//                String line;
-//                while ((line = br.readLine()) != null) {
-//                    String[] row = line.split(",");
-//                    boolean found = false;
-//                    for (String[] matchingRow : matchingRows) {
-//                        if (row[2].equals(matchingRow[2])) {
-//                            found = true;
-//                            break;
-//                        }
-//                    }
-//                    if (!found) {
-//                        bw.write(line);
-//                        bw.newLine();
-//                    }
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-    //열차 취소시 csv파일에서 삭제
-
-//    public static void clearCSVContent(String fileName) {
-//        try {
-//            // FileWriter 객체를 생성할 때, 두 번째 매개변수로 false를 주어 파일의 내용을 덮어쓰게 함
-//            FileWriter fw = new FileWriter(fileName, false);
-//
-//            // 파일을 빈 내용으로 덮어쓰기
-//            fw.write("");
-//
-//            // FileWriter 닫기
-//            fw.close();
-//
-//            System.out.println(fileName + "의 내용이 성공적으로 지워졌습니다.");
-//        } catch (IOException e) {
-//            // IO 예외 처리
-//            e.printStackTrace();
-//            System.out.println(fileName + "의 내용을 지우는 데 실패했습니다.");
-//        }
-//    }
-
-    private int rowIndicesHandle(String[] inputArr) {
+      private int rowIndicesHandle(String[] inputArr) {
         int arrLength = inputArr.length;
         boolean patternFlag = true;
         for (int i = 0; i < arrLength; i++) {
