@@ -28,6 +28,7 @@ public class ReservationAndCancel {
         this.fileReserve = (FileReserve) fileReserve;
         this.fileTempReserve = (FileTempReserve) fileTempReserve;
         this.timeTableFile = (FileTimeTable) timeTableFile;
+        this.reserveList = ((FileReserve) fileReserve).getReserveList();
     }
 
     public void init() throws IOException {
@@ -81,12 +82,12 @@ public class ReservationAndCancel {
             if (departureTime.isAfter(nowTime)) {
                 long minutesBetween = Duration.between(LocalDateTime.now(), reserveTime).toMinutes();
 
-                System.out.print("#" + (rowNum+1) + " / ");
+                System.out.print("#" + (rowNum + 1) + " / ");
                 System.out.print(tempTicket.line.lineNum + " / ");
                 System.out.print(tempTicket.depTime + " / ");
                 System.out.print(tempTicket.railIndices.get(0).fromStation.getStation() + " / ");
                 System.out.print(tempTicket.calculateArrivalTime() + " / ");
-                System.out.print(tempTicket.railIndices.get(tempTicket.railIndices.size()-1).toStation.getStation());
+                System.out.print(tempTicket.railIndices.get(tempTicket.railIndices.size() - 1).toStation.getStation());
                 System.out.println();
                 if (minutesBetween > 20) {
                     System.out.println("- 20분이 지나 삭제되었습니다.");
@@ -578,15 +579,15 @@ public class ReservationAndCancel {
                     flag = removeTicketByRowNum(inputArr);
             }
 
+            //fileReserve.reserveList = (ArrayList<Ticket>) reserveList.clone();
             fileTempReserve.update();
             fileReserve.update();
 
 
             for (Ticket ticket : cancelTicketList) {
                 System.out.println(ticket.toString());
-            }
-            for (Ticket ticket : cancelTicketList) {
                 System.out.println("취소 수수료:" + calcCancelFee(ticket.depTime, ticket.arrivalTime, ticket.calculatePrice()));
+                System.out.println("-".repeat(20));
             }
 
 
@@ -798,7 +799,9 @@ public class ReservationAndCancel {
                     throw new RuntimeException(e);
                 }
                 cancelTicketList.add(clientReservationList.get(index));
-                reserveList.remove(clientReservationList.get(index));
+                //reserve list 수정하고 setter로 reservlist 다시 설정
+                //public 으로 fileReserve 안에 있는 reserveList 수정
+                fileReserve.reserveList.remove(index);
             }
         }
 
