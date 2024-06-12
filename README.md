@@ -14,7 +14,7 @@ Java 기반의 기차표 예매 시스템으로, 1학기 동안 기획/개발되
 
 1. 저장소를 클론합니다:
     ```bash
-    git clone [https://github.com/Maple4812/Train.git](https://github.com/Maple4812/Train.git)
+    git clone https://github.com/Maple4812/Train.git
     ```
 2. 프로젝트 디렉토리로 이동합니다:
     ```bash
