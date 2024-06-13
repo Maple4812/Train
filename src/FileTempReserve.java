@@ -105,6 +105,8 @@ public class FileTempReserve implements FileInterface {
                     temp.add(fileRail.getRailByIndex(Integer.parseInt(railIndices[i])));
                 }
                 ticket.railIndices = temp;
+                ticket.calculateArrivalTime();
+
                 // 만들어진 ticket 을 TempList 에 저장
                 tempList.add(ticket);
             }

@@ -116,7 +116,7 @@ public class Ticket {
                 depDate += Integer.parseInt(r.duration) * 60 * 1000L;
             }
             // return
-            return FORMATTER.format(new Date(depDate));
+            return arrivalTime = FORMATTER.format(new Date(depDate));
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

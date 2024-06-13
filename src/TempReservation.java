@@ -81,7 +81,7 @@ public class TempReservation {
                     int remainSeat = ticket.line.calculateSeat(list.get(0).railIndex, list.get(list.size() - 1).railIndex);
                     if(remainSeat < 1) {
                         System.out.println("해당 열차에서는 최대 0개의 좌석만 예약할 수 있습니다.");
-                        break;
+                        continue;
                     }
                     try {
                         ticket.depTime = ticket.line.calculateDepTime(list.get(0).railIndex);
@@ -129,7 +129,6 @@ public class TempReservation {
                     System.out.println(FORMATTER.parse(tempTicket.depTime) + "에 출발하는 " + tempTicket.line.lineNum + " 1장을 가예약 했습니다.");
                 }
                 timeTableFile.reduceExtraSeat(inputArr[0], list.get(0).railIndex, list.get(list.size() - 1).railIndex, 1);
-                break;
             } else if (n == 4) {
                 // 중요함@@@@@@@ : 예약 개수와 실제 여석을 비교하는 무결성 검사 필수!!!!
                 int numberOfReservation = Integer.parseInt(inputArr[3]);
@@ -171,7 +170,7 @@ public class TempReservation {
                     int remainSeat = ticket.line.calculateSeat(list.get(0).railIndex, list.get(list.size() - 1).railIndex);
                     if(remainSeat < numberOfReservation) {
                         System.out.println("해당 열차에서는 최대 "+ remainSeat + "개의 좌석만 예약할 수 있습니다.");
-                        break;
+                        continue;
                     }
                     ticket.reserveTime = LogInAndTimeInput.getNowTime();
 
@@ -222,7 +221,6 @@ public class TempReservation {
                     tempReserveFile.update();
                 }
                 timeTableFile.reduceExtraSeat(inputArr[0], list.get(0).railIndex, list.get(list.size() - 1).railIndex, numberOfReservation);
-                break;
             } else {
                 System.out.println("잘못된 입력입니다.");
             }
