@@ -26,6 +26,7 @@ public class Ticket {
         }
 
         if(lineIndices.size() < railIndices.size()){
+            System.out.println("입력한 노선 정보에 해당하는 노선이 없습니다.");
             throw new FileIntegrityException();
         }
 

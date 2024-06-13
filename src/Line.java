@@ -195,16 +195,23 @@ public class Line {
     //인덱스에 따른 최소 여석 수 반환
     public int calculateSeat(int index1, int index2){
         int n = 0;
-        int seat = 0;
+        int seat = 600;
 
+        // 2024-06-14 수정
+        // 부등호 방향 반대로 수정
+        // 해당 구간들 중 여석의 최대값을 찾고 있었음
         for (Map.Entry<Rail, Integer> entry : railList.entrySet()) {
-            if(Objects.equals(entry.getKey().railIndex, index1)){
+            if (n == 1) {
+                if (seat > entry.getValue()) {
+                    seat = entry.getValue();
+                }
+            } else if(Objects.equals(entry.getKey().railIndex, index1)){
                 n = 1;
                 seat = entry.getValue();
-            } else if (n == 1) {
-                if (seat < entry.getValue()) {seat = entry.getValue();}
             } else if (Objects.equals(entry.getKey().railIndex, index2)){
-                if (seat < entry.getValue()) {seat = entry.getValue();}
+                if (seat > entry.getValue()) {
+                    seat = entry.getValue();
+                }
                 break;
             }
         }
