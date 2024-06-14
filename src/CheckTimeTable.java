@@ -139,43 +139,43 @@ public class CheckTimeTable {
             // 검색에 부합하는 기차 정보 출력(새로 작성)
             int n = 0;
             for (int i = 0; i < timeTableFile.getLineList().size(); i++) {
-                if (timeTableFile.getLineList().get(i).slicing(inputArr[0], inputArr[1]) != null) {
-
-                    //티켓 객체 임시 생성
-                    Ticket ticket = new Ticket();
-                    ticket.railIndices = timeTableFile.getLineList().get(i).slicing(inputArr[0], inputArr[1]);
-                    ticket.line = timeTableFile.getLineList().get(i);
-                    ticket.depTime = timeTableFile.getLineList().get(i).calculateDepTime(ticket.railIndices.get(0).railIndex); // caculateDeptime : 역입력 시 출발 시각 반환 함수
-                    int seat = timeTableFile.getLineList().get(i).calculateSeat(ticket.railIndices.get(0).railIndex, ticket.railIndices.get(ticket.railIndices.size()-1).railIndex);
-
-                    //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
-                    Depdate = dtFormat.parse(ticket.depTime);
-                    diff = inputdate.getTime() - Depdate.getTime();
-                    if ((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))) {
-                        if (n == 0){System.out.println("노선 번호 / 노선 정보 / 출발 시각 / 운행 구간 / 도착 시각 / 여석 수 / 가격");}
-                        n++;
-                        printTicket(ticket, seat);
-                    }
-                }
-//                if(!timeTableFile.getLineList().get(i).NEWslicing(inputArr[0],inputArr[1]).isEmpty()){
-//                    for(ArrayList<Rail> arr : timeTableFile.getLineList().get(i).NEWslicing(inputArr[0],inputArr[1])){
-//                        //티켓 객체 임시 생성
-//                        Ticket ticket = new Ticket();
-//                        ticket.railIndices = arr;
-//                        ticket.line = timeTableFile.getLineList().get(i);
-//                        ticket.depTime = timeTableFile.getLineList().get(i).calculateDepTime(ticket.railIndices.get(0).railIndex); // caculateDeptime : 역입력 시 출발 시각 반환 함수
-//                        int seat = timeTableFile.getLineList().get(i).calculateSeat(ticket.railIndices.get(0).railIndex, ticket.railIndices.get(ticket.railIndices.size()-1).railIndex);
+//                if (timeTableFile.getLineList().get(i).slicing(inputArr[0], inputArr[1]) != null) {
 //
-//                        //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
-//                        Depdate = dtFormat.parse(ticket.depTime);
-//                        diff = inputdate.getTime() - Depdate.getTime();
-//                        if ((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))) {
-//                            if (n == 0){System.out.println("노선 번호 / 노선 정보 / 출발 시각 / 운행 구간 / 도착 시각 / 여석 수 / 가격");}
-//                            n++;
-//                            printTicket(ticket, seat);
-//                        }
+//                    //티켓 객체 임시 생성
+//                    Ticket ticket = new Ticket();
+//                    ticket.railIndices = timeTableFile.getLineList().get(i).slicing(inputArr[0], inputArr[1]);
+//                    ticket.line = timeTableFile.getLineList().get(i);
+//                    ticket.depTime = timeTableFile.getLineList().get(i).calculateDepTime(ticket.railIndices.get(0).railIndex); // caculateDeptime : 역입력 시 출발 시각 반환 함수
+//                    int seat = timeTableFile.getLineList().get(i).calculateSeat(ticket.railIndices.get(0).railIndex, ticket.railIndices.get(ticket.railIndices.size()-1).railIndex);
+//
+//                    //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
+//                    Depdate = dtFormat.parse(ticket.depTime);
+//                    diff = inputdate.getTime() - Depdate.getTime();
+//                    if ((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))) {
+//                        if (n == 0){System.out.println("노선 번호 / 노선 정보 / 출발 시각 / 운행 구간 / 도착 시각 / 여석 수 / 가격");}
+//                        n++;
+//                        printTicket(ticket, seat);
 //                    }
 //                }
+                if(timeTableFile.getLineList().get(i).slicing(inputArr[0],inputArr[1])!=null){
+                    for(ArrayList<Rail> arr : timeTableFile.getLineList().get(i).slicing(inputArr[0],inputArr[1])){
+                        //티켓 객체 임시 생성
+                        Ticket ticket = new Ticket();
+                        ticket.railIndices = arr;
+                        ticket.line = timeTableFile.getLineList().get(i);
+                        ticket.depTime = timeTableFile.getLineList().get(i).calculateDepTime(ticket.railIndices.get(0).railIndex); // caculateDeptime : 역입력 시 출발 시각 반환 함수
+                        int seat = timeTableFile.getLineList().get(i).calculateSeat(ticket.railIndices.get(0).railIndex, ticket.railIndices.get(ticket.railIndices.size()-1).railIndex);
+
+                        //검색 시간으로 부터 30분 이내로 출발 시간이 차이나는 기차만 출력
+                        Depdate = dtFormat.parse(ticket.depTime);
+                        diff = inputdate.getTime() - Depdate.getTime();
+                        if ((diff < (30 * 60 * 1000)) && (diff > (-30 * 60 * 1000))) {
+                            if (n == 0){System.out.println("노선 번호 / 노선 정보 / 출발 시각 / 운행 구간 / 도착 시각 / 여석 수 / 가격");}
+                            n++;
+                            printTicket(ticket, seat);
+                        }
+                    }
+                }
             }
 
             if (n == 0) {
