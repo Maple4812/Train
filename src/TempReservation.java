@@ -37,7 +37,6 @@ public class TempReservation {
                     return;
                 } else {
                     System.out.println("잘못된 입력입니다.");
-                    continue;
                 }
             }
             // 3개가 입력되었을 때
@@ -59,7 +58,7 @@ public class TempReservation {
                     System.out.println("잘못된 입력입니다.");
                     continue;
                 } catch (FileIntegrityException e2){
-                    System.out.println("입력한 노선 정보에 해당하는 노선이 없습니다,");
+                    System.out.println("입력한 노선 정보에 해당하는 노선이 없습니다.");
                     continue;
                 }
                 try {
@@ -76,7 +75,7 @@ public class TempReservation {
                     try {
                         ticket.line = timeTableFile.getLine(inputArr[0]);
                     } catch (FileIntegrityException e) {
-                        System.out.println("잘못된 노선 번호입니다.");
+                        System.out.println("잘못된 노선 번호입니다");
                         continue;
                     }
                     ticket.client = LogInAndTimeInput.getClient();
@@ -84,7 +83,7 @@ public class TempReservation {
                     try {
                         ticket.checkIntegrity();
                     } catch (FileIntegrityException e) {
-                        System.out.print("");
+                        System.out.println("입력한 노선 정보에 해당하는 노선이 없습니다.");
                         continue;
                     }
                     // 해당 노선 정보에 해당하는 여석이 남아있지 않은 경우
@@ -109,12 +108,18 @@ public class TempReservation {
                 }
                 // 가예약인 경우
                 else {
-                    tempTicket.line = timeTableFile.getLine(inputArr[0]);
+                    try {
+                        tempTicket.line = timeTableFile.getLine(inputArr[0]);
+                    } catch (FileIntegrityException e) {
+                        System.out.println("잘못된 노선 번호입니다.");
+                        continue;
+                    }
                     tempTicket.client = LogInAndTimeInput.getClient();
                     tempTicket.railIndices = list;
                     try{
                         tempTicket.checkIntegrity();
                     }catch (FileIntegrityException e){
+                        System.out.println("입력한 노선 정보에 해당하는 노선이 없습니다.");
                         continue;
                     }
                     // 해당 노선 정보에 해당하는 여석이 남아있지 않은 경우
@@ -146,7 +151,7 @@ public class TempReservation {
                 // 입력받는 예매 수가 음수이거나 0 인 경우에 대한 예외 처리 추가
                 try {
                     if(Integer.parseInt(inputArr[3]) <= 0){
-                        System.out.println("예매 수가 올바르지 않습니다. 1이상의 정수를 입력하세요.");
+                        System.out.println("예매 수가 올바르지 않습니다. 1 이상의 정수를 입력하세요.");
                         continue;
                     }
                 } catch(NumberFormatException e){
@@ -171,7 +176,7 @@ public class TempReservation {
                     System.out.println("잘못된 입력입니다.");
                     continue;
                 } catch (FileIntegrityException e2){
-                    System.out.println("입력한 노선 정보에 해당하는 노선이 없습니다,");
+                    System.out.println("입력한 노선 정보에 해당하는 노선이 없습니다.");
                     continue;
                 }
                 try {
@@ -195,7 +200,7 @@ public class TempReservation {
                     try {
                         ticket.checkIntegrity();
                     } catch (FileIntegrityException e) {
-                        System.out.print("");
+                        System.out.println("입력한 노선 정보에 해당하는 노선이 없습니다.");
                         continue;
                     }
                     // 해당 노선 정보에 해당하는 여석이 남아있지 않은 경우
@@ -221,12 +226,18 @@ public class TempReservation {
                     System.out.println(FORMATTER.parse(ticket.depTime) + "에 출발하는 " + ticket.line.lineNum + " " + numberOfReservation + "장을 예매 확정지었습니다.");
                     reserveFile.update();
                 } else {
-                    tempTicket.line = timeTableFile.getLine(inputArr[0]);
+                    try {
+                        tempTicket.line = timeTableFile.getLine(inputArr[0]);
+                    } catch (FileIntegrityException e) {
+                        System.out.println("잘못된 노선 번호입니다.");
+                        continue;
+                    }
                     tempTicket.client = LogInAndTimeInput.getClient();
                     tempTicket.railIndices = list;
                     try{
                         tempTicket.checkIntegrity();
                     }catch (FileIntegrityException e){
+                        System.out.println("입력한 노선 정보에 해당하는 노선이 없습니다.");
                         continue;
                     }
                     // 해당 노선 정보에 해당하는 여석이 남아있지 않은 경우
