@@ -30,15 +30,7 @@ public class Line {
         }
 
         // railList의 운행 구간에서 선행하는 rail의 도착역과 바로 뒤의 rail의 출발역이 같지 않은지 확인
-        // 정현: 이 부분 getStationList 사용하면 될 거 같아서 일단 주석으로 해두겠습니다.
-//        for (int i = 0; i < railArrayList.size() - 1; i++) {
-//            Rail currentRail = railArrayList.get(i);
-//            Rail nextRail = railArrayList.get(i + 1);
-//            if (!currentRail.toStation.equals(nextRail.fromStation)) {
-//                throw new FileIntegrityException("무결성 오류: 선행하는 rail의 도착역과 바로 뒤의 rail의 출발역이 같지 않습니다.");
-//            }
-//        }
-        getStationList(); //getStationList 내의 throw FileIntegrityException이 연결되는 구간인지 체크하기 때문
+        getStationList(); //getStationList 내의 throw FileIntegrityException이 연결되는 구간인지 체크
 
         // 각 rail의 인덱스가 rail.csv 파일 내에 존재하는지 확인
         // FileRail의 getRailByIndex가 static이 아니어서 오류가 생기는 것 같습니다.(추후 논의 필요)
@@ -56,51 +48,6 @@ public class Line {
         }
 
     }
-
-
-    /*
-        1. public static으로 해야하는지? 만약 static으로 해야하면 설계문서 수정해야 할 듯
-    */
-//    public ArrayList<Rail> slicing(String fromstation, String tostation) throws FileIntegrityException {
-//        //Ticket 객체로 변환 및 사용자가 입력한 출발 시각과의 비교는 CheckTimeTable 내에서 수행
-//        ArrayList<String> stationList = getStationList(); //이 Line이 지나는 역을 순서대로 반환
-//        ArrayList<Rail> slicedList = new ArrayList<>(); //return 할 arraylist
-//
-//        /*
-//            입력 받은 출발역과 도착역이 이 Line에 존재하고, 선후관계도 일치하는 경우 Rail 객체의 list를 반환
-//         */
-//        if(stationList.contains(fromstation) && stationList.contains(tostation)
-//                && (stationList.indexOf(fromstation)<stationList.indexOf(tostation))){
-//            int startIdx = stationList.indexOf(fromstation);
-//            int endIdx = stationList.indexOf(tostation);
-//            int i = 0;
-//            for (Map.Entry<Rail, Integer> entry : railList.entrySet()){
-//                /*
-//                    서울-대전-대구-부산 (1/2/3)
-//                    slicing(대전,부산)
-//                    -> stationList : 서울, 대전, 대구, 부산
-//                    -> railList : (서울, 대전), (대전, 대구), (대구, 부산)
-//                    -> startIdx : 1 (대전)
-//                    -> endIdx : 3 (부산)
-//                    -> 우리가 가져와야하는 구간은 railList의 인덱스 1, 2에 해당하는 (대전, 대구), (대구, 부산)
-//                    -> 즉 railList의 startIdx부터 endIdx-1 까지 Rail 객체를 slicedList에 저장함
-//                 */
-//                if(i>=startIdx && i<=endIdx-1){
-//                    slicedList.add(entry.getKey());
-//                }
-//                i++;
-//            }
-//            return slicedList;
-//        }
-//
-//        /*
-//            입력 받은 출발역과 도착역이 이 Line에 존재하지 않거나, 선후관계가 맞지 않으면 null을 반환
-//         */
-//        else{
-//            return null;
-//        }
-//
-//    }
 
     public ArrayList<ArrayList<Rail>> slicing(String fromstation, String tostation) throws FileIntegrityException{
         /*
@@ -267,19 +214,4 @@ public class Line {
         return stationList;
 
     }
-
-    /*
-        충돌 무결성 검사용, 일단 쓸 일 없어서 주석 처리
-        각 구간을 지나는 출발시간을 list로 반환
-     */
-//    public ArrayList<String> getDeptimeList(){
-//
-//    }
-
-    /*
-        중복 구간이 있는지 무결성 검사하는 용, 일단 쓸 일 없어서 주석 처리
-     */
-//    public ArrayList<Integer> getRailIndecies(){
-//
-//    }
 }
