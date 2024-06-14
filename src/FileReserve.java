@@ -98,6 +98,7 @@ public class FileReserve implements FileInterface{
                     temp.add(fileRail.getRailByIndex(Integer.parseInt(railIndices[i])));
                 }
                 ticket.railIndices = temp;
+                ticket.calculateArrivalTime();
 
                 // 만들어진 ticket 을 TempList 에 저장
                 reserveList.add(ticket);
@@ -140,7 +141,6 @@ public class FileReserve implements FileInterface{
     // 추가!!!
     public void update(){
         File file = new File(fileName);
-        System.out.println(reserveList.size());
         try {
             fw = new FileWriter(file, false);
             writer = new PrintWriter(fw);

@@ -37,7 +37,14 @@ public class FileTimeTable implements FileInterface{
                 return line;
             }
         }
-        return null;
+
+        // 2024-06-14 수정
+        // 기존 return null 이었지만
+        // 이렇게 되면 null 값을 들고다니는 Ticket 객체가 생겨서
+        // 다른 곳에서 NullPointerException 발생
+        // return null 대신 exception 을 throw 해서
+        // TempReservation 클래스에서 try catch 로 잡아내는걸로 수정함
+        throw new FileIntegrityException();
     }
 
     /*
