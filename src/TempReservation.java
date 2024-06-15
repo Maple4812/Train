@@ -8,13 +8,14 @@ public class TempReservation {
     private static FileTempReserve tempReserveFile;
     private static FileReserve reserveFile;
     private static FileTimeTable timeTableFile;
-    private static Client loginClient;
+    private static FileRail railFile;
     Scanner scan = new Scanner(System.in);
 
-    public TempReservation(FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile) {
+    public TempReservation(FileInterface reserveFile, FileInterface tempReserveFile, FileInterface timeTableFile, FileInterface fileRail) {
         this.tempReserveFile = (FileTempReserve) tempReserveFile;
         this.reserveFile = (FileReserve) reserveFile;
         this.timeTableFile = (FileTimeTable) timeTableFile;
+        this.railFile = (FileRail) fileRail;
     }
 
     public void init() throws FileIntegrityException, IOException, ParseException {
@@ -22,6 +23,7 @@ public class TempReservation {
         ArrayList<String> falseList = new ArrayList<>(Arrays.asList("F", "f", "아니오", "ㄴ", "0"));
 
         while (true) {
+            railFile.printRail();
             System.out.print("예약하시고 싶은 기차표의 노선번호, 노선 정보, 확정 여부, 개수(없을 경우 1개)를 입력해주세요: ");
             String input = scan.next();
             LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
