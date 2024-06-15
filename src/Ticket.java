@@ -150,7 +150,7 @@ public class Ticket {
         String arrivalTime = this.calculateArrivalTime();
         String toStation = railIndices.get(railIndices.size() - 1).toStation.getStation();
 
-        return "취소 열차 정보:\n" +
+        return "열차 정보:\n" +
                "노선 번호: " + lineNum + "\n" +
                "출발 시각: " + depTime + "\n" +
                "출발 역: " + fromStation + "\n" +

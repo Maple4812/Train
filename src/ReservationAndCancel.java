@@ -222,7 +222,9 @@ public class ReservationAndCancel {
 
             for (TempTicket tempTicket : confirmedTempTicketList) {
                 System.out.println(tempTicket.toString());
+                System.out.println();
             }
+            confirmedTempTicketList.clear();
         } while (flag == -1);
     }
 
