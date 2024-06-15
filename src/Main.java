@@ -39,7 +39,7 @@ public class Main {
         // NOTE! 구간 정보 파일이 필요한 경우, 기능 객체의 시작 파라미터로 파일 객체를 넣으시면 됩니다.
         LogInAndTimeInput logInAndTimeInput = new LogInAndTimeInput();
         CheckTimeTable checkTimeTable = new CheckTimeTable(fileTimeTable, fileRail);
-        TempReservation tempReservation = new TempReservation(fileReserve, fileTempReserve, fileTimeTable);
+        TempReservation tempReservation = new TempReservation(fileReserve, fileTempReserve, fileTimeTable, fileRail);
         ReservationAndCancel reservationAndCancel = new ReservationAndCancel(fileTempReserve, fileReserve, fileTimeTable);
 
         // 가장 처음 사용자로부터 정보들을 입력받습니다.
