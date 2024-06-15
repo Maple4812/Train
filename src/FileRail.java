@@ -64,13 +64,13 @@ public class FileRail implements FileInterface{
         /*
             각 Rail 객체와 그 정보들을 출력
          */
-        System.out.println("운행 정보 인덱스\t출발역\t도착역");
+        System.out.println("다음은 운행 정보 인덱스와 출발역, 도착역입니다.");
         for(Rail rail : raillist){
             String str=Integer.toString(rail.railIndex);
-            str+="\t";
-            str+=rail.fromStation;
-            str+="\t";
-            str+=rail.toStation;
+            str+=" : ";
+            str+=rail.fromStation.getStation();
+            str+=" -> ";
+            str+=rail.toStation.getStation();
             System.out.println(str);
         }
     }

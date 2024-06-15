@@ -37,53 +37,15 @@ public class FileTimeTable implements FileInterface{
                 return line;
             }
         }
-        return null;
+
+        // 2024-06-14 수정
+        // 기존 return null 이었지만
+        // 이렇게 되면 null 값을 들고다니는 Ticket 객체가 생겨서
+        // 다른 곳에서 NullPointerException 발생
+        // return null 대신 exception 을 throw 해서
+        // TempReservation 클래스에서 try catch 로 잡아내는걸로 수정함
+        throw new FileIntegrityException();
     }
-
-    /*
-    아래는 다른 파트에서 쓰는 부분
-     */
-
-//    public Ticket getTicketByLineNum(String lineNum) {
-//        for (Ticket ticket : trainlist) {
-//            if (ticket.lineNum.equals(lineNum))
-//                return ticket;
-//        }
-//        return null;
-//    }
-//
-//    public ArrayList<Ticket> getTicketByDepStation(String depStation) {
-//        ArrayList<Ticket> arrayList = new ArrayList<>();
-//        for (Ticket ticket : trainlist) {
-//            if (ticket.fromStation.getStation().equals(depStation))
-//                arrayList.add(ticket);
-//        }
-//        return arrayList;
-//    }
-//
-//    public ArrayList<Ticket> getTicketByArrStation(String arrStation) {
-//        ArrayList<Ticket> arrayList = new ArrayList<>();
-//        for (Ticket ticket : trainlist) {
-//            if (ticket.toStation.getStation().equals(arrStation))
-//                arrayList.add(ticket);
-//        }
-//        return arrayList;
-//    }
-//
-//    public ArrayList<Ticket> getTicketByDepArrStation(String depStation, String arrStation) {
-//        ArrayList<Ticket> arrayList = new ArrayList<>();
-//        for (Ticket ticket : trainlist) {
-//            if (ticket.fromStation.getStation().equals(depStation)) {
-//                if (ticket.toStation.getStation().equals(arrStation))
-//                    arrayList.add(ticket);
-//            }
-//        }
-//        return arrayList;
-//    }
-
-    /*
-        위는 다른 파트에서 쓰는 부분
-     */
 
     @Override
     public void checkIntegrity() throws FileNotFoundException, FileIntegrityException {
@@ -337,19 +299,3 @@ public class FileTimeTable implements FileInterface{
         scan.close();
     }
 }
-
-
-            /*
-                ********************************************************
-                이 부분은 기획서 수정이 필요해 보입니다. 기획서에 출발 시각과 도착 시각에 대한 규칙이 따로 정의되어 있지 않고
-                단지 시각 형식만 따른다고 되어 있습니다.
-                출발 시각과 도착 시각의 선후관계가 올바른지 무결성검사를 진행합니다.
-                ********************************************************
-             */
-
-
-            /*
-                여석 수의 의미 규칙에 따라 여석 수가 전체 좌석 수보다 큰지 무결성 검사를 진행합니다.
-                위에서 Seat.checkIntegrity()를 통해 여석 수, 전체 좌석 수의 무결성 검사를 이미 진행했기에
-                추가적인 형식 검사 없이 Integer.parseInt()를 사용합니다.
-             */
