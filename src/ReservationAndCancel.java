@@ -111,6 +111,11 @@ public class ReservationAndCancel {
             Scanner inputScan = new Scanner(System.in);
             String[] inputArr = inputScan.nextLine().split(",");
 
+            if(!checkInput(inputArr)){
+                System.out.println("잘못된 입력입니다.");
+                break;
+            }
+
             fileTempReserve.repos();
             fileReserve.repos();
 
@@ -280,6 +285,10 @@ public class ReservationAndCancel {
 
             refreshFileData();
 
+            if(!checkInput(inputArr)){
+                System.out.println("잘못된 입력입니다.");
+                break;
+            }
             switch (inputArr.length) {
                 case 1:
                     if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
@@ -466,6 +475,12 @@ public class ReservationAndCancel {
             fileTempReserve.repos();
             fileReserve.repos();
 
+            if(!checkInput(inputArr)){
+                System.out.println("잘못된 입력입니다.");
+                break;
+            }
+
+
             switch (inputArr.length) {
                 case 1:
                     if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
@@ -607,6 +622,7 @@ public class ReservationAndCancel {
                 default:
                     flag = removeTicketByRowNum(inputArr);
             }
+
 
             fileTempReserve.update();
             fileReserve.update();
@@ -796,4 +812,50 @@ public class ReservationAndCancel {
             return ticketPrice;
         }
     }
+
+    public boolean checkInput(String[] inputArr){
+        switch (inputArr.length) {
+            case 1:
+                if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                    return true;
+                } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
+                    return true;
+                }
+                break;
+
+            //Case1 Test Complete
+            case 2:
+                if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                    return true;
+                } else if (Pattern.matches("^[A-Z][0-9]{4}$", inputArr[0])) {
+                    return true;
+                } else if (inputArr[1].equals("출발")) {
+                    return true;
+                } else if (inputArr[1].equals("도착")) {
+                    return true;
+                }
+                break;
+            //test Complete
+            case 3:
+                if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                    return true;
+                }
+                break;
+
+            //test Complete
+            case 4:
+                if (Pattern.matches("^\\#[1-9]$", inputArr[0])) {
+                    return true;
+                } else if (inputArr[1].equals("출발")) {
+                    return true;
+                }
+                break;
+
+            //Test Complete
+            default:
+                return false;
+        }
+        return false;
+    }
+
 }
