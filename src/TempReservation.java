@@ -21,9 +21,9 @@ public class TempReservation {
     public void init() throws FileIntegrityException, IOException, ParseException {
         ArrayList<String> trueList = new ArrayList<>(Arrays.asList("T", "t", "예", "ㅇ", "1"));
         ArrayList<String> falseList = new ArrayList<>(Arrays.asList("F", "f", "아니오", "ㄴ", "0"));
+        railFile.printRail();
 
         while (true) {
-            railFile.printRail();
             System.out.print("예약하시고 싶은 기차표의 노선번호, 노선 정보, 확정 여부, 개수(없을 경우 1개)를 입력해주세요: ");
             String input = scan.next();
             LogInAndTimeInput.setNowTime(TempReservation.timeRenewal());
