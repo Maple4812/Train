@@ -143,7 +143,7 @@ public class FileRail implements FileInterface{
             }
         }
         if(idxList.size()!=raillist.size()){
-            throw new FileIntegrityException("오류: 중복되는 운행 정보 인덱스가 존재합니다.");
+            throw new FileIntegrityException("오류: 운행 정보 인덱스가 중복됩니다.");
         }
 
         /*
@@ -156,16 +156,16 @@ public class FileRail implements FileInterface{
                 throw new FileIntegrityException("오류: 반대되는 운행 정보가 존재하지 않습니다.");
             }
             if(!rail.fromStation.getStation().equals(getRailByIndex(-rail.railIndex).toStation.getStation())){
-                throw new FileIntegrityException("오류: 반대되는 운행 정보와 역 정보가 일치하지 않습니다.");
+                throw new FileIntegrityException("오류: 같은 구간에 대한 상/하행 정보가 충돌합니다.");
             }
             if(!rail.toStation.getStation().equals(getRailByIndex(-rail.railIndex).fromStation.getStation())){
-                throw new FileIntegrityException("오류: 반대되는 운행 정보와 역 정보가 일치하지 않습니다.");
+                throw new FileIntegrityException("오류: 같은 구간에 대한 상/하행 정보가 충돌합니다.");
             }
             if(!rail.duration.equals(getRailByIndex(-rail.railIndex).duration)){
-                throw new FileIntegrityException("오류: 반대되는 운행 정보와 소요 시간 정보가 일치하지 않습니다.");
+                throw new FileIntegrityException("오류: 같은 구간에 대한 상/하행 정보가 충돌합니다.");
             }
             if(!rail.price.getPrice().equals(getRailByIndex(-rail.railIndex).price.getPrice())){
-                throw new FileIntegrityException("오류: 반대되는 운행 정보와 가격 정보가 일치하지 않습니다.");
+                throw new FileIntegrityException("오류: 같은 구간에 대한 상/하행 정보가 충돌합니다.");
             }
 
         }

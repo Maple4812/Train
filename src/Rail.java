@@ -12,7 +12,7 @@ public class Rail {
      */
     public void checkIntegrity() throws FileIntegrityException{
         if (railIndex == 0) { //railIndex가 0인 경우
-            throw new FileIntegrityException("무결성 오류: railIndex는 0이 될 수 없습니다.");
+            throw new FileIntegrityException("오류: 운행 정보 인덱스의 형식이 잘못되었습니다.");
         }
 
         if (fromStation.getStation().equals(toStation.getStation())){ //출발역과 도착역이 동일한 경우

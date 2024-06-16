@@ -136,7 +136,7 @@ public class FileTimeTable implements FileInterface{
                         throw new RuntimeException(e);
                     }
                     if(Date2 - Date1 < 5 * 60 * 1000L && Date2 - Date1 > -5 * 60 * 1000L && Date2 != Date1){
-                        throw new FileIntegrityException("오류: 같은역에서 출발 또는 도착시간이 5분이내인 기차가 있습니다");
+                        throw new FileIntegrityException("오류: 노선이 동시에 겹치는 열차가 있습니다.");
                     }
                 }
             }

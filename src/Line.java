@@ -24,7 +24,7 @@ public class Line {
         for (int i = 0; i < railArrayList.size() - 1; i++) {
             for (int j = i + 1; j < railArrayList.size(); j++) {
                 if (railArrayList.get(i).equals(railArrayList.get(j))) {
-                    throw new FileIntegrityException("무결성 오류: railList에 동일한 Rail 객체가 두 개 이상 존재합니다.");
+                    throw new FileIntegrityException("오류: 같은 구간을 2회 이상 지나는 열차가 있습니다.");
                 }
             }
         }
@@ -40,7 +40,7 @@ public class Line {
             filerail.checkIntegrity(); //checkIntegrity를 통해 여기서 만든 filerail의 raillist를 생성
             for (Rail rail : railArrayList) {
                 if (filerail.getRailByIndex(rail.railIndex) == null) {
-                    throw new FileIntegrityException("무결성 오류: rail.csv 파일에 존재하지 않는 rail 인덱스가 포함되어 있습니다.");
+                    throw new FileIntegrityException("오류: 존재하지 않는 구간을 지나는 열차가 있습니다.");
                 }
             }
         }catch (FileNotFoundException e){
@@ -205,7 +205,7 @@ public class Line {
                     구간이 연결되지 않은 것이므로 오류를 throw 합니다
                  */
                 else{
-                    throw new FileIntegrityException("무결성 오류: 선행하는 rail의 도착역과 바로 뒤의 rail의 출발역이 같지 않습니다.");
+                    throw new FileIntegrityException("오류: 올바르지 않은 노선을 가진 열차가 있습니다.");
                 }
             }
             i++;

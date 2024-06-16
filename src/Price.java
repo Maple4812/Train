@@ -15,7 +15,7 @@ public class Price {
 
     public static void checkIntegrity(String str) throws FileIntegrityException {
         if(!Pattern.matches(REGEXP_PATTERN_NORMAL, str)) {
-            throw new FileIntegrityException("가격 무결성 오류");
+            throw new FileIntegrityException("오류: 가격 정보의 형식이 잘못되었습니다.");
         }
     }
 
