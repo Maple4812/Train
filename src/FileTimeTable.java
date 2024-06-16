@@ -141,7 +141,7 @@ public class FileTimeTable implements FileInterface{
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
-                    if(Date2 - Date1 < 5 * 60 * 1000L && Date2 - Date1 > -5 * 60 * 1000L && Date2 != Date1){
+                    if(Date2 - Date1 < 5 * 60 * 1000L && Date2 - Date1 > -5 * 60 * 1000L && i != j){
                         throw new FileIntegrityException("오류: 노선이 동시에 겹치는 열차가 있습니다.");
                     }
                 }
