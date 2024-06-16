@@ -78,6 +78,13 @@ public class FileTimeTable implements FileInterface{
 
             try{
                 for(int i=1;i<strArr.length/2;i++){
+                    // 존재하는 구간인지 체크
+                    if(railFile.getRailByIndex(Integer.parseInt(strArr[2*i]))==null)
+                        throw new FileIntegrityException("오류: 존재하지 않는 구간을 지나는 열차가 있습니다.");
+                    // 중복 구간인지 체크
+                    if(line.railList.containsKey(railFile.getRailByIndex(Integer.parseInt(strArr[2*i])))){
+                        throw new FileIntegrityException("오류: 같은 구간을 2회 이상 지나는 열차가 있습니다.");
+                    }
                     line.railList.put(railFile.getRailByIndex(Integer.parseInt(strArr[2*i])),Integer.parseInt(strArr[2*i+1]));
                 }
             }catch (NumberFormatException e){

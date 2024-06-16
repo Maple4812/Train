@@ -19,33 +19,23 @@ public class Line {
             throw new FileIntegrityException("무결성 오류: 노선 번호가 올바른 형식이 아닙니다.");
         }
 
-        // railList에서 같은 Rail 객체가 두 개 이상 존재하는지 확인
-        ArrayList<Rail> railArrayList = new ArrayList<>(railList.keySet());
-        for (int i = 0; i < railArrayList.size() - 1; i++) {
-            for (int j = i + 1; j < railArrayList.size(); j++) {
-                if (railArrayList.get(i).equals(railArrayList.get(j))) {
-                    throw new FileIntegrityException("오류: 같은 구간을 2회 이상 지나는 열차가 있습니다.");
-                }
-            }
-        }
-
         // railList의 운행 구간에서 선행하는 rail의 도착역과 바로 뒤의 rail의 출발역이 같지 않은지 확인
         getStationList(); //getStationList 내의 throw FileIntegrityException이 연결되는 구간인지 체크
 
         // 각 rail의 인덱스가 rail.csv 파일 내에 존재하는지 확인
         // FileRail의 getRailByIndex가 static이 아니어서 오류가 생기는 것 같습니다.(추후 논의 필요)
         // 일단 try catch 문으로 묶어서 filerail 생성
-        try{
-            FileRail filerail = new FileRail("rail.csv");
-            filerail.checkIntegrity(); //checkIntegrity를 통해 여기서 만든 filerail의 raillist를 생성
-            for (Rail rail : railArrayList) {
-                if (filerail.getRailByIndex(rail.railIndex) == null) {
-                    throw new FileIntegrityException("오류: 존재하지 않는 구간을 지나는 열차가 있습니다.");
-                }
-            }
-        }catch (FileNotFoundException e){
-            throw new FileIntegrityException("오류: rail.csv를 읽어오는중 문제 발생");
-        }
+//        try{
+//            FileRail filerail = new FileRail("rail.csv");
+//            filerail.checkIntegrity(); //checkIntegrity를 통해 여기서 만든 filerail의 raillist를 생성
+//            for (Rail rail : railArrayList) {
+//                if (filerail.getRailByIndex(rail.railIndex) == null) {
+//                    throw new FileIntegrityException("오류: 존재하지 않는 구간을 지나는 열차가 있습니다.");
+//                }
+//            }
+//        }catch (FileNotFoundException e){
+//            throw new FileIntegrityException("오류: rail.csv를 읽어오는중 문제 발생");
+//        }
 
     }
 
