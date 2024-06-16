@@ -108,7 +108,6 @@ public class FileRail implements FileInterface{
                 rail.railIndex=Integer.parseInt(strArr[0]);
             }catch (NumberFormatException e){
                 System.out.println("오류: 운행 정보 인덱스의 형식이 잘못되었습니다.");
-                System.exit(0);
             }
 
 
