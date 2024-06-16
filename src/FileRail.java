@@ -99,12 +99,18 @@ public class FileRail implements FileInterface{
                 운행 정보 인덱스의 형식 검사 (2차 기획서 내용 기반)
                 1. 운행 정보 인덱스는 0이 될 수 없다.
                 -> Rail 객체의 checkIntegrity에서 실행하므로 여기서 따로 처리하지 않고, while문 뒷부분에 rail.checkIntegrity를 실행
+                또한 운행 정보 인덱스는 Integer여야한다.
              */
-//            if(Integer.parseInt(strArr[0])==0){
-//                throw new FileIntegrityException("오류: 노선 번호가 0인 열차가 존재합니다.");
-//            }
 
-            rail.railIndex=Integer.parseInt(strArr[0]);
+
+            // 운행 정보 인덱스가 Integer가 아니라면 오류
+            try{
+                rail.railIndex=Integer.parseInt(strArr[0]);
+            }catch (NumberFormatException e){
+                System.out.println("오류: 운행 정보 인덱스의 형식이 잘못되었습니다.");
+                System.exit(0);
+            }
+
 
             /*
                 출발역과 도착역의 형식 검사
