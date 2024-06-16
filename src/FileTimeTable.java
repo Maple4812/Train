@@ -82,6 +82,7 @@ public class FileTimeTable implements FileInterface{
                 }
             }catch (NumberFormatException e){
                 System.out.println("마지막 데이터 요소 이후 쉼표 이외의 문자가 존재합니다.");
+                System.exit(0);
             }
 
             line.checkIntegrity(strArr[0]);
